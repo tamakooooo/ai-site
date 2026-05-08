@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>面包 AI | AI 中转站</title>
+  <meta name="description" content="面包 AI 提供统一的 AI 接入入口，连接 Claude、GPT、Gemini 与更多模型。">
+  <style>
+    :root {
+      --bg: #fcf8f3;
+      --surface: rgba(255, 255, 255, 0.78);
+      --surface-strong: #fffaf4;
+      --fg: #2f1d10;
+      --muted: #7b5b45;
+      --line: rgba(184, 108, 31, 0.16);
+      --accent: #f28c28;
+      --accent-strong: #d86512;
+      --shadow: 0 22px 64px rgba(216, 101, 18, 0.18);
+      --radius: 28px;
+      --max: 1180px;
+      --font-display: "Iowan Old Style", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--fg);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(circle at top left, rgba(242, 140, 40, 0.14) 0, transparent 32%),
+        radial-gradient(circle at bottom right, rgba(216, 101, 18, 0.1) 0, transparent 28%),
+        linear-gradient(180deg, #fefcf8 0%, var(--bg) 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(252, 248, 243, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 74px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(242, 140, 40, 0.18);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 3px;
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-size: 21px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 12px 28px rgba(216, 101, 18, 0.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: var(--line);
+    }
+
+    .hero {
+      padding: 56px 0 36px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-strong);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    h1 {
+      margin: 18px 0 0;
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 90px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy p {
+      margin: 22px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 20px);
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .stat-card,
+    .feature-card,
+    .panel,
+    .cta {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      padding: 18px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .stat-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      padding: 28px;
+      border-radius: 36px;
+      background:
+        linear-gradient(145deg, rgba(242, 140, 40, 0.92), rgba(216, 101, 18, 0.96)),
+        linear-gradient(180deg, #fff, #fff);
+      color: #fff8f0;
+      box-shadow: 0 28px 70px rgba(216, 101, 18, 0.24);
+    }
+
+    .hero-visual::before,
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      filter: blur(2px);
+    }
+
+    .hero-visual::before {
+      top: -80px;
+      right: -40px;
+      width: 240px;
+      height: 240px;
+    }
+
+    .hero-visual::after {
+      bottom: -60px;
+      left: -30px;
+      width: 220px;
+      height: 220px;
+    }
+
+    .visual-chip,
+    .visual-panel {
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 24px;
+      background: rgba(255, 248, 240, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .visual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .visual-panel {
+      margin-top: 22px;
+      padding: 20px;
+    }
+
+    .visual-panel strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .visual-panel p,
+    .visual-list li {
+      margin: 0;
+      color: rgba(255, 248, 240, 0.88);
+      line-height: 1.7;
+    }
+
+    .visual-list {
+      margin: 16px 0 0;
+      padding-left: 18px;
+    }
+
+    .section {
+      padding: 26px 0 44px;
+    }
+
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .section-head small {
+      color: var(--accent-strong);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 22px;
+    }
+
+    .feature-card h3,
+    .panel h3,
+    .cta h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .feature-card p,
+    .panel p,
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .flow {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .flow li { margin-top: 12px; line-height: 1.7; }
+
+    .cta-wrap {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 18px;
+    }
+
+    .cta {
+      padding: 24px;
+      background: var(--surface-strong);
+    }
+
+    .footer {
+      padding: 18px 0 36px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .route-grid,
+      .cta-wrap,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual { min-height: 420px; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: min(calc(100% - 24px), var(--max)); }
+      .header-row,
+      .footer-row { align-items: flex-start; flex-direction: column; }
+      .header-actions { justify-content: flex-start; }
+      .hero { padding-top: 36px; }
+      .btn { width: 100%; }
+      .hero-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-row">
+      <a class="brand" href="#top" aria-label="面包 AI 首页">
+        <img class="brand-mark" src="./logo.png" alt="面包 AI Logo">
+        <div class="brand-copy">
+          <strong>面包 AI</strong>
+          <span>AI Gateway</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="#features">能力概览</a>
+        <a class="btn btn-primary js-register-link" href="#start">免费注册</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">AI Gateway For Builders</div>
+          <h1>把多模型接入，做成更顺手的一站式入口。</h1>
+          <p>面包 AI 提供统一的 AI 接入体验，帮助你连接 Claude、GPT、Gemini 与更多模型。无论你是在做个人工具、团队协作，还是准备企业级接入，都能从这里更轻地起步。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary js-register-link" href="#start">立即注册</a>
+            <a class="btn btn-secondary" href="#routes">查看接入流程</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <strong>统一入口</strong>
+              <span>减少为不同模型分别维护调用方式的成本，让接入路径更稳定。</span>
+            </div>
+            <div class="stat-card">
+              <strong>开发友好</strong>
+              <span>更适合日常调试、路由切换、权限隔离和团队协作场景。</span>
+            </div>
+            <div class="stat-card">
+              <strong>更容易扩展</strong>
+              <span>从个人试用到团队协作，再到企业级接入，页面和路径都更好延展。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="visual-chip">Claude / GPT / Gemini / DeepSeek</div>
+          <div class="visual-panel">
+            <strong>Route Policy</strong>
+            <p>更像一个好用的产品首页，而不是一面堆满参数的控制台。你可以用更少的切换成本，把模型能力接入到真实工作流里。</p>
+            <ul class="visual-list">
+              <li>统一分发不同模型能力</li>
+              <li>保留熟悉的 API 使用方式</li>
+              <li>更适合长期维护与团队接力</li>
+            </ul>
+          </div>
+          <div class="visual-panel">
+            <strong>Usage Scenario</strong>
+            <p>适合写作、代码辅助、团队内部 AI 工具、内容生产和企业接入前的试跑阶段。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="shell">
+        <div class="section-head">
+          <small>Why Bread AI</small>
+          <h2>不是把模型堆得更多，而是把接入、切换和使用顺序整理得更清楚。</h2>
+          <p>这是一张偏产品叙事的首页。你可以先让访客理解这个中转站能做什么，再把他们引导到注册、接入和后续支持里。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>统一模型入口</h3>
+            <p>把文本、视觉与推理模型放在更一致的接入方式里，降低接入门槛，也方便后续扩展。</p>
+          </article>
+          <article class="feature-card">
+            <h3>适合开发者</h3>
+            <p>从个人脚本、内部工具到团队项目，都能保持更稳定的对接路径和更顺手的迁移体验。</p>
+          </article>
+          <article class="feature-card">
+            <h3>适合团队增长</h3>
+            <p>当试用变成长期使用时，你会更需要清晰的权限、额度、路由和支持入口。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="routes">
+      <div class="shell route-grid">
+        <article class="panel">
+          <div class="section-head">
+            <small>How It Works</small>
+            <h2>从试用到接入，再到团队落地，路径可以更自然。</h2>
+          </div>
+          <ol class="flow">
+            <li>先创建账号，进入控制台完成最基础的接入。</li>
+            <li>根据任务类型选择更合适的模型，而不是被单一模型锁住。</li>
+            <li>把后续的项目、成员、额度和使用记录慢慢收进同一个入口。</li>
+          </ol>
+        </article>
+        <article class="panel">
+          <div class="section-head">
+            <small>Common Use Cases</small>
+            <h2>适合内容、工具、团队协作和企业接入前的试跑。</h2>
+          </div>
+          <p>如果你需要一个更温和、更稳定的 AI 接入入口，而不是一堆散落的模型账号和不同的调用方式，这种结构会更适合长期使用。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="shell cta-wrap">
+        <article class="cta">
+          <h3>现在开始</h3>
+          <p>创建账号后，你就可以从一个模型和一条调用链开始。确认路径跑通，再慢慢把更多模型、更多成员和更多场景接进来。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary js-register-link" href="#start">免费注册</a>
+            <a class="btn btn-secondary" href="#features">先看功能概览</a>
+          </div>
+        </article>
+        <article class="cta">
+          <h3>后续支持</h3>
+          <p>这里可以后续替换成社群入口、文档链接、商务联系或二维码模块。先用轻量结构占位，后面再逐步补齐。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-row">
+      <div class="brand">
+        <img class="brand-mark" src="./logo.png" alt="面包 AI Logo">
+        <div class="brand-copy">
+          <strong>面包 AI</strong>
+          <span>AI Gateway</span>
+        </div>
+      </div>
+      <div class="footer-note">AI 中转站，智能连接更多可能。部署到 Cloudflare Pages 后，可直接作为 sub2api 的 iframe 首页使用。</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const links = document.querySelectorAll('.js-register-link');
+      let origin = '';
+
+      if (document.referrer) {
+        try {
+          origin = new URL(document.referrer).origin;
+        } catch (error) {
+          origin = '';
+        }
+      }
+
+      if (!origin) return;
+
+      links.forEach((link) => {
+        link.href = origin + '/register';
+        link.target = '_top';
+        link.rel = 'noopener';
+      });
+    })();
+  </script>
+</body>
+</html>
