@@ -121,6 +121,14 @@
       transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
     }
 
+    .btn-hero-primary {
+      min-height: 56px;
+      padding: 0 28px;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 16px 36px rgba(216, 101, 18, 0.28);
+    }
+
     .btn:hover { transform: translateY(-1px); }
 
     .btn-primary {
@@ -190,14 +198,6 @@
       margin-top: 36px;
     }
 
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 40px;
-    }
-
-    .stat-card,
     .feature-card,
     .panel,
     .cta {
@@ -206,25 +206,6 @@
       background: var(--surface);
       backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
-    }
-
-    .stat-card {
-      padding: 18px;
-    }
-
-    .stat-card strong {
-      display: block;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .stat-card span {
-      display: block;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
     }
 
     .hero-visual {
@@ -422,10 +403,6 @@
         grid-template-columns: 1fr;
       }
 
-      .hero-stats {
-        grid-template-columns: 1fr;
-      }
-
       .hero-visual { min-height: 420px; }
     }
 
@@ -465,22 +442,8 @@
           <h1>一个入口，连接主流 AI 模型。</h1>
           <p>面包 AI 提供更稳定、更优雅的统一接入体验，让 Claude、GPT、Gemini 与更多模型在同一条路径中协同工作。</p>
           <div class="hero-actions">
-            <a class="btn btn-primary js-register-link" href="#start">立即注册</a>
+            <a class="btn btn-primary btn-hero-primary js-register-link" href="#start">立即注册</a>
             <a class="btn btn-secondary" href="#routes">查看接入流程</a>
-          </div>
-          <div class="hero-stats">
-            <div class="stat-card">
-              <strong>统一入口</strong>
-              <span>将多模型接入、调用与管理收束为一套清晰路径，让系统架构和团队协作都更从容。</span>
-            </div>
-            <div class="stat-card">
-              <strong>开发友好</strong>
-              <span>兼顾迁移效率与工程体验，适合日常开发、灰度试跑、权限隔离与持续迭代。</span>
-            </div>
-            <div class="stat-card">
-              <strong>面向增长</strong>
-              <span>从个人试用到团队扩展，再到企业级落地，都能保持更稳的接入秩序与演进空间。</span>
-            </div>
           </div>
         </div>
 
