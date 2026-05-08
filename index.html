@@ -385,6 +385,73 @@
       background: var(--surface-strong);
     }
 
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .contact-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 12px 30px rgba(184, 108, 31, 0.08);
+    }
+
+    .contact-card strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .qr-placeholder {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px dashed rgba(216, 101, 18, 0.28);
+      background:
+        linear-gradient(135deg, rgba(242, 140, 40, 0.06), rgba(216, 101, 18, 0.08)),
+        #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.7;
+      padding: 14px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(216, 101, 18, 0.12);
+    }
+
+    .contact-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9a4d12;
+    }
+
+    .contact-item span {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
     .footer {
       padding: 18px 0 36px;
     }
@@ -413,6 +480,7 @@
       }
 
       .hero-visual { min-height: 420px; }
+      .contact-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -525,16 +593,35 @@
     <section class="section" id="start">
       <div class="shell cta-wrap">
         <article class="cta">
-          <h3>开始接入</h3>
-          <p>从一个账号、一把密钥开始，把常用模型接入到同一条调用路径里，让项目先跑起来，再逐步扩展。</p>
+          <h3>社群联系</h3>
+          <p>这里可以放你的 QQ 群和微信群二维码。当前先用占位模块，后面把真实二维码图片换进去就可以直接上线。</p>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <strong>QQ群二维码</strong>
+              <div class="qr-placeholder">QQ群二维码<br>占位区</div>
+            </div>
+            <div class="contact-card">
+              <strong>微信群二维码</strong>
+              <div class="qr-placeholder">微信群二维码<br>占位区</div>
+            </div>
+          </div>
           <div class="hero-actions">
-            <a class="btn btn-primary js-register-link" href="#start">免费注册</a>
-            <a class="btn btn-secondary" href="#features">先看功能概览</a>
+            <a class="btn btn-primary js-register-link" href="#start">立即注册</a>
           </div>
         </article>
         <article class="cta">
-          <h3>文档与支持</h3>
-          <p>后续可以在这里承接接入文档、社群答疑、商务合作与企业对接，让首页保持简洁，也让支持能力逐步展开。</p>
+          <h3>直接联系</h3>
+          <p>这里放最常用的联系方式。等你把真实号码发给我后，我可以直接替换成正式版本。</p>
+          <div class="contact-list">
+            <div class="contact-item">
+              <strong>QQ</strong>
+              <span>QQ 占位：123456789</span>
+            </div>
+            <div class="contact-item">
+              <strong>微信</strong>
+              <span>微信占位：tamako-ai</span>
+            </div>
+          </div>
         </article>
       </div>
     </section>
