@@ -14,60 +14,15 @@
           "highlight": false
         },
         {
-          "text": "7 个模型",
+          "text": "4 个模型",
           "highlight": false
         },
         {
-          "text": "GPT 系列",
+          "text": "实时接口同步",
           "highlight": true
         }
       ],
       "models": [
-        {
-          "id": "gpt-5.2",
-          "name": "GPT-5.2",
-          "pricingType": "token",
-          "pricingLabel": "Token 计费",
-          "pricing": {
-            "input": 1.75,
-            "output": 14,
-            "cacheRead": 0.175
-          },
-          "features": [
-            "128K上下文",
-            "多模态输入"
-          ]
-        },
-        {
-          "id": "gpt-5.3",
-          "name": "GPT-5.3",
-          "pricingType": "token",
-          "pricingLabel": "Token 计费",
-          "pricing": {
-            "input": 1.75,
-            "output": 14,
-            "cacheRead": 0.175
-          },
-          "features": [
-            "256K上下文",
-            "高级推理"
-          ]
-        },
-        {
-          "id": "gpt-5.3-spark",
-          "name": "gpt-5.3-spark",
-          "pricingType": "token",
-          "pricingLabel": "Token 计费",
-          "pricing": {
-            "input": 1.75,
-            "output": 14,
-            "cacheRead": 0.175
-          },
-          "features": [
-            "快速响应",
-            "流式输出"
-          ]
-        },
         {
           "id": "gpt-5.4",
           "name": "GPT-5.4",
@@ -90,8 +45,8 @@
             ]
           },
           "features": [
-            "超长上下文",
-            "复杂推理"
+            "1050K上下文",
+            "128K输出"
           ]
         },
         {
@@ -105,32 +60,23 @@
             "cacheRead": 0.075
           },
           "features": [
-            "轻量级",
-            "低成本"
+            "400K上下文",
+            "128K输出"
           ]
         },
         {
-          "id": "gpt-5.4-pro",
-          "name": "gpt-5.4-pro",
-          "pricingType": "context",
-          "pricingLabel": "按上下文区间定价",
+          "id": "gpt-5.4-nano",
+          "name": "GPT-5.4 Nano",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
           "pricing": {
-            "ranges": [
-              {
-                "label": "0-272k",
-                "input": 30,
-                "output": 180
-              },
-              {
-                "label": "272k+",
-                "input": 60,
-                "output": 270
-              }
-            ]
+            "input": 0.2,
+            "output": 1.25,
+            "cacheRead": 0.02
           },
           "features": [
-            "专业级",
-            "多步骤推理"
+            "400K上下文",
+            "128K输出"
           ]
         },
         {
