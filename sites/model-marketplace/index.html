@@ -437,14 +437,6 @@
       letter-spacing: -0.01em;
     }
 
-    .model-id {
-      margin-top: 4px;
-      color: var(--soft);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
-
     .type-pill {
       justify-content: center;
       flex: 0 0 auto;
@@ -817,7 +809,6 @@
           <div class="model-card-head">
             <div class="model-name">
               <strong>${escapeHTML(model.name || model.id || "Unnamed model")}</strong>
-              <div class="model-id">${escapeHTML(model.id || "")}</div>
             </div>
             <span class="type-pill">${escapeHTML(model.pricingLabel || "")}</span>
           </div>
