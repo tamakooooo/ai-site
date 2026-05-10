@@ -50,36 +50,6 @@
           ]
         },
         {
-          "id": "gpt-5.4-mini",
-          "name": "GPT-5.4 Mini",
-          "pricingType": "token",
-          "pricingLabel": "Token 计费",
-          "pricing": {
-            "input": 0.75,
-            "output": 4.5,
-            "cacheRead": 0.075
-          },
-          "features": [
-            "400K上下文",
-            "128K输出"
-          ]
-        },
-        {
-          "id": "gpt-5.4-nano",
-          "name": "GPT-5.4 Nano",
-          "pricingType": "token",
-          "pricingLabel": "Token 计费",
-          "pricing": {
-            "input": 0.2,
-            "output": 1.25,
-            "cacheRead": 0.02
-          },
-          "features": [
-            "400K上下文",
-            "128K输出"
-          ]
-        },
-        {
           "id": "gpt-5.5",
           "name": "GPT-5.5",
           "pricingType": "context",
@@ -103,6 +73,36 @@
           "features": [
             "旗舰级",
             "全能推理"
+          ]
+        },
+        {
+          "id": "gpt-5.4-nano",
+          "name": "GPT-5.4 Nano",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 0.2,
+            "output": 1.25,
+            "cacheRead": 0.02
+          },
+          "features": [
+            "400K上下文",
+            "128K输出"
+          ]
+        },
+        {
+          "id": "gpt-5.4-mini",
+          "name": "GPT-5.4 Mini",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 0.75,
+            "output": 4.5,
+            "cacheRead": 0.075
+          },
+          "features": [
+            "400K上下文",
+            "128K输出"
           ]
         }
       ]
