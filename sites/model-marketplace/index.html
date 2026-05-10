@@ -3,162 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>模型广场 - 面包AI中转站</title>
+  <title>模型广场</title>
   <style>
     :root {
-      /* Brand Colors - 面包AI中转站 */
-      --bg: oklch(98.2% 0.005 95.1);
-      --surface: oklch(96.6% 0.009 100);
-      --fg: oklch(19.1% 0.002 106.6);
-      --muted: oklch(35.9% 0.005 106.7);
-      --border: oklch(89.2% 0.021 79.1);
-      --accent: oklch(67.2% 0.131 38.8);
-      --accent-strong: oklch(60.8% 0.138 39);
-      --accent-soft: color-mix(in oklch, var(--accent) 12%, white);
-      
-      /* Typography */
-      --font-display: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      color-scheme: light;
+      --bg: #f8f2e9;
+      --bg-soft: #fffaf4;
+      --panel: rgba(255, 251, 246, 0.82);
+      --panel-strong: rgba(255, 248, 241, 0.94);
+      --line: rgba(163, 94, 24, 0.14);
+      --text: #2c1b10;
+      --muted: #7f5b44;
+      --soft: #a37d61;
+      --accent: #e98b31;
+      --accent-strong: #c85f18;
+      --accent-soft: rgba(233, 139, 49, 0.12);
+      --shadow: 0 24px 64px rgba(171, 89, 18, 0.14);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --font-display: "Iowan Old Style", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
       --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
       --font-mono: "SF Mono", "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
-      
-      /* Shadows */
-      --shadow-soft: 0 18px 60px color-mix(in oklch, var(--accent) 8%, transparent);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root.dark {
+      color-scheme: dark;
+      --bg: #22150d;
+      --bg-soft: #2a190f;
+      --panel: rgba(64, 39, 23, 0.8);
+      --panel-strong: rgba(73, 44, 26, 0.94);
+      --line: rgba(243, 184, 126, 0.16);
+      --text: #fff4ea;
+      --muted: #e2c6b0;
+      --soft: #c79d7d;
+      --accent: #f0a24e;
+      --accent-strong: #ffc17b;
+      --accent-soft: rgba(240, 162, 78, 0.13);
+      --shadow: 0 28px 80px rgba(8, 4, 2, 0.38);
+    }
 
-    html {
-      background: var(--bg);
-      color: var(--fg);
-      scroll-behavior: smooth;
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: var(--font-body);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(233, 139, 49, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(200, 95, 24, 0.1), transparent 24%),
+        linear-gradient(180deg, #fdf9f3 0%, var(--bg) 100%);
+    }
+
+    .dark body {
+      background:
+        radial-gradient(circle at top left, rgba(240, 162, 78, 0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(200, 95, 24, 0.08), transparent 24%),
+        linear-gradient(180deg, #2b190f 0%, var(--bg) 100%);
     }
 
     body {
-      margin: 0;
-      font-family: var(--font-body);
-      background:
-        radial-gradient(circle at top left, color-mix(in oklch, var(--accent) 5%, white) 0, transparent 36%),
-        linear-gradient(180deg, var(--bg) 0%, color-mix(in oklch, var(--surface) 74%, white) 100%);
-      min-height: 100vh;
-      color: var(--fg);
-      line-height: 1.6;
+      padding: 24px;
     }
 
-    /* Topline */
-    .topline {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 24px 0 0;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
+    button, input, select { font: inherit; }
 
-    .topline::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* Shell */
-    .shell {
-      width: min(calc(100% - 48px), 1240px);
+    .page {
+      width: min(1440px, 100%);
       margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: linear-gradient(180deg, rgba(255, 252, 247, 0.92), var(--panel));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(16px);
     }
 
-    /* Header */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(14px);
-      background: color-mix(in oklch, var(--bg) 92%, white);
-      border-bottom: 1px solid var(--border);
+    .dark .page {
+      background: linear-gradient(180deg, rgba(76, 46, 26, 0.92), var(--panel));
     }
 
-    .header-row {
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      min-height: 78px;
+      gap: 20px;
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--line);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 14px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      cursor: pointer;
     }
 
     .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 12px 22px rgba(201, 97, 20, 0.14);
+      flex: 0 0 auto;
     }
 
-    .brand-copy strong {
-      display: block;
-      font-size: 21px;
-      line-height: 1;
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .brand-copy small {
       display: block;
-      margin-top: 3px;
+      margin-bottom: 4px;
       color: var(--accent-strong);
-      font-size: 10px;
-      letter-spacing: 0.34em;
+      font-size: 12px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
+    .brand-copy h1 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-copy p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    .nav-links a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 180ms ease;
+    .embed-badge {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.66);
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--fg);
+    .embed-badge.visible { display: inline-flex; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 18px;
+      padding: 24px 28px 0;
     }
 
-    /* Main Content */
-    .main-content {
-      padding: 48px 0 80px;
+    .hero-card,
+    .hero-aside,
+    .sidebar-card,
+    .stat-card,
+    .group-card,
+    .detail-card,
+    .empty-card,
+    .loading-card,
+    .error-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      box-shadow: 0 14px 32px rgba(171, 89, 18, 0.08);
+      backdrop-filter: blur(14px);
     }
 
-    /* Page Header */
-    .page-header {
-      margin-bottom: 40px;
-    }
+    .hero-card { padding: 30px; }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 16px;
       color: var(--accent-strong);
       font-family: var(--font-mono);
       font-size: 12px;
@@ -166,717 +186,1221 @@
       text-transform: uppercase;
     }
 
-    .page-title {
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .hero-card h2 {
+      margin: 20px 0 0;
+      max-width: 11ch;
       font-family: var(--font-display);
-      font-size: 42px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 16px;
+      font-size: clamp(40px, 5vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
     }
 
-    .page-desc {
+    .hero-card p {
+      margin: 22px 0 0;
+      max-width: 42em;
       color: var(--muted);
       font-size: 16px;
-      max-width: 560px;
-      line-height: 1.65;
+      line-height: 1.9;
     }
 
-    .unit-tag {
-      display: inline-block;
-      background: var(--surface);
-      padding: 2px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      font-size: 11px;
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.6);
       color: var(--muted);
-      font-family: var(--font-mono);
-    }
-
-    /* Stats Row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin: 40px 0;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: transform 180ms ease, box-shadow 180ms ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .stat-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      background: color-mix(in oklch, var(--accent) 12%, white);
-      color: var(--accent-strong);
-    }
-
-    .stat-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-value {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--fg);
-      line-height: 1;
-      font-family: var(--font-mono);
-    }
-
-    .stat-label {
       font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: 0.05em;
-    }
-
-    /* Filters */
-    .filters-section {
-      margin-bottom: 40px;
-    }
-
-    .filters-row {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      position: relative;
-      flex: 1;
-      min-width: 320px;
-      max-width: 400px;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 14px 20px 14px 48px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-size: 15px;
-      color: var(--fg);
-      background: var(--surface);
-      transition: border-color 180ms ease, box-shadow 180ms ease;
-      font-family: var(--font-body);
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 15%, transparent);
-    }
-
-    .search-box input::placeholder {
-      color: var(--muted);
-      opacity: 0.7;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .filter-btn {
-      padding: 14px 24px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 180ms ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .filter-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent-strong);
-    }
-
-    .filter-btn.active {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
-
-    /* Group Section */
-    .group-section {
-      margin-bottom: 48px;
-    }
-
-    .group-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand-tag {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      background: color-mix(in oklch, var(--accent) 10%, white);
-      color: var(--accent-strong);
-      border-radius: 999px;
-      font-size: 14px;
       font-weight: 600;
     }
 
-    .brand-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-    }
-
-    .info-tag {
-      padding: 8px 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+    .hero-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
     }
 
-    .info-tag.highlight {
-      background: color-mix(in oklch, var(--accent) 10%, white);
-      color: var(--accent-strong);
-      border-color: color-mix(in oklch, var(--accent) 25%, transparent);
-    }
-
-    .group-title {
-      font-family: var(--font-display);
-      font-size: 28px;
-      font-weight: 700;
-      margin: 24px 0 8px;
-    }
-
-    .group-desc {
-      font-size: 15px;
-      color: var(--muted);
-    }
-
-    /* Models Grid */
-    .models-grid {
+    .hero-aside {
+      padding: 22px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
+      gap: 14px;
+      align-content: start;
     }
 
-    .model-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px;
+    .hero-aside h3 {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-aside p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .aside-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .aside-metric {
+      padding: 16px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.54);
+    }
+
+    .dark .aside-metric { background: rgba(82, 50, 29, 0.46); }
+
+    .aside-metric strong {
+      display: block;
+      font-size: 30px;
+      letter-spacing: -0.05em;
+    }
+
+    .aside-metric span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 28px 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 18px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .sidebar-card {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sidebar-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .reset-btn {
+      border: 0;
+      background: none;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--text);
+      outline: none;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
     }
 
-    .model-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-soft);
-      border-color: color-mix(in oklch, var(--accent) 30%, var(--border));
+    .dark .input,
+    .dark .select {
+      background: rgba(72, 44, 26, 0.84);
+      color: var(--text);
     }
 
-    .model-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
+    .input:focus,
+    .select:focus {
+      transform: translateY(-1px);
+      border-color: rgba(233, 139, 49, 0.42);
+      box-shadow: 0 0 0 4px rgba(233, 139, 49, 0.12);
     }
 
-    .model-title {
-      display: flex;
-      flex-direction: column;
+    .filter-stats {
+      display: grid;
+      gap: 10px;
     }
 
-    .model-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--fg);
-      margin-bottom: 4px;
+    .filter-stat {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.56);
     }
 
-    .model-id {
-      font-family: var(--font-mono);
+    .dark .filter-stat { background: rgba(82, 50, 29, 0.46); }
+
+    .filter-stat strong {
+      display: block;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+    }
+
+    .filter-stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
       font-size: 12px;
-      color: var(--muted);
     }
 
-    .pricing-badge {
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.03em;
+    .detail-card {
+      padding: 22px;
+      display: grid;
+      gap: 16px;
     }
 
-    .pricing-badge.token {
-      background: color-mix(in oklch, #3b82f6 12%, white);
-      color: #1d4ed8;
-    }
+    .detail-card.hidden { display: none; }
 
-    .pricing-badge.context {
-      background: color-mix(in oklch, var(--accent) 15%, white);
-      color: var(--accent-strong);
-    }
-
-    /* Pricing Rows */
-    .pricing-rows {
+    .detail-head {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .pricing-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      background: var(--bg);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-    }
-
-    .pricing-row.context {
-      flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
-    }
-
-    .pricing-label {
-      font-size: 14px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .pricing-label-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .pricing-value {
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .pricing-value .price {
-      color: var(--fg);
-      font-weight: 700;
-      font-family: var(--font-mono);
-    }
-
-    .context-row-header {
-      display: flex;
-      align-items: center;
       justify-content: space-between;
-      width: 100%;
+      gap: 16px;
     }
 
-    .context-range {
-      font-size: 13px;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      background: var(--surface);
-      padding: 4px 10px;
-      border-radius: 8px;
-    }
-
-    /* View Details */
-    .view-details {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: var(--accent-strong);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 180ms ease;
-    }
-
-    .view-details:hover {
-      color: var(--accent);
-    }
-
-    .context-toggle {
+    .detail-brand {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px;
+      gap: 8px;
+      padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: color-mix(in oklch, var(--surface) 85%, white);
-      margin-bottom: 14px;
-    }
-
-    .context-toggle-btn {
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      padding: 8px 14px;
-      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
       font-size: 12px;
-      font-family: var(--font-mono);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .detail-title {
+      margin: 14px 0 0;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
+
+    .detail-description {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 180ms ease;
+      white-space: nowrap;
     }
 
-    .context-toggle-btn:hover {
-      color: var(--accent-strong);
-    }
-
-    .context-toggle-btn.active {
-      background: color-mix(in oklch, var(--accent) 14%, white);
-      color: var(--accent-strong);
-      box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
-    }
-
-    .context-panels {
+    .detail-tags {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .context-panel {
-      display: none;
+    .detail-meta {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.56);
     }
 
-    .context-panel.active {
+    .dark .detail-meta { background: rgba(82, 50, 29, 0.46); }
+
+    .detail-meta span {
       display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
 
-    .feature-tags {
+    .detail-meta strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      padding: 18px;
+    }
+
+    .stat-card h3 {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 34px;
+      letter-spacing: -0.05em;
+    }
+
+    .stat-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .group-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .group-card { overflow: hidden; }
+
+    .group-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 150px;
+      gap: 18px;
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .group-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .group-head h3 {
+      margin: 14px 0 0;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .group-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .group-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 14px;
     }
 
-    .feature-tag {
-      padding: 6px 10px;
+    .meta-pill,
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: color-mix(in oklch, var(--accent) 8%, white);
-      color: var(--accent-strong);
-      border: 1px solid color-mix(in oklch, var(--accent) 18%, transparent);
-      font-size: 12px;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    /* Loading */
-    .loading {
-      text-align: center;
-      padding: 80px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.56);
       color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
     }
 
-    .error {
-      text-align: center;
-      padding: 60px;
+    .dark .meta-pill,
+    .dark .tag-chip { background: rgba(82, 50, 29, 0.46); }
+
+    .group-multiplier {
+      padding: 16px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(233, 139, 49, 0.12), rgba(255, 255, 255, 0.72));
+      text-align: right;
+      align-self: start;
+    }
+
+    .dark .group-multiplier {
+      background: linear-gradient(180deg, rgba(233, 139, 49, 0.12), rgba(82, 50, 29, 0.62));
+    }
+
+    .group-multiplier span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .group-multiplier strong {
+      font-size: 30px;
+      letter-spacing: -0.05em;
+    }
+
+    .model-list {
+      display: grid;
+    }
+
+    .model-item {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(180px, 0.8fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 24px;
+      border: 0;
+      border-top: 1px solid rgba(163, 94, 24, 0.08);
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+
+    .model-item:hover {
+      background: rgba(233, 139, 49, 0.05);
+    }
+
+    .dark .model-item:hover {
+      background: rgba(233, 139, 49, 0.08);
+    }
+
+    .model-main strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .model-main code {
+      display: inline-block;
+      margin-top: 6px;
+      color: var(--soft);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.45);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+
+    .model-main p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .model-side {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: flex-end;
+    }
+
+    .model-multiplier {
+      min-width: 86px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
       color: var(--accent-strong);
-      background: color-mix(in oklch, var(--accent) 8%, white);
-      border-radius: 24px;
-      margin: 40px 0;
-      border: 1px solid color-mix(in oklch, var(--accent) 20%, transparent);
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .stats-row { grid-template-columns: 1fr; }
-      .filters-row { flex-direction: column; align-items: stretch; }
-      .search-box { max-width: 100%; }
-      .models-grid { grid-template-columns: 1fr; }
-      .page-title { font-size: 32px; }
+    .model-arrow {
+      color: var(--soft);
+      font-size: 18px;
+    }
+
+    .loading-card,
+    .error-card,
+    .empty-card {
+      padding: 40px 28px;
+      text-align: center;
+    }
+
+    .loading-card.hidden,
+    .error-card.hidden,
+    .empty-card.hidden { display: none; }
+
+    .loading-card p,
+    .error-card p,
+    .empty-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .error-card h3,
+    .empty-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 14px; }
+      .topbar,
+      .hero,
+      .layout { padding-left: 18px; padding-right: 18px; }
+      .hero-card h2 { max-width: none; }
+      .stats-row,
+      .detail-grid,
+      .aside-grid { grid-template-columns: 1fr; }
+      .group-head,
+      .model-item { grid-template-columns: 1fr; }
+      .group-multiplier,
+      .model-side { justify-self: start; text-align: left; }
+      .model-side { justify-content: flex-start; }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <!-- Topline -->
-    <div class="topline">
-      <span>MODEL MARKETPLACE</span>
-    </div>
-    
-    <!-- Header -->
-    <header class="site-header">
-      <div class="header-row">
-        <div class="brand" onclick="goHome()">
-          <div class="brand-mark">🍞</div>
-          <div class="brand-copy">
-            <strong>面包AI</strong>
-            <small>BREAD AI GATEWAY</small>
-          </div>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="./logo.png" alt="Logo">
         </div>
-        <nav class="nav-links">
-          <a href="/ai-site/sites/homepage/">首页</a>
-          <a href="#" class="active">模型广场</a>
-          <a href="#">控制台</a>
-          <a href="#">文档</a>
-        </nav>
+        <div class="brand-copy">
+          <small id="brand-kicker">Model Showcase</small>
+          <h1 id="brand-title">模型广场</h1>
+          <p id="brand-subtitle">更清楚地展示模型、分组与倍率信息</p>
+        </div>
       </div>
+      <div class="embed-badge" id="embed-badge">嵌入模式</div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Page Header -->
-      <div class="page-header">
-        <div class="eyebrow">BROWSE MODELS</div>
-        <h1 class="page-title">模型广场</h1>
-        <p class="page-desc" id="pageDesc">按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。价格单位为 <span class="unit-tag" id="unitTag">美元</span></p>
-      </div>
+    <section class="hero">
+      <article class="hero-card">
+        <div class="eyebrow" id="hero-eyebrow">Curated Catalog</div>
+        <h2 id="hero-title">把模型列表整理成用户愿意认真浏览的模型广场。</h2>
+        <p id="hero-description">这页只做一件事：把模型、分组、倍率和推荐信息讲明白。后面你只需要维护数据文件，不用每次都重写页面结构。</p>
+        <div class="hero-pills">
+          <span class="hero-pill" id="hero-pill-1">静态数据驱动</span>
+          <span class="hero-pill" id="hero-pill-2">倍率维护单独收口</span>
+          <span class="hero-pill" id="hero-pill-3">适合直接部署到 Pages</span>
+        </div>
+      </article>
 
-      <!-- Stats -->
-      <div class="stats-row" id="statsRow">
-        <div class="stat-card">
-          <div class="stat-icon">⊞</div>
-          <div class="stat-info">
-            <div class="stat-value" id="groupStat">0</div>
-            <div class="stat-label">匹配分组</div>
+      <aside class="hero-aside">
+        <h3 id="aside-title">Overview</h3>
+        <p id="aside-text">这里展示的是适合对外说明的模型目录，不是后台原始配置表。</p>
+        <div class="aside-grid">
+          <div class="aside-metric">
+            <strong id="total-groups">0</strong>
+            <span id="label-total-groups">分组数量</span>
+          </div>
+          <div class="aside-metric">
+            <strong id="total-models">0</strong>
+            <span id="label-total-models">模型数量</span>
+          </div>
+          <div class="aside-metric">
+            <strong id="total-platforms">0</strong>
+            <span id="label-total-platforms">平台数量</span>
+          </div>
+          <div class="aside-metric">
+            <strong id="total-visible">0</strong>
+            <span id="label-total-visible">当前可见模型</span>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">✦</div>
-          <div class="stat-info">
-            <div class="stat-value" id="modelStat">0</div>
-            <div class="stat-label">匹配模型</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">◉</div>
-          <div class="stat-info">
-            <div class="stat-value" id="brandStat">0</div>
-            <div class="stat-label">品牌数量</div>
-          </div>
-        </div>
-      </div>
+      </aside>
+    </section>
 
-      <!-- Filters -->
-      <div class="filters-section">
-        <div class="filters-row">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="搜索模型名称、ID 或品牌..." oninput="filterModels()">
+    <section class="layout">
+      <aside class="sidebar">
+        <section class="sidebar-card">
+          <div class="sidebar-head">
+            <h3 id="filters-title">筛选器</h3>
+            <button class="reset-btn" id="reset-btn" type="button">重置</button>
           </div>
-          <button class="filter-btn active" onclick="filterType('all')" id="btnAll">全部</button>
-          <button class="filter-btn" onclick="filterType('token')" id="btnToken">Token 计费</button>
-          <button class="filter-btn" onclick="filterType('context')" id="btnContext">区间定价</button>
-        </div>
-      </div>
 
-      <!-- Content -->
-      <div id="content">
-        <div class="loading">正在加载模型数据...</div>
-      </div>
-    </main>
+          <div class="field">
+            <label for="search-input" id="search-label">搜索</label>
+            <input class="input" id="search-input" type="text" placeholder="搜索模型名、平台、标签或分组">
+          </div>
+
+          <div class="field">
+            <label for="platform-filter" id="platform-label">平台</label>
+            <select class="select" id="platform-filter">
+              <option value="all">全部平台</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="group-filter" id="group-label">分组</label>
+            <select class="select" id="group-filter">
+              <option value="all">全部分组</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="tag-filter" id="tag-label">标签</label>
+            <select class="select" id="tag-filter">
+              <option value="all">全部标签</option>
+            </select>
+          </div>
+
+          <div class="filter-stats">
+            <div class="filter-stat">
+              <strong id="visible-groups">0</strong>
+              <span id="visible-groups-label">匹配分组</span>
+            </div>
+            <div class="filter-stat">
+              <strong id="visible-models">0</strong>
+              <span id="visible-models-label">匹配模型</span>
+            </div>
+            <div class="filter-stat">
+              <strong id="visible-platforms">0</strong>
+              <span id="visible-platforms-label">品牌覆盖</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-card hidden" id="detail-card">
+          <div class="detail-head">
+            <div>
+              <div class="detail-brand" id="detail-brand">OpenAI</div>
+              <h3 class="detail-title" id="detail-title">GPT-5.4</h3>
+            </div>
+            <button class="copy-btn" id="copy-btn" type="button">复制模型名</button>
+          </div>
+          <p class="detail-description" id="detail-description">模型说明</p>
+          <div class="detail-tags" id="detail-tags"></div>
+          <div class="detail-grid">
+            <div class="detail-meta">
+              <span id="detail-platform-label">平台</span>
+              <strong id="detail-platform">-</strong>
+            </div>
+            <div class="detail-meta">
+              <span id="detail-channel-label">展示渠道</span>
+              <strong id="detail-channel">-</strong>
+            </div>
+            <div class="detail-meta">
+              <span id="detail-groups-label">所属分组</span>
+              <strong id="detail-groups">-</strong>
+            </div>
+            <div class="detail-meta">
+              <span id="detail-multiplier-label">当前倍率</span>
+              <strong id="detail-multiplier">-</strong>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="stats-row">
+          <article class="stat-card">
+            <h3 id="summary-groups-title">分组视图</h3>
+            <strong id="summary-groups">0</strong>
+            <p id="summary-groups-text">按你希望用户浏览的方式整理模型，而不是直接堆原始来源列表。</p>
+          </article>
+          <article class="stat-card">
+            <h3 id="summary-models-title">模型条目</h3>
+            <strong id="summary-models">0</strong>
+            <p id="summary-models-text">这里统计的是当前筛选条件下真正展示给用户看的模型数量。</p>
+          </article>
+          <article class="stat-card">
+            <h3 id="summary-platforms-title">平台覆盖</h3>
+            <strong id="summary-platforms">0</strong>
+            <p id="summary-platforms-text">可以快速判断这份目录是否覆盖了 OpenAI、Claude、Gemini 等主流平台。</p>
+          </article>
+        </section>
+
+        <section class="loading-card visible" id="loading-card">
+          <p id="loading-text">正在加载模型广场数据...</p>
+        </section>
+
+        <section class="error-card hidden" id="error-card">
+          <h3 id="error-title">数据加载失败</h3>
+          <p id="error-text">请检查 `model-marketplace-data.json` 是否存在，以及内容是否是合法 JSON。</p>
+        </section>
+
+        <section class="empty-card hidden" id="empty-card">
+          <h3 id="empty-title">没有找到匹配结果</h3>
+          <p id="empty-text">可以试着清空筛选条件，或者换一个关键词继续搜索。</p>
+        </section>
+
+        <section class="group-list" id="group-list" hidden></section>
+      </main>
+    </section>
   </div>
 
-<script>
-let configData = null;
-let allModels = [];
-let currentFilter = 'all';
+  <script>
+    const STRINGS = {
+      zh: {
+        title: "模型广场",
+        subtitle: "把模型、倍率和推荐信息整理得更清楚一点",
+        eyebrow: "Curated Catalog",
+        heroTitle: "把模型列表整理成用户愿意认真浏览的模型广场。",
+        heroDescription: "这页只做一件事：把模型、分组、倍率和推荐信息讲明白。后面你只需要维护数据文件，不用每次都重写页面结构。",
+        pill1: "静态数据驱动",
+        pill2: "倍率维护单独收口",
+        pill3: "适合直接部署到 Pages",
+        asideTitle: "Overview",
+        asideText: "这里展示的是适合对外说明的模型目录，不是后台原始配置表。",
+        totalGroups: "分组数量",
+        totalModels: "模型数量",
+        totalPlatforms: "平台数量",
+        totalVisible: "当前可见模型",
+        filtersTitle: "筛选器",
+        reset: "重置",
+        searchLabel: "搜索",
+        searchPlaceholder: "搜索模型名、平台、标签或分组",
+        platformLabel: "平台",
+        groupLabel: "分组",
+        tagLabel: "标签",
+        allPlatforms: "全部平台",
+        allGroups: "全部分组",
+        allTags: "全部标签",
+        visibleGroups: "匹配分组",
+        visibleModels: "匹配模型",
+        visiblePlatforms: "品牌覆盖",
+        summaryGroupsTitle: "分组视图",
+        summaryGroupsText: "按你希望用户浏览的方式整理模型，而不是直接堆原始来源列表。",
+        summaryModelsTitle: "模型条目",
+        summaryModelsText: "这里统计的是当前筛选条件下真正展示给用户看的模型数量。",
+        summaryPlatformsTitle: "平台覆盖",
+        summaryPlatformsText: "可以快速判断这份目录是否覆盖了 OpenAI、Claude、Gemini 等主流平台。",
+        loading: "正在加载模型广场数据...",
+        errorTitle: "数据加载失败",
+        errorText: "请检查 `model-marketplace-data.json` 是否存在，以及内容是否是合法 JSON。",
+        emptyTitle: "没有找到匹配结果",
+        emptyText: "可以试着清空筛选条件，或者换一个关键词继续搜索。",
+        modelsSuffix: "个模型",
+        tagsSuffix: "个标签",
+        multiplier: "当前倍率",
+        channel: "展示渠道",
+        copy: "复制模型名",
+        copied: "已复制",
+        detailPlatform: "平台",
+        detailChannel: "展示渠道",
+        detailGroups: "所属分组",
+        detailMultiplier: "当前倍率",
+        groupCollectionSuffix: "模型集合。",
+        embed: "嵌入模式"
+      },
+      en: {
+        title: "Model Marketplace",
+        subtitle: "Present your models, multipliers, and recommendations with more clarity",
+        eyebrow: "Curated Catalog",
+        heroTitle: "Turn a raw model list into a marketplace people actually want to browse.",
+        heroDescription: "This page focuses on one job only: explain your models, groups, multipliers, and recommendations clearly. Later on, you only need to maintain the data file instead of rewriting the page structure every time.",
+        pill1: "Static data driven",
+        pill2: "Multiplier maintenance is isolated",
+        pill3: "Ready for standalone Pages deployment",
+        asideTitle: "Overview",
+        asideText: "What you see here is a curated public catalog, not a dump of raw backend configuration.",
+        totalGroups: "Groups",
+        totalModels: "Models",
+        totalPlatforms: "Platforms",
+        totalVisible: "Visible models",
+        filtersTitle: "Filters",
+        reset: "Reset",
+        searchLabel: "Search",
+        searchPlaceholder: "Search by model, platform, tag, or group",
+        platformLabel: "Platform",
+        groupLabel: "Group",
+        tagLabel: "Tag",
+        allPlatforms: "All platforms",
+        allGroups: "All groups",
+        allTags: "All tags",
+        visibleGroups: "Matching groups",
+        visibleModels: "Matching models",
+        visiblePlatforms: "Brand coverage",
+        summaryGroupsTitle: "Grouped view",
+        summaryGroupsText: "Organize models by the way you want users to browse them instead of exposing the raw source list.",
+        summaryModelsTitle: "Model entries",
+        summaryModelsText: "This count shows how many model entries are currently visible under the active filters.",
+        summaryPlatformsTitle: "Platform coverage",
+        summaryPlatformsText: "A quick way to judge whether the catalog covers OpenAI, Claude, Gemini, and other major platforms.",
+        loading: "Loading marketplace data...",
+        errorTitle: "Failed to load data",
+        errorText: "Please make sure `model-marketplace-data.json` exists and contains valid JSON.",
+        emptyTitle: "No matching results",
+        emptyText: "Try clearing the filters or searching with another keyword.",
+        modelsSuffix: "models",
+        tagsSuffix: "tags",
+        multiplier: "Multiplier",
+        channel: "Channel",
+        copy: "Copy model name",
+        copied: "Copied",
+        detailPlatform: "Platform",
+        detailChannel: "Channel",
+        detailGroups: "Groups",
+        detailMultiplier: "Multiplier",
+        groupCollectionSuffix: "model collection.",
+        embed: "Embedded mode"
+      }
+    };
 
-function goHome() {
-  window.location.href = '/ai-site/sites/homepage/';
-}
-
-function getUnitLabel() {
-  return configData?.unit || '美元';
-}
-
-async function loadConfig() {
-  try {
-    const response = await fetch('config.json');
-    if (!response.ok) throw new Error('无法加载配置文件');
-    configData = await response.json();
-    renderPage();
-  } catch (error) {
-    console.error('加载失败:', error);
-    document.getElementById('content').innerHTML = 
-      '<div class="error">加载配置文件失败，请检查 config.json 是否存在</div>';
-  }
-}
-
-function renderPage() {
-  document.getElementById('pageDesc').innerHTML = (configData.description || '按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。') + 
-    ` 价格单位为 <span class="unit-tag">${getUnitLabel()}</span>`;
-  
-  const totalModels = configData.groups?.reduce((sum, g) => sum + (g.models?.length || 0), 0) || 0;
-  const totalBrands = new Set(configData.groups?.map(g => g.brand)).size || 0;
-  
-  document.getElementById('groupStat').textContent = configData.groups?.length || 0;
-  document.getElementById('modelStat').textContent = totalModels;
-  document.getElementById('brandStat').textContent = totalBrands;
-  
-  allModels = [];
-  configData.groups?.forEach(group => {
-    group.models?.forEach(model => {
-      allModels.push({ ...model, group: group });
-    });
-  });
-  
-  renderContent(configData.groups);
-}
-
-function renderContent(groups) {
-  const content = document.getElementById('content');
-  content.innerHTML = groups?.map(group => `
-    <div class="group-section">
-      <div class="group-header">
-        <div class="brand-tag">
-          <div class="brand-icon"></div>
-          <span>${group.brand}</span>
-        </div>
-        ${group.tags?.map(tag => `<span class="info-tag ${tag.highlight ? 'highlight' : ''}">${tag.text}</span>`).join('') || ''}
-      </div>
-      <h2 class="group-title">${group.name}</h2>
-      ${group.description ? `<p class="group-desc">${group.description}</p>` : ''}
-      
-      <div class="models-grid">
-        ${group.models?.map(model => renderModelCard(model, group)).join('') || ''}
-      </div>
-    </div>
-  `).join('');
-}
-
-function applyGroupMultiplier(value, groupMultiplier) {
-  if (typeof value !== 'number') return value;
-  return value * (groupMultiplier || 1);
-}
-
-function renderModelCard(model, group) {
-  const isToken = model.pricingType === 'token';
-  const pricingHTML = isToken
-    ? renderTokenPricing(model.pricing, group?.groupMultiplier)
-    : renderContextPricing(model.pricing, group?.groupMultiplier);
-  const featureHTML = model.features?.length
-    ? `<div class="feature-tags">${model.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}</div>`
-    : '';
-  
-  return `
-    <div class="model-card" data-type="${model.pricingType}" data-name="${(model.name + ' ' + model.id + ' ' + model.group?.brand).toLowerCase()}">
-      <div class="model-header">
-        <div class="model-title">
-          <div class="model-name">${model.name}</div>
-          <div class="model-id">${model.id}</div>
-        </div>
-        <span class="pricing-badge ${isToken ? 'token' : 'context'}">${model.pricingLabel}</span>
-      </div>
-      <div class="pricing-rows">${pricingHTML}</div>
-      ${featureHTML}
-    </div>
-  `;
-}
-
-function renderTokenPricing(pricing, groupMultiplier = 1) {
-  const unitLabel = getUnitLabel();
-  const rows = [
-    { label: '输入', value: pricing.input, color: '#3b82f6' },
-    { label: '输出', value: pricing.output, color: '#8b5cf6' }
-  ];
-
-  if (typeof pricing.cacheRead === 'number') {
-    rows.push({ label: '缓存读取', value: pricing.cacheRead, color: '#10b981' });
-  }
-  if (typeof pricing.cacheWrite === 'number') {
-    rows.push({ label: '缓存写入', value: pricing.cacheWrite, color: '#f59e0b' });
-  }
-
-  return rows.map(row => `
-    <div class="pricing-row">
-      <div class="pricing-label"><span class="pricing-label-dot" style="background: ${row.color};"></span>${row.label}</div>
-      <div class="pricing-value"><span class="price">${applyGroupMultiplier(row.value, groupMultiplier).toFixed(2)}</span> ${unitLabel} / 1M Token</div>
-    </div>
-  `).join('');
-}
-
-function renderContextPricing(pricing, groupMultiplier = 1) {
-  return pricing.ranges.map(range => {
-    const extras = [];
-    if (typeof range.cacheRead === 'number') {
-      extras.push(`缓存读取 <span class="price">${applyGroupMultiplier(range.cacheRead, groupMultiplier).toFixed(2)}</span>`);
-    }
-    if (typeof range.cacheWrite === 'number') {
-      extras.push(`缓存写入 <span class="price">${applyGroupMultiplier(range.cacheWrite, groupMultiplier).toFixed(2)}</span>`);
+    const params = new URLSearchParams(window.location.search);
+    const lang = (params.get("lang") || "zh").toLowerCase().startsWith("en") ? "en" : "zh";
+    const t = STRINGS[lang];
+    if ((params.get("theme") || "").toLowerCase() === "dark") {
+      document.documentElement.classList.add("dark");
     }
 
-    const extraText = extras.length ? ` / ${extras.join(' / ')}` : '';
+    const els = {
+      brandTitle: document.getElementById("brand-title"),
+      brandSubtitle: document.getElementById("brand-subtitle"),
+      heroEyebrow: document.getElementById("hero-eyebrow"),
+      heroTitle: document.getElementById("hero-title"),
+      heroDescription: document.getElementById("hero-description"),
+      heroPill1: document.getElementById("hero-pill-1"),
+      heroPill2: document.getElementById("hero-pill-2"),
+      heroPill3: document.getElementById("hero-pill-3"),
+      asideTitle: document.getElementById("aside-title"),
+      asideText: document.getElementById("aside-text"),
+      totalGroups: document.getElementById("total-groups"),
+      totalModels: document.getElementById("total-models"),
+      totalPlatforms: document.getElementById("total-platforms"),
+      totalVisible: document.getElementById("total-visible"),
+      labelTotalGroups: document.getElementById("label-total-groups"),
+      labelTotalModels: document.getElementById("label-total-models"),
+      labelTotalPlatforms: document.getElementById("label-total-platforms"),
+      labelTotalVisible: document.getElementById("label-total-visible"),
+      filtersTitle: document.getElementById("filters-title"),
+      resetBtn: document.getElementById("reset-btn"),
+      searchLabel: document.getElementById("search-label"),
+      searchInput: document.getElementById("search-input"),
+      platformLabel: document.getElementById("platform-label"),
+      platformFilter: document.getElementById("platform-filter"),
+      groupLabel: document.getElementById("group-label"),
+      groupFilter: document.getElementById("group-filter"),
+      tagLabel: document.getElementById("tag-label"),
+      tagFilter: document.getElementById("tag-filter"),
+      statVisibleGroups: document.getElementById("visible-groups"),
+      statVisibleModels: document.getElementById("visible-models"),
+      statVisiblePlatforms: document.getElementById("visible-platforms"),
+      statVisibleGroupsLabel: document.getElementById("visible-groups-label"),
+      statVisibleModelsLabel: document.getElementById("visible-models-label"),
+      statVisiblePlatformsLabel: document.getElementById("visible-platforms-label"),
+      summaryGroups: document.getElementById("summary-groups"),
+      summaryModels: document.getElementById("summary-models"),
+      summaryPlatforms: document.getElementById("summary-platforms"),
+      summaryGroupsTitle: document.getElementById("summary-groups-title"),
+      summaryGroupsText: document.getElementById("summary-groups-text"),
+      summaryModelsTitle: document.getElementById("summary-models-title"),
+      summaryModelsText: document.getElementById("summary-models-text"),
+      summaryPlatformsTitle: document.getElementById("summary-platforms-title"),
+      summaryPlatformsText: document.getElementById("summary-platforms-text"),
+      loadingCard: document.getElementById("loading-card"),
+      loadingText: document.getElementById("loading-text"),
+      errorCard: document.getElementById("error-card"),
+      errorTitle: document.getElementById("error-title"),
+      errorText: document.getElementById("error-text"),
+      emptyCard: document.getElementById("empty-card"),
+      emptyTitle: document.getElementById("empty-title"),
+      emptyText: document.getElementById("empty-text"),
+      groupList: document.getElementById("group-list"),
+      detailCard: document.getElementById("detail-card"),
+      detailBrand: document.getElementById("detail-brand"),
+      detailTitle: document.getElementById("detail-title"),
+      detailDescription: document.getElementById("detail-description"),
+      detailTags: document.getElementById("detail-tags"),
+      detailPlatformLabel: document.getElementById("detail-platform-label"),
+      detailPlatform: document.getElementById("detail-platform"),
+      detailChannelLabel: document.getElementById("detail-channel-label"),
+      detailChannel: document.getElementById("detail-channel"),
+      detailGroupsLabel: document.getElementById("detail-groups-label"),
+      detailGroups: document.getElementById("detail-groups"),
+      detailMultiplierLabel: document.getElementById("detail-multiplier-label"),
+      detailMultiplier: document.getElementById("detail-multiplier"),
+      copyBtn: document.getElementById("copy-btn"),
+      embedBadge: document.getElementById("embed-badge")
+    };
 
-    return `
-      <div class="pricing-row context">
-        <div class="context-row-header">
-          <span class="context-range">${range.label}</span>
-          <span class="pricing-value">输入 <span class="price">${applyGroupMultiplier(range.input, groupMultiplier).toFixed(2)}</span> / 输出 <span class="price">${applyGroupMultiplier(range.output, groupMultiplier).toFixed(2)}</span>${extraText}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
+    const state = {
+      models: [],
+      selectedModelId: null
+    };
 
-function filterType(type) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
-  filterModels();
-}
+    function applyText() {
+      document.title = t.title;
+      els.brandTitle.textContent = t.title;
+      els.brandSubtitle.textContent = t.subtitle;
+      els.heroEyebrow.textContent = t.eyebrow;
+      els.heroTitle.textContent = t.heroTitle;
+      els.heroDescription.textContent = t.heroDescription;
+      els.heroPill1.textContent = t.pill1;
+      els.heroPill2.textContent = t.pill2;
+      els.heroPill3.textContent = t.pill3;
+      els.asideTitle.textContent = t.asideTitle;
+      els.asideText.textContent = t.asideText;
+      els.labelTotalGroups.textContent = t.totalGroups;
+      els.labelTotalModels.textContent = t.totalModels;
+      els.labelTotalPlatforms.textContent = t.totalPlatforms;
+      els.labelTotalVisible.textContent = t.totalVisible;
+      els.filtersTitle.textContent = t.filtersTitle;
+      els.resetBtn.textContent = t.reset;
+      els.searchLabel.textContent = t.searchLabel;
+      els.searchInput.placeholder = t.searchPlaceholder;
+      els.platformLabel.textContent = t.platformLabel;
+      els.groupLabel.textContent = t.groupLabel;
+      els.tagLabel.textContent = t.tagLabel;
+      els.statVisibleGroupsLabel.textContent = t.visibleGroups;
+      els.statVisibleModelsLabel.textContent = t.visibleModels;
+      els.statVisiblePlatformsLabel.textContent = t.visiblePlatforms;
+      els.summaryGroupsTitle.textContent = t.summaryGroupsTitle;
+      els.summaryGroupsText.textContent = t.summaryGroupsText;
+      els.summaryModelsTitle.textContent = t.summaryModelsTitle;
+      els.summaryModelsText.textContent = t.summaryModelsText;
+      els.summaryPlatformsTitle.textContent = t.summaryPlatformsTitle;
+      els.summaryPlatformsText.textContent = t.summaryPlatformsText;
+      els.loadingText.textContent = t.loading;
+      els.errorTitle.textContent = t.errorTitle;
+      els.errorText.textContent = t.errorText;
+      els.emptyTitle.textContent = t.emptyTitle;
+      els.emptyText.textContent = t.emptyText;
+      els.detailPlatformLabel.textContent = t.detailPlatform;
+      els.detailChannelLabel.textContent = t.detailChannel;
+      els.detailGroupsLabel.textContent = t.detailGroups;
+      els.detailMultiplierLabel.textContent = t.detailMultiplier;
+      els.copyBtn.textContent = t.copy;
 
-function filterModels() {
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  const filteredGroups = configData.groups.map(group => {
-    const filteredModels = group.models.filter(model => {
-      const matchesType = currentFilter === 'all' || model.pricingType === currentFilter;
-      const matchesSearch = !query || 
-        model.name.toLowerCase().includes(query) ||
-        model.id.toLowerCase().includes(query) ||
-        group.brand.toLowerCase().includes(query);
-      return matchesType && matchesSearch;
+      if ((params.get("ui_mode") || "") === "embedded") {
+        els.embedBadge.textContent = t.embed;
+        els.embedBadge.classList.add("visible");
+      }
+    }
+
+    function normalizeModels(models) {
+      return (models || []).map((model, index) => ({
+        id: model.id || `model-${index}`,
+        name: model.name || "Unnamed Model",
+        platform: model.platform || "Other",
+        channel: model.channel || "",
+        groups: Array.isArray(model.groups) && model.groups.length ? model.groups : ["默认分组"],
+        tags: Array.isArray(model.tags) ? model.tags : [],
+        description: model.description || "",
+        multiplier: model.multiplier || "1.00x"
+      }));
+    }
+
+    function buildGroups(models) {
+      const map = new Map();
+      for (const model of models) {
+        for (const groupName of model.groups) {
+          const key = `${groupName}::${model.platform}`;
+          if (!map.has(key)) {
+            map.set(key, {
+              id: key,
+              name: groupName,
+              platform: model.platform,
+              channel: model.channel,
+              models: [],
+              tags: new Set()
+            });
+          }
+          const group = map.get(key);
+          group.models.push(model);
+          model.tags.forEach((tag) => group.tags.add(tag));
+        }
+      }
+
+      return Array.from(map.values())
+        .map((group) => ({
+          ...group,
+          tags: Array.from(group.tags),
+          multiplier:
+            group.models.length === 1
+              ? group.models[0].multiplier
+              : new Set(group.models.map((item) => item.multiplier)).size === 1
+                ? group.models[0].multiplier
+                : (lang === "zh" ? "多倍率" : "Mixed"),
+          description: group.channel
+            ? `${group.channel} ${lang === "zh" ? `下的 ${group.name} ${t.groupCollectionSuffix}` : `${t.groupCollectionSuffix}`}`
+            : `${group.name} ${t.groupCollectionSuffix}`
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function buildOptions(groups) {
+      const platforms = [...new Set(state.models.map((model) => model.platform))].sort();
+      const groupNames = [...new Set(groups.map((group) => group.name))].sort();
+      const tags = [...new Set(state.models.flatMap((model) => model.tags))].sort();
+
+      els.platformFilter.innerHTML = `<option value="all">${t.allPlatforms}</option>` + platforms.map((item) => `<option value="${item}">${item}</option>`).join("");
+      els.groupFilter.innerHTML = `<option value="all">${t.allGroups}</option>` + groupNames.map((item) => `<option value="${item}">${item}</option>`).join("");
+      els.tagFilter.innerHTML = `<option value="all">${t.allTags}</option>` + tags.map((item) => `<option value="${item}">${item}</option>`).join("");
+    }
+
+    function updateGlobalStats(groups) {
+      const platforms = new Set(state.models.map((model) => model.platform));
+      els.totalGroups.textContent = String(groups.length);
+      els.totalModels.textContent = String(state.models.length);
+      els.totalPlatforms.textContent = String(platforms.size);
+    }
+
+    function getFilteredGroups() {
+      const keyword = els.searchInput.value.trim().toLowerCase();
+      const platform = els.platformFilter.value;
+      const groupName = els.groupFilter.value;
+      const tag = els.tagFilter.value;
+      const allGroups = buildGroups(state.models);
+
+      return allGroups
+        .map((group) => {
+          if (platform !== "all" && group.platform !== platform) return null;
+          if (groupName !== "all" && group.name !== groupName) return null;
+
+          const models = group.models.filter((model) => {
+            if (tag !== "all" && !model.tags.includes(tag)) return false;
+            if (!keyword) return true;
+            return [model.name, model.id, model.platform, model.channel, group.name, ...model.tags]
+              .filter(Boolean)
+              .some((value) => String(value).toLowerCase().includes(keyword));
+          });
+
+          if (!models.length) return null;
+
+          return {
+            ...group,
+            models,
+            multiplier:
+              models.length === 1
+                ? models[0].multiplier
+                : new Set(models.map((item) => item.multiplier)).size === 1
+                  ? models[0].multiplier
+                  : (lang === "zh" ? "多倍率" : "Mixed")
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function tagChip(value) {
+      return `<span class="tag-chip">${value}</span>`;
+    }
+
+    function renderDetails(modelId) {
+      const model = state.models.find((item) => item.id === modelId);
+      if (!model) {
+        els.detailCard.classList.add("hidden");
+        return;
+      }
+      state.selectedModelId = modelId;
+      els.detailCard.classList.remove("hidden");
+      els.detailBrand.textContent = model.platform;
+      els.detailTitle.textContent = model.name;
+      els.detailDescription.textContent = model.description;
+      els.detailTags.innerHTML = model.tags.map(tagChip).join("");
+      els.detailPlatform.textContent = model.platform;
+      els.detailChannel.textContent = model.channel || "-";
+      els.detailGroups.textContent = model.groups.join(" / ");
+      els.detailMultiplier.textContent = model.multiplier;
+    }
+
+    function renderGroups() {
+      const groups = getFilteredGroups();
+      const visibleModels = groups.reduce((sum, group) => sum + group.models.length, 0);
+      const visiblePlatforms = new Set(groups.map((group) => group.platform));
+
+      els.totalVisible.textContent = String(visibleModels);
+      els.statVisibleGroups.textContent = String(groups.length);
+      els.statVisibleModels.textContent = String(visibleModels);
+      els.statVisiblePlatforms.textContent = String(visiblePlatforms.size);
+      els.summaryGroups.textContent = String(groups.length);
+      els.summaryModels.textContent = String(visibleModels);
+      els.summaryPlatforms.textContent = String(visiblePlatforms.size);
+
+      els.groupList.hidden = groups.length === 0;
+      els.emptyCard.classList.toggle("hidden", groups.length !== 0);
+
+      els.groupList.innerHTML = groups.map((group) => `
+        <article class="group-card">
+          <div class="group-head">
+            <div>
+              <div class="group-brand">${group.platform}</div>
+              <h3>${group.name}</h3>
+              <p>${group.description}</p>
+              <div class="group-meta">
+                <span class="meta-pill">${group.channel || t.channel}</span>
+                <span class="meta-pill">${group.models.length} ${t.modelsSuffix}</span>
+                <span class="meta-pill">${group.tags.length} ${t.tagsSuffix}</span>
+              </div>
+            </div>
+            <div class="group-multiplier">
+              <span>${t.multiplier}</span>
+              <strong>${group.multiplier}</strong>
+            </div>
+          </div>
+          <div class="model-list">
+            ${group.models.map((model) => `
+              <button class="model-item" type="button" data-model-id="${model.id}">
+                <div class="model-main">
+                  <strong>${model.name}</strong>
+                  <code>${model.id}</code>
+                  <p>${model.description}</p>
+                </div>
+                <div class="tag-row">${model.tags.map(tagChip).join("")}</div>
+                <div class="model-side">
+                  <span class="model-multiplier">${model.multiplier}</span>
+                  <span class="model-arrow">›</span>
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        </article>
+      `).join("");
+
+      els.groupList.querySelectorAll("[data-model-id]").forEach((button) => {
+        button.addEventListener("click", () => renderDetails(button.getAttribute("data-model-id")));
+      });
+
+      if (state.selectedModelId) {
+        renderDetails(state.selectedModelId);
+      } else if (groups[0]?.models[0]) {
+        renderDetails(groups[0].models[0].id);
+      }
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch("./model-marketplace-data.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        state.models = normalizeModels(payload.models);
+
+        if (payload.meta) {
+          els.brandTitle.textContent = payload.meta.site_name || t.title;
+          els.brandSubtitle.textContent = payload.meta.site_subtitle || t.subtitle;
+          els.heroTitle.textContent = payload.meta.hero_headline || t.heroTitle;
+          els.heroDescription.textContent = payload.meta.hero_description || t.heroDescription;
+          els.heroPill1.textContent = payload.meta.pill_one || t.pill1;
+          els.heroPill2.textContent = payload.meta.pill_two || t.pill2;
+          els.heroPill3.textContent = payload.meta.pill_three || t.pill3;
+        }
+
+        const groups = buildGroups(state.models);
+        buildOptions(groups);
+        updateGlobalStats(groups);
+        renderGroups();
+
+        els.loadingCard.classList.add("hidden");
+        els.groupList.hidden = false;
+      } catch (error) {
+        console.error(error);
+        els.loadingCard.classList.add("hidden");
+        els.errorCard.classList.remove("hidden");
+      }
+    }
+
+    function resetFilters() {
+      els.searchInput.value = "";
+      els.platformFilter.value = "all";
+      els.groupFilter.value = "all";
+      els.tagFilter.value = "all";
+      renderGroups();
+    }
+
+    els.searchInput.addEventListener("input", renderGroups);
+    els.platformFilter.addEventListener("change", renderGroups);
+    els.groupFilter.addEventListener("change", renderGroups);
+    els.tagFilter.addEventListener("change", renderGroups);
+    els.resetBtn.addEventListener("click", resetFilters);
+    els.copyBtn.addEventListener("click", async () => {
+      const model = state.models.find((item) => item.id === state.selectedModelId);
+      if (!model) return;
+      try {
+        await navigator.clipboard.writeText(model.name);
+        els.copyBtn.textContent = t.copied;
+        setTimeout(() => {
+          els.copyBtn.textContent = t.copy;
+        }, 1200);
+      } catch (error) {
+        console.error(error);
+      }
     });
-    return { ...group, models: filteredModels };
-  }).filter(group => group.models.length > 0);
-  
-  renderContent(filteredGroups);
-}
 
-document.addEventListener('DOMContentLoaded', loadConfig);
-</script>
+    applyText();
+    loadData();
+  </script>
 </body>
 </html>
