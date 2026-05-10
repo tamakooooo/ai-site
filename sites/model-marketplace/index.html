@@ -662,7 +662,7 @@
       <div class="page-header">
         <div class="eyebrow">BROWSE MODELS</div>
         <h1 class="page-title">模型广场</h1>
-        <p class="page-desc" id="pageDesc">按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。价格单位为 <span class="unit-tag" id="unitTag">推理积分</span></p>
+        <p class="page-desc" id="pageDesc">按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。价格单位为 <span class="unit-tag" id="unitTag">美元</span></p>
       </div>
 
       <!-- Stats -->
@@ -719,6 +719,10 @@ function goHome() {
   window.location.href = '/ai-site/sites/homepage/';
 }
 
+function getUnitLabel() {
+  return configData?.unit || '美元';
+}
+
 async function loadConfig() {
   try {
     const response = await fetch('config.json');
@@ -734,7 +738,7 @@ async function loadConfig() {
 
 function renderPage() {
   document.getElementById('pageDesc').innerHTML = (configData.description || '按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。') + 
-    ` 价格单位为 <span class="unit-tag">${configData.unit || '推理积分'}</span>`;
+    ` 价格单位为 <span class="unit-tag">${getUnitLabel()}</span>`;
   
   const totalModels = configData.groups?.reduce((sum, g) => sum + (g.models?.length || 0), 0) || 0;
   const totalBrands = new Set(configData.groups?.map(g => g.brand)).size || 0;
@@ -804,6 +808,7 @@ function renderModelCard(model, group) {
 }
 
 function renderTokenPricing(pricing, groupMultiplier = 1) {
+  const unitLabel = getUnitLabel();
   const rows = [
     { label: '输入', value: pricing.input, color: '#3b82f6' },
     { label: '输出', value: pricing.output, color: '#8b5cf6' }
@@ -819,7 +824,7 @@ function renderTokenPricing(pricing, groupMultiplier = 1) {
   return rows.map(row => `
     <div class="pricing-row">
       <div class="pricing-label"><span class="pricing-label-dot" style="background: ${row.color};"></span>${row.label}</div>
-      <div class="pricing-value"><span class="price">${applyGroupMultiplier(row.value, groupMultiplier).toFixed(2)}</span> 推理积分 / 1M Token</div>
+      <div class="pricing-value"><span class="price">${applyGroupMultiplier(row.value, groupMultiplier).toFixed(2)}</span> ${unitLabel} / 1M Token</div>
     </div>
   `).join('');
 }

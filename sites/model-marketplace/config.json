@@ -1,7 +1,7 @@
 {
   "title": "模型广场",
   "description": "按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。",
-  "unit": "推理积分",
+  "unit": "美元",
   "groups": [
     {
       "brand": "OpenAI",
