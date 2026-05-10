@@ -538,6 +538,24 @@
       color: var(--accent);
     }
 
+    .feature-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .feature-tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--accent) 8%, white);
+      color: var(--accent-strong);
+      border: 1px solid color-mix(in oklch, var(--accent) 18%, transparent);
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
     /* Loading */
     .loading {
       text-align: center;
@@ -712,6 +730,9 @@ function renderContent(groups) {
 function renderModelCard(model) {
   const isToken = model.pricingType === 'token';
   const pricingHTML = isToken ? renderTokenPricing(model.pricing) : renderContextPricing(model.pricing);
+  const featureHTML = model.features?.length
+    ? `<div class="feature-tags">${model.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}</div>`
+    : '';
   
   return `
     <div class="model-card" data-type="${model.pricingType}" data-name="${(model.name + ' ' + model.id + ' ' + model.group?.brand).toLowerCase()}">
@@ -723,36 +744,53 @@ function renderModelCard(model) {
         <span class="pricing-badge ${isToken ? 'token' : 'context'}">${model.pricingLabel}</span>
       </div>
       <div class="pricing-rows">${pricingHTML}</div>
-      <div class="view-details" onclick="viewDetails('${model.id}')">
-        <span>◉</span>
-        <span>查看详细定价</span>
-      </div>
+      ${featureHTML}
     </div>
   `;
 }
 
 function renderTokenPricing(pricing) {
-  return `
+  const rows = [
+    { label: '输入', value: pricing.input, color: '#3b82f6' },
+    { label: '输出', value: pricing.output, color: '#8b5cf6' }
+  ];
+
+  if (typeof pricing.cacheRead === 'number') {
+    rows.push({ label: '缓存读取', value: pricing.cacheRead, color: '#10b981' });
+  }
+  if (typeof pricing.cacheWrite === 'number') {
+    rows.push({ label: '缓存写入', value: pricing.cacheWrite, color: '#f59e0b' });
+  }
+
+  return rows.map(row => `
     <div class="pricing-row">
-      <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
-      <div class="pricing-value"><span class="price">${pricing.input.toFixed(2)}</span> 推理积分 / 1M Token</div>
+      <div class="pricing-label"><span class="pricing-label-dot" style="background: ${row.color};"></span>${row.label}</div>
+      <div class="pricing-value"><span class="price">${row.value.toFixed(2)}</span> 推理积分 / 1M Token</div>
     </div>
-    <div class="pricing-row">
-      <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
-      <div class="pricing-value"><span class="price">${pricing.output.toFixed(2)}</span> 推理积分 / 1M Token</div>
-    </div>
-  `;
+  `).join('');
 }
 
 function renderContextPricing(pricing) {
-  return pricing.ranges.map(range => `
-    <div class="pricing-row context">
-      <div class="context-row-header">
-        <span class="context-range">${range.label}</span>
-        <span class="pricing-value">输入 <span class="price">${range.input.toFixed(2)}</span> / 输出 <span class="price">${range.output.toFixed(2)}</span></span>
+  return pricing.ranges.map(range => {
+    const extras = [];
+    if (typeof range.cacheRead === 'number') {
+      extras.push(`缓存读取 <span class="price">${range.cacheRead.toFixed(2)}</span>`);
+    }
+    if (typeof range.cacheWrite === 'number') {
+      extras.push(`缓存写入 <span class="price">${range.cacheWrite.toFixed(2)}</span>`);
+    }
+
+    const extraText = extras.length ? ` / ${extras.join(' / ')}` : '';
+
+    return `
+      <div class="pricing-row context">
+        <div class="context-row-header">
+          <span class="context-range">${range.label}</span>
+          <span class="pricing-value">输入 <span class="price">${range.input.toFixed(2)}</span> / 输出 <span class="price">${range.output.toFixed(2)}</span>${extraText}</span>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function filterType(type) {
@@ -777,10 +815,6 @@ function filterModels() {
   }).filter(group => group.models.length > 0);
   
   renderContent(filteredGroups);
-}
-
-function viewDetails(modelId) {
-  console.log('查看模型详情:', modelId);
 }
 
 document.addEventListener('DOMContentLoaded', loadConfig);
