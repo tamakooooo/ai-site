@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>面包 AI | AI 中转站</title>
+  <meta name="description" content="面包 AI 提供统一的 AI 接入入口，连接 Claude、GPT、Gemini 与更多模型。">
+  <style>
+    :root {
+      --bg: #fcf8f3;
+      --surface: rgba(255, 255, 255, 0.78);
+      --surface-strong: #fffaf4;
+      --fg: #2f1d10;
+      --muted: #7b5b45;
+      --line: rgba(184, 108, 31, 0.16);
+      --accent: #f28c28;
+      --accent-strong: #d86512;
+      --shadow: 0 22px 64px rgba(216, 101, 18, 0.18);
+      --radius: 28px;
+      --max: 1180px;
+      --font-display: "Iowan Old Style", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--fg);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(circle at top left, rgba(242, 140, 40, 0.14) 0, transparent 32%),
+        radial-gradient(circle at bottom right, rgba(216, 101, 18, 0.1) 0, transparent 28%),
+        linear-gradient(180deg, #fefcf8 0%, var(--bg) 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(252, 248, 243, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 74px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+      padding: 0;
+      flex: none;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 72px;
+      padding-top: 8px;
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .btn-hero-primary {
+      min-height: 78px;
+      padding: 0 48px;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 22px 46px rgba(216, 101, 18, 0.34);
+    }
+
+    .btn-hero-secondary {
+      min-height: 78px;
+      padding: 0 48px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 12px 28px rgba(216, 101, 18, 0.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(216, 101, 18, 0.26);
+      color: #9a4d12;
+      box-shadow: 0 10px 24px rgba(184, 108, 31, 0.08);
+    }
+
+    .hero {
+      padding: 56px 0 36px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-strong);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    h1 {
+      margin: 22px 0 0;
+      max-width: 10.5em;
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 90px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      margin: 28px 0 0;
+      max-width: 34em;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 20px);
+      line-height: 1.92;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 36px;
+    }
+
+    .feature-card,
+    .panel,
+    .cta {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      padding: 28px;
+      border-radius: 36px;
+      background:
+        linear-gradient(145deg, rgba(242, 140, 40, 0.92), rgba(216, 101, 18, 0.96)),
+        linear-gradient(180deg, #fff, #fff);
+      color: #fff8f0;
+      box-shadow: 0 28px 70px rgba(216, 101, 18, 0.24);
+    }
+
+    .hero-visual::before,
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      filter: blur(2px);
+    }
+
+    .hero-visual::before {
+      top: -80px;
+      right: -40px;
+      width: 240px;
+      height: 240px;
+    }
+
+    .hero-visual::after {
+      bottom: -60px;
+      left: -30px;
+      width: 220px;
+      height: 220px;
+    }
+
+    .visual-chip,
+    .visual-panel {
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 24px;
+      background: rgba(255, 248, 240, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .visual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .visual-panel {
+      margin-top: 22px;
+      padding: 20px;
+    }
+
+    .visual-panel strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .visual-panel p,
+    .visual-list li {
+      margin: 0;
+      color: rgba(255, 248, 240, 0.88);
+      line-height: 1.7;
+    }
+
+    .visual-list {
+      margin: 16px 0 0;
+      padding-left: 18px;
+    }
+
+    .section {
+      padding: 26px 0 44px;
+    }
+
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .section-head small {
+      color: var(--accent-strong);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 22px;
+    }
+
+    .feature-card h3,
+    .panel h3,
+    .cta h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .feature-card p,
+    .panel p,
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .flow {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .flow li { margin-top: 12px; line-height: 1.7; }
+
+    .cta-wrap {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 18px;
+    }
+
+    .cta {
+      padding: 24px;
+      background: var(--surface-strong);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .contact-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 12px 30px rgba(184, 108, 31, 0.08);
+    }
+
+    .contact-card strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .qr-placeholder {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px dashed rgba(216, 101, 18, 0.28);
+      background:
+        linear-gradient(135deg, rgba(242, 140, 40, 0.06), rgba(216, 101, 18, 0.08)),
+        #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.7;
+      padding: 14px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(216, 101, 18, 0.12);
+    }
+
+    .contact-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9a4d12;
+    }
+
+    .contact-item span {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer {
+      padding: 18px 0 36px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .route-grid,
+      .cta-wrap,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual { min-height: 420px; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: min(calc(100% - 24px), var(--max)); }
+      .header-row,
+      .footer-row { align-items: flex-start; flex-direction: column; }
+      .header-actions { justify-content: flex-start; }
+      .hero { padding-top: 36px; }
+      .btn { width: 100%; }
+      .hero-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-row">
+      <a class="brand" href="#top" aria-label="面包 AI 首页">
+        <img class="brand-mark" src="./logo.png" alt="面包 AI Logo">
+        <div class="brand-copy">
+          <strong>面包 AI</strong>
+          <span>AI Gateway</span>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">AI Gateway For Builders</div>
+          <h1>一个入口，连接主流 AI 模型。</h1>
+          <p>面包 AI 提供更稳定、更优雅的统一接入体验，让 Claude、GPT、Gemini 与更多模型在同一条路径中协同工作。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-hero-primary js-register-link" href="#start">立即注册</a>
+            <a class="btn btn-secondary btn-hero-secondary" href="#features">使用教程</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="visual-chip">Claude / GPT / Gemini / DeepSeek</div>
+          <div class="visual-panel">
+            <strong>Route Policy</strong>
+            <p>我们希望把复杂的模型接入体验，整理成一种更克制、更可靠的产品秩序。不是让你面对一面堆满参数的墙，而是让 AI 能力以更自然的方式进入真实工作流。</p>
+            <ul class="visual-list">
+              <li>统一接入主流模型能力</li>
+              <li>保留熟悉的 API 调用习惯</li>
+              <li>更适合长期维护与团队协作</li>
+            </ul>
+          </div>
+          <div class="visual-panel">
+            <strong>Usage Scenario</strong>
+            <p>适合 AI 产品原型、代码辅助、内容生产、团队内部工具，以及企业正式接入前的验证与试跑阶段。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="shell">
+        <div class="section-head">
+          <small>Core Capabilities</small>
+          <h2>把接入、调用和管理，做得更简单一点。</h2>
+          <p>这些是 AI 中转站最常用的核心能力。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>一键接入</h3>
+            <p>获取一个 API Key，即可调用已接入的主流模型，减少重复申请与多平台切换。</p>
+          </article>
+          <article class="feature-card">
+            <h3>稳定可靠</h3>
+            <p>支持多模型统一接入与灵活切换，让调用链路更稳，也让日常开发与试跑更顺手。</p>
+          </article>
+          <article class="feature-card">
+            <h3>按量计费</h3>
+            <p>按实际使用量计费，适合个人开发、团队协作与持续增长中的多模型使用场景。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="routes">
+      <div class="shell route-grid">
+        <article class="panel">
+          <div class="section-head">
+            <small>How It Works</small>
+            <h2>从注册到调用，把接入过程缩短到三步。</h2>
+          </div>
+          <ol class="flow">
+            <li>创建账号并获取 API Key。</li>
+            <li>替换 Base URL，接入现有项目。</li>
+            <li>选择模型并开始调用。</li>
+          </ol>
+        </article>
+        <article class="panel">
+          <div class="section-head">
+            <small>Control & Safety</small>
+            <h2>统一管理模型与额度。</h2>
+          </div>
+          <p>一个 Key 即可调用语言、图片、视频等各种大模型，把模型、额度和访问范围统一收口，让接入更简单，管理也更省心。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="shell cta-wrap">
+        <article class="cta">
+          <h3>社群联系</h3>
+          <p>社群入口正在建设中，QQ 群与微信群二维码将于后续开放，敬请期待。</p>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <strong>QQ群二维码</strong>
+              <div class="qr-placeholder">正在建设中<br>敬请期待</div>
+            </div>
+            <div class="contact-card">
+              <strong>微信群二维码</strong>
+              <div class="qr-placeholder">正在建设中<br>敬请期待</div>
+            </div>
+          </div>
+        </article>
+        <article class="cta">
+          <h3>直接联系</h3>
+          <p>联系方式模块正在完善中，后续将开放更完整的联系渠道与服务支持。</p>
+          <div class="contact-list">
+            <div class="contact-item">
+              <strong>QQ</strong>
+              <span>正在建设中</span>
+            </div>
+            <div class="contact-item">
+              <strong>微信</strong>
+              <span>正在建设中</span>
+            </div>
+            <div class="contact-item">
+              <strong>其他同事微信</strong>
+              <span>正在建设中</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-row">
+      <div class="brand">
+        <img class="brand-mark" src="./logo.png" alt="面包 AI Logo">
+        <div class="brand-copy">
+          <strong>面包 AI</strong>
+          <span>AI Gateway</span>
+        </div>
+      </div>
+      <div class="footer-note">AI 中转站，智能连接更多可能。部署到 Cloudflare Pages 后，可直接作为 sub2api 的 iframe 首页使用。</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const links = document.querySelectorAll('.js-register-link');
+      let origin = '';
+
+      if (document.referrer) {
+        try {
+          origin = new URL(document.referrer).origin;
+        } catch (error) {
+          origin = '';
+        }
+      }
+
+      if (!origin) return;
+
+      links.forEach((link) => {
+        link.href = origin + '/register';
+        link.target = '_top';
+        link.rel = 'noopener';
+      });
+    })();
+  </script>
+</body>
+</html>

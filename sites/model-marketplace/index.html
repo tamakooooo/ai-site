@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模型广场</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8fafc;
+        --bg-accent: rgba(20, 184, 166, 0.1);
+        --panel: rgba(255, 255, 255, 0.72);
+        --panel-strong: rgba(255, 255, 255, 0.84);
+        --panel-border: rgba(229, 231, 235, 0.6);
+        --text: #111827;
+        --text-soft: #4b5563;
+        --text-faint: #6b7280;
+        --primary: #14b8a6;
+        --primary-strong: #0f766e;
+        --primary-soft: rgba(20, 184, 166, 0.14);
+        --shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+        --shadow-soft: 0 14px 34px rgba(15, 23, 42, 0.06);
+        --ring: rgba(20, 184, 166, 0.24);
+        --hero-grid: rgba(20, 184, 166, 0.03);
+      }
+
+      :root.dark {
+        color-scheme: dark;
+        --bg: #020617;
+        --bg-accent: rgba(45, 212, 191, 0.08);
+        --panel: rgba(15, 23, 42, 0.78);
+        --panel-strong: rgba(15, 23, 42, 0.9);
+        --panel-border: rgba(51, 65, 85, 0.58);
+        --text: #f8fafc;
+        --text-soft: #d1d5db;
+        --text-faint: #94a3b8;
+        --primary: #2dd4bf;
+        --primary-strong: #5eead4;
+        --primary-soft: rgba(45, 212, 191, 0.14);
+        --shadow: 0 28px 72px rgba(2, 6, 23, 0.45);
+        --shadow-soft: 0 14px 36px rgba(2, 6, 23, 0.32);
+        --ring: rgba(45, 212, 191, 0.22);
+        --hero-grid: rgba(45, 212, 191, 0.05);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background:
+          radial-gradient(circle at top right, var(--bg-accent), transparent 32%),
+          radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.05), transparent 30%),
+          linear-gradient(135deg, #f9fafb 0%, #f5fbfa 42%, #f3f4f6 100%);
+        color: var(--text);
+      }
+
+      .dark body {
+        background:
+          radial-gradient(circle at top right, var(--bg-accent), transparent 32%),
+          radial-gradient(circle at bottom left, rgba(45, 212, 191, 0.04), transparent 30%),
+          linear-gradient(135deg, #020617 0%, #0b1120 42%, #020617 100%);
+      }
+
+      body {
+        padding: 24px;
+      }
+
+      .shell {
+        position: relative;
+        min-height: calc(100vh - 48px);
+        overflow: hidden;
+        border: 1px solid var(--panel-border);
+        border-radius: 28px;
+        background:
+          linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, transparent), var(--panel)),
+          linear-gradient(var(--hero-grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px);
+        background-size: auto, 64px 64px, 64px 64px;
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
+      }
+
+      .shell::before,
+      .shell::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        width: 420px;
+        height: 420px;
+        border-radius: 999px;
+        filter: blur(72px);
+        opacity: 0.58;
+        pointer-events: none;
+      }
+
+      .shell::before {
+        top: -140px;
+        right: -100px;
+        background: rgba(20, 184, 166, 0.2);
+      }
+
+      .shell::after {
+        bottom: -180px;
+        left: -140px;
+        background: rgba(45, 212, 191, 0.12);
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        padding: 28px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(20, 184, 166, 0.04));
+        box-shadow: 0 8px 20px rgba(20, 184, 166, 0.2);
+      }
+
+      .brand-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .brand-kicker {
+        margin: 0 0 4px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+      }
+
+      .brand-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .brand-subtitle {
+        margin: 4px 0 0;
+        color: var(--text-faint);
+        font-size: 13px;
+      }
+
+      .embed-badge {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--text-soft);
+        font-size: 13px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .dark .embed-badge {
+        background: rgba(15, 23, 42, 0.84);
+      }
+
+      .embed-badge.is-visible {
+        display: inline-flex;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .hero-card,
+      .stats-card,
+      .toolbar,
+      .empty-state,
+      .notice,
+      .card {
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        background: var(--panel);
+        backdrop-filter: blur(16px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .hero-card {
+        padding: 28px;
+      }
+
+      .hero-headline {
+        margin: 0 0 14px;
+        font-size: clamp(32px, 4vw, 52px);
+        line-height: 1.04;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-desc {
+        margin: 0;
+        max-width: 760px;
+        font-size: 16px;
+        line-height: 1.8;
+        color: var(--text-soft);
+      }
+
+      .hero-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 15px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid var(--panel-border);
+        color: var(--text-soft);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .hero-pill-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), #60a5fa);
+      }
+
+      .stats-card {
+        padding: 22px;
+        display: grid;
+        gap: 16px;
+        align-content: start;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .stat-block {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.68);
+        border: 1px solid var(--panel-border);
+      }
+
+      .dark .stat-block {
+        background: rgba(15, 23, 42, 0.52);
+      }
+
+      .stat-value {
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .stat-label {
+        margin-top: 6px;
+        color: var(--text-faint);
+        font-size: 12px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(160px, 0.35fr));
+        gap: 14px;
+        padding: 18px;
+        margin-bottom: 22px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      .field-label {
+        color: var(--text-faint);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+
+      .input,
+      .select {
+        width: 100%;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--text);
+        border-radius: 16px;
+        padding: 14px 16px;
+        font-size: 14px;
+        outline: none;
+        transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+      }
+
+      .dark .input,
+      .dark .select {
+        background: rgba(15, 23, 42, 0.74);
+      }
+
+      .input:focus,
+      .select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--ring);
+        transform: translateY(-1px);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        position: relative;
+        padding: 22px;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: auto -42px -68px auto;
+        width: 160px;
+        height: 160px;
+        border-radius: 999px;
+        opacity: 0.12;
+        background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+        filter: blur(18px);
+      }
+
+      .card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .platform-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        background: var(--primary-soft);
+        color: var(--primary-strong);
+      }
+
+      .model-name {
+        margin: 0;
+        font-size: 24px;
+        letter-spacing: -0.03em;
+      }
+
+      .model-summary {
+        margin: 0 0 18px;
+        color: var(--text-soft);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .chip-row,
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--text-soft);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .dark .chip {
+        background: rgba(15, 23, 42, 0.54);
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .meta-item {
+        padding: 14px;
+        border-radius: 18px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.62);
+      }
+
+      .dark .meta-item {
+        background: rgba(15, 23, 42, 0.52);
+      }
+
+      .meta-label {
+        font-size: 12px;
+        color: var(--text-faint);
+        margin-bottom: 8px;
+      }
+
+      .meta-value {
+        font-size: 15px;
+        color: var(--text);
+        line-height: 1.55;
+        word-break: break-word;
+      }
+
+      .copy-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 18px;
+        width: 100%;
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.74);
+        color: var(--text-soft);
+        border-radius: 18px;
+        padding: 13px 16px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      }
+
+      .dark .copy-button {
+        background: rgba(15, 23, 42, 0.66);
+      }
+
+      .copy-button:hover {
+        transform: translateY(-1px);
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.98);
+      }
+
+      .dark .copy-button:hover {
+        background: rgba(15, 23, 42, 0.88);
+      }
+
+      .empty-state,
+      .notice {
+        padding: 28px;
+        text-align: center;
+      }
+
+      .empty-state {
+        display: none;
+      }
+
+      .empty-state.is-visible {
+        display: block;
+      }
+
+      .notice {
+        margin-bottom: 18px;
+      }
+
+      .notice.is-hidden {
+        display: none;
+      }
+
+      .notice-title,
+      .empty-title {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .notice-text,
+      .empty-text {
+        margin: 0;
+        color: var(--text-soft);
+        line-height: 1.75;
+      }
+
+      .footer-note {
+        margin-top: 24px;
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--panel-border);
+        color: var(--text-faint);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .dark .footer-note {
+        background: rgba(15, 23, 42, 0.48);
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 280px;
+        color: var(--text-soft);
+        gap: 12px;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--panel-border);
+        border-top-color: var(--primary);
+        animation: spin 0.9s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1200px) {
+        .hero,
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        body {
+          padding: 0;
+        }
+
+        .shell {
+          min-height: 100vh;
+          border-radius: 0;
+          border-left: 0;
+          border-right: 0;
+        }
+
+        .content {
+          padding: 18px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .cards,
+        .stats-grid,
+        .meta-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="content">
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand-logo">
+              <img id="site-logo" src="/logo.png" alt="Logo" />
+            </div>
+            <div>
+              <p class="brand-kicker" id="brand-kicker">Model Marketplace</p>
+              <h1 class="brand-title" id="brand-title">模型广场</h1>
+          <p class="brand-subtitle" id="brand-subtitle">统一查看当前可用模型、平台与倍率信息</p>
+            </div>
+          </div>
+          <div class="embed-badge" id="embed-badge">嵌入模式</div>
+        </header>
+
+        <section class="hero">
+          <article class="hero-card">
+            <h2 class="hero-headline" id="hero-headline">把常用模型整理成一个真正清爽好找的模型广场</h2>
+            <p class="hero-desc" id="hero-desc">
+              这个页面采用纯静态数据驱动，不依赖登录态和接口权限。后面你只需要维护每个模型的倍率，就能快速更新给用户看的模型目录。
+            </p>
+            <div class="hero-pills">
+              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-one">纯静态页面，嵌入最省事</span></div>
+              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-two">维护时只改倍率字段</span></div>
+              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-three">适合放进自定义菜单当展示页</span></div>
+            </div>
+          </article>
+
+          <aside class="stats-card">
+            <div class="stats-grid">
+              <div class="stat-block">
+                <div class="stat-value" id="stat-models">--</div>
+                <div class="stat-label" id="stat-models-label">模型数量</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-value" id="stat-platforms">--</div>
+                <div class="stat-label" id="stat-platforms-label">平台数量</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-value" id="stat-channels">--</div>
+                <div class="stat-label" id="stat-channels-label">渠道数量</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-value" id="stat-groups">--</div>
+                <div class="stat-label" id="stat-groups-label">分组数量</div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="notice is-hidden" id="notice">
+          <h3 class="notice-title" id="notice-title">需要通过自定义菜单打开</h3>
+          <p class="notice-text" id="notice-text">这个页面使用静态数据文件，不依赖用户登录态。你只需要在 `model-marketplace-data.json` 里维护模型倍率，就能更新展示内容。</p>
+        </section>
+
+        <section class="toolbar">
+          <label class="field">
+            <span class="field-label" id="search-label">搜索</span>
+            <input class="input" id="search-input" type="search" placeholder="搜索模型名、平台、渠道、分组、标签" />
+          </label>
+          <label class="field">
+            <span class="field-label" id="platform-label">平台筛选</span>
+            <select class="select" id="platform-filter">
+              <option value="">全部平台</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label" id="group-label">分组筛选</span>
+            <select class="select" id="group-filter">
+              <option value="">全部分组</option>
+            </select>
+          </label>
+        </section>
+
+        <div class="loading" id="loading">
+          <span class="spinner"></span>
+          <span id="loading-text">正在加载模型列表...</span>
+        </div>
+
+        <section class="cards" id="cards" hidden></section>
+
+        <section class="empty-state" id="empty-state">
+          <h3 class="empty-title" id="empty-title">没有找到匹配的模型</h3>
+          <p class="empty-text" id="empty-text">可以试试更换搜索词，或者把平台与分组筛选切回“全部”。</p>
+        </section>
+
+        <footer class="footer-note" id="footer-note">
+          这个页面的数据来自同目录下的 `model-marketplace-data.json`。如果你后面只想调整展示价格，直接改每个模型的 `multiplier` 字段即可，不需要动页面结构。
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const STRINGS = {
+        zh: {
+          pageTitle: "模型广场",
+          brandKicker: "Model Marketplace",
+          brandTitle: "模型广场",
+          brandSubtitle: "统一查看当前可用模型、平台与倍率信息",
+          heroHeadline: "把常用模型整理成一个真正清爽好找的模型广场",
+          heroDesc:
+            "这个页面采用纯静态数据驱动，不依赖登录态和接口权限。后面你只需要维护每个模型的倍率，就能快速更新给用户看的模型目录。",
+          pillOne: "纯静态页面，嵌入最省事",
+          pillTwo: "维护时只改倍率字段",
+          pillThree: "适合放进自定义菜单当展示页",
+          statModels: "模型数量",
+          statPlatforms: "平台数量",
+          statChannels: "渠道数量",
+          statGroups: "分组数量",
+          noticeTitle: "需要通过自定义菜单打开",
+          noticeText:
+            "这个页面使用静态数据文件，不依赖用户登录态。你只需要在 `model-marketplace-data.json` 里维护模型倍率，就能更新展示内容。",
+          searchLabel: "搜索",
+          searchPlaceholder: "搜索模型名、平台、渠道、分组、标签",
+          platformLabel: "平台筛选",
+          groupLabel: "分组筛选",
+          allPlatforms: "全部平台",
+          allGroups: "全部分组",
+          loading: "正在加载模型列表...",
+          emptyTitle: "没有找到匹配的模型",
+          emptyText: "可以试试更换搜索词，或者把平台与分组筛选切回“全部”。",
+          footerNote:
+            "这个页面的数据来自同目录下的 `model-marketplace-data.json`。如果你后面只想调整展示价格，直接改每个模型的 `multiplier` 字段即可，不需要动页面结构。",
+          copyModel: "复制模型名",
+          copied: "已复制",
+          channel: "渠道",
+          groups: "分组",
+          billing: "计费说明",
+          pricing: "倍率",
+          noDescription: "当前没有额外说明，这个模型会沿用渠道与分组权限控制。",
+          noPricing: "未配置",
+          tokenBilling: "按倍率展示",
+          requestBilling: "按倍率展示",
+          tieredBilling: "按倍率展示",
+          embedMode: "嵌入模式",
+          authRequired: "静态模型页",
+          authHint: "这是一个纯静态的模型展示页，适合直接嵌入自定义菜单使用。",
+          tieredPriceHint: "请查看倍率配置",
+          mixedPriceHint: "请查看倍率配置",
+        },
+        en: {
+          pageTitle: "Model Marketplace",
+          brandKicker: "Model Marketplace",
+          brandTitle: "Model Marketplace",
+          brandSubtitle: "Browse available models, platforms, and multipliers in one place",
+          heroHeadline: "Turn your common models into a clean marketplace-style catalog",
+          heroDesc:
+            "This page is powered by a static data file and does not depend on login state or permission APIs. To update what users see, you only need to edit each model's multiplier value.",
+          pillOne: "Static page, easiest to embed",
+          pillTwo: "Maintain only the multiplier field",
+          pillThree: "Great fit for a custom menu showcase page",
+          statModels: "Models",
+          statPlatforms: "Platforms",
+          statChannels: "Channels",
+          statGroups: "Groups",
+          noticeTitle: "Open this from the custom menu",
+          noticeText:
+            "This page uses a static data file and does not depend on login state. Update model visibility by editing the multiplier values inside `model-marketplace-data.json`.",
+          searchLabel: "Search",
+          searchPlaceholder: "Search by model, platform, channel, group, or tag",
+          platformLabel: "Platform",
+          groupLabel: "Group",
+          allPlatforms: "All platforms",
+          allGroups: "All groups",
+          loading: "Loading available models...",
+          emptyTitle: "No models match your filters",
+          emptyText: "Try a different keyword or reset the platform and group filters.",
+          footerNote:
+            "The page reads from `model-marketplace-data.json` in the same directory. If you only want to adjust pricing presentation later, edit the `multiplier` field for each model and keep the page untouched.",
+          copyModel: "Copy model name",
+          copied: "Copied",
+          channel: "Channel",
+          groups: "Groups",
+          billing: "Billing note",
+          pricing: "Multiplier",
+          noDescription: "No extra description is configured for this model. Access is still controlled by channel and group permissions.",
+          noPricing: "Not configured",
+          tokenBilling: "Multiplier display",
+          requestBilling: "Multiplier display",
+          tieredBilling: "Multiplier display",
+          embedMode: "Embedded mode",
+          authRequired: "Static model page",
+          authHint: "This is a static showcase page and can be embedded directly through the custom menu.",
+          tieredPriceHint: "See multiplier config",
+          mixedPriceHint: "See multiplier config",
+        },
+      };
+
+      const PLATFORM_ACCENTS = {
+        openai: ["#10b981", "#14b8a6"],
+        anthropic: ["#fb923c", "#f97316"],
+        gemini: ["#60a5fa", "#2563eb"],
+        google: ["#60a5fa", "#2563eb"],
+        antigravity: ["#a78bfa", "#7c3aed"],
+      };
+
+      const state = {
+        strings: STRINGS.zh,
+        models: [],
+        settings: null,
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const lang = (params.get("lang") || "zh").toLowerCase().startsWith("en") ? "en" : "zh";
+      state.strings = STRINGS[lang];
+      const uiMode = params.get("ui_mode") || "";
+      const theme = params.get("theme") || "light";
+
+      const els = {
+        siteLogo: document.getElementById("site-logo"),
+        brandKicker: document.getElementById("brand-kicker"),
+        brandTitle: document.getElementById("brand-title"),
+        brandSubtitle: document.getElementById("brand-subtitle"),
+        embedBadge: document.getElementById("embed-badge"),
+        heroHeadline: document.getElementById("hero-headline"),
+        heroDesc: document.getElementById("hero-desc"),
+        pillOne: document.getElementById("pill-one"),
+        pillTwo: document.getElementById("pill-two"),
+        pillThree: document.getElementById("pill-three"),
+        statModels: document.getElementById("stat-models"),
+        statPlatforms: document.getElementById("stat-platforms"),
+        statChannels: document.getElementById("stat-channels"),
+        statGroups: document.getElementById("stat-groups"),
+        statModelsLabel: document.getElementById("stat-models-label"),
+        statPlatformsLabel: document.getElementById("stat-platforms-label"),
+        statChannelsLabel: document.getElementById("stat-channels-label"),
+        statGroupsLabel: document.getElementById("stat-groups-label"),
+        notice: document.getElementById("notice"),
+        noticeTitle: document.getElementById("notice-title"),
+        noticeText: document.getElementById("notice-text"),
+        searchLabel: document.getElementById("search-label"),
+        searchInput: document.getElementById("search-input"),
+        platformLabel: document.getElementById("platform-label"),
+        platformFilter: document.getElementById("platform-filter"),
+        groupLabel: document.getElementById("group-label"),
+        groupFilter: document.getElementById("group-filter"),
+        loading: document.getElementById("loading"),
+        loadingText: document.getElementById("loading-text"),
+        cards: document.getElementById("cards"),
+        emptyState: document.getElementById("empty-state"),
+        emptyTitle: document.getElementById("empty-title"),
+        emptyText: document.getElementById("empty-text"),
+        footerNote: document.getElementById("footer-note"),
+      };
+
+      function setTheme() {
+        const root = document.documentElement;
+        root.classList.toggle("dark", theme === "dark");
+      }
+
+      function applyStrings() {
+        document.title = state.strings.pageTitle;
+        els.brandKicker.textContent = state.strings.brandKicker;
+        els.brandTitle.textContent = state.strings.brandTitle;
+        els.brandSubtitle.textContent = state.strings.brandSubtitle;
+        els.heroHeadline.textContent = state.strings.heroHeadline;
+        els.heroDesc.textContent = state.strings.heroDesc;
+        els.pillOne.textContent = state.strings.pillOne;
+        els.pillTwo.textContent = state.strings.pillTwo;
+        els.pillThree.textContent = state.strings.pillThree;
+        els.statModelsLabel.textContent = state.strings.statModels;
+        els.statPlatformsLabel.textContent = state.strings.statPlatforms;
+        els.statChannelsLabel.textContent = state.strings.statChannels;
+        els.statGroupsLabel.textContent = state.strings.statGroups;
+        els.noticeTitle.textContent = state.strings.noticeTitle;
+        els.noticeText.textContent = state.strings.noticeText;
+        els.searchLabel.textContent = state.strings.searchLabel;
+        els.searchInput.placeholder = state.strings.searchPlaceholder;
+        els.platformLabel.textContent = state.strings.platformLabel;
+        els.groupLabel.textContent = state.strings.groupLabel;
+        els.loadingText.textContent = state.strings.loading;
+        els.emptyTitle.textContent = state.strings.emptyTitle;
+        els.emptyText.textContent = state.strings.emptyText;
+        els.footerNote.textContent = state.strings.footerNote;
+        els.platformFilter.innerHTML = `<option value="">${state.strings.allPlatforms}</option>`;
+        els.groupFilter.innerHTML = `<option value="">${state.strings.allGroups}</option>`;
+      }
+
+      function updateEmbedBadge() {
+        if (uiMode === "embedded") {
+          els.embedBadge.classList.add("is-visible");
+          els.embedBadge.textContent = state.strings.embedMode;
+        }
+      }
+
+      async function fetchJson(url, options = {}) {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          const message = `HTTP ${response.status}`;
+          throw new Error(message);
+        }
+        return response.json();
+      }
+
+      function getAccent(platform) {
+        const key = String(platform || "").toLowerCase();
+        const [a, b] = PLATFORM_ACCENTS[key] || ["#14b8a6", "#60a5fa"];
+        return { a, b };
+      }
+
+      function billingLabel() {
+        return state.strings.tokenBilling;
+      }
+
+      function describePricing(multiplier) {
+        return multiplier || state.strings.noPricing;
+      }
+
+      function dedupe(values) {
+        return [...new Set(values.filter(Boolean))];
+      }
+
+      function normalizeStaticModels(models) {
+        return (models || [])
+          .map((item) => ({
+            id: item.id || item.name,
+            name: item.name || "-",
+            platform: item.platform || "Other",
+            description: item.description || state.strings.noDescription,
+            channels: dedupe([item.channel, ...(item.channels || [])]),
+            groups: dedupe(item.groups || []),
+            tags: dedupe(item.tags || []),
+            multiplier: item.multiplier || "",
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      function updateStats() {
+        els.statModels.textContent = String(state.models.length);
+        els.statPlatforms.textContent = String(new Set(state.models.map((item) => item.platform)).size);
+        els.statChannels.textContent = String(new Set(state.models.flatMap((item) => item.channels)).size);
+        els.statGroups.textContent = String(new Set(state.models.flatMap((item) => item.groups)).size);
+      }
+
+      function buildFilters() {
+        const platforms = dedupe(state.models.map((item) => item.platform)).sort();
+        const groups = dedupe(state.models.flatMap((item) => item.groups)).sort();
+
+        els.platformFilter.innerHTML = [
+          `<option value="">${state.strings.allPlatforms}</option>`,
+          ...platforms.map((platform) => `<option value="${platform}">${platform}</option>`),
+        ].join("");
+
+        els.groupFilter.innerHTML = [
+          `<option value="">${state.strings.allGroups}</option>`,
+          ...groups.map((group) => `<option value="${group}">${group}</option>`),
+        ].join("");
+      }
+
+      function createChip(text) {
+        return `<span class="chip">${text}</span>`;
+      }
+
+      function renderCards() {
+        const query = els.searchInput.value.trim().toLowerCase();
+        const platform = els.platformFilter.value;
+        const group = els.groupFilter.value;
+
+        const items = state.models.filter((item) => {
+          const matchesQuery =
+            !query ||
+            item.name.toLowerCase().includes(query) ||
+            item.platform.toLowerCase().includes(query) ||
+            item.channels.some((value) => value.toLowerCase().includes(query)) ||
+            item.groups.some((value) => value.toLowerCase().includes(query)) ||
+            item.tags.some((value) => value.toLowerCase().includes(query));
+          const matchesPlatform = !platform || item.platform === platform;
+          const matchesGroup = !group || item.groups.includes(group);
+          return matchesQuery && matchesPlatform && matchesGroup;
+        });
+
+        els.cards.hidden = items.length === 0;
+        els.emptyState.classList.toggle("is-visible", items.length === 0);
+
+        els.cards.innerHTML = items
+          .map((item) => {
+            const accent = getAccent(item.platform);
+            const channels = item.channels.map(createChip).join("");
+            const groups = item.groups.map(createChip).join("");
+            const tags = (item.tags || []).map(createChip).join("");
+            const price = describePricing(item.multiplier);
+            const billing = billingLabel();
+
+            return `
+              <article class="card" style="--accent-a:${accent.a};--accent-b:${accent.b};">
+                <div class="card-head">
+                  <div>
+                    <div class="platform-pill">${item.platform}</div>
+                    <h3 class="model-name">${item.name}</h3>
+                  </div>
+                </div>
+                <p class="model-summary">${item.description || state.strings.noDescription}</p>
+                ${tags ? `<div class="chip-row" style="margin-bottom:18px;">${tags}</div>` : ""}
+                <div class="meta-grid">
+                  <div class="meta-item">
+                    <div class="meta-label">${state.strings.channel}</div>
+                    <div class="meta-row">${channels || createChip("-")}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">${state.strings.groups}</div>
+                    <div class="meta-row">${groups || createChip("-")}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">${state.strings.billing}</div>
+                    <div class="meta-value">${billing}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">${state.strings.pricing}</div>
+                    <div class="meta-value">${price}</div>
+                  </div>
+                </div>
+                <button class="copy-button" data-model="${item.name}">
+                  ${state.strings.copyModel}
+                </button>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function bindCopyActions() {
+        els.cards.addEventListener("click", async (event) => {
+          const button = event.target.closest("[data-model]");
+          if (!button) return;
+          const model = button.getAttribute("data-model");
+          if (!model) return;
+          try {
+            await navigator.clipboard.writeText(model);
+            const original = button.textContent;
+            button.textContent = state.strings.copied;
+            setTimeout(() => {
+              button.textContent = original;
+            }, 1200);
+          } catch (error) {
+            console.error("Copy failed:", error);
+          }
+        });
+      }
+
+      function bindFilters() {
+        [els.searchInput, els.platformFilter, els.groupFilter].forEach((node) => {
+          node.addEventListener("input", renderCards);
+          node.addEventListener("change", renderCards);
+        });
+      }
+
+      async function loadSettings() {
+        try {
+          const payload = await fetchJson("/api/v1/settings/public");
+          const settings = payload.data || payload;
+          state.settings = settings;
+          if (settings.site_logo) {
+            els.siteLogo.src = settings.site_logo;
+          }
+          if (settings.site_name) {
+            els.brandTitle.textContent = `${settings.site_name} · ${state.strings.pageTitle}`;
+          }
+        } catch (error) {
+          console.warn("Failed to load public settings:", error);
+        }
+      }
+
+      function applyMeta(meta) {
+        if (!meta) return;
+        if (meta.site_name) {
+          els.brandTitle.textContent = meta.site_name;
+        }
+        if (meta.site_subtitle) {
+          els.brandSubtitle.textContent = meta.site_subtitle;
+        }
+        if (meta.hero_headline) {
+          els.heroHeadline.textContent = meta.hero_headline;
+        }
+        if (meta.hero_description) {
+          els.heroDesc.textContent = meta.hero_description;
+        }
+        if (meta.pill_one) {
+          els.pillOne.textContent = meta.pill_one;
+        }
+        if (meta.pill_two) {
+          els.pillTwo.textContent = meta.pill_two;
+        }
+        if (meta.pill_three) {
+          els.pillThree.textContent = meta.pill_three;
+        }
+      }
+
+      async function loadModels() {
+        const payload = await fetchJson("./model-marketplace-data.json");
+        applyMeta(payload.meta || {});
+        state.models = normalizeStaticModels(payload.models || []);
+        updateStats();
+        buildFilters();
+        renderCards();
+        els.loading.hidden = true;
+        els.cards.hidden = state.models.length === 0;
+      }
+
+      async function boot() {
+        setTheme();
+        applyStrings();
+        updateEmbedBadge();
+        bindFilters();
+        bindCopyActions();
+        await loadSettings();
+        try {
+          await loadModels();
+        } catch (error) {
+          console.error(error);
+          els.loading.hidden = true;
+          els.notice.classList.remove("is-hidden");
+          els.noticeTitle.textContent = "数据文件加载失败";
+          els.noticeText.textContent = error.message;
+          els.emptyState.classList.add("is-visible");
+        }
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
