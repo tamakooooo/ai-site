@@ -1,1416 +1,701 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>模型广场</title>
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #f8f1e7;
-        --bg-deep: #f2e4d3;
-        --panel: rgba(255, 251, 245, 0.8);
-        --panel-solid: #fffaf3;
-        --line: rgba(163, 94, 24, 0.14);
-        --text: #2d1b0f;
-        --muted: #7d5a44;
-        --soft: #a27a60;
-        --accent: #e88a2e;
-        --accent-strong: #c96114;
-        --accent-soft: rgba(232, 138, 46, 0.14);
-        --shadow: 0 24px 60px rgba(171, 89, 18, 0.14);
-        --radius-xl: 30px;
-        --radius-lg: 24px;
-        --radius-md: 18px;
-        --font-display: "Iowan Old Style", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-        --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
-      }
-
-      :root.dark {
-        color-scheme: dark;
-        --bg: #21140c;
-        --bg-deep: #2f1b0f;
-        --panel: rgba(65, 39, 22, 0.76);
-        --panel-solid: rgba(71, 42, 24, 0.94);
-        --line: rgba(243, 184, 126, 0.16);
-        --text: #fff4ea;
-        --muted: #e6c9b0;
-        --soft: #c79c79;
-        --accent: #f0a24e;
-        --accent-strong: #ffbf7a;
-        --accent-soft: rgba(240, 162, 78, 0.14);
-        --shadow: 0 26px 72px rgba(12, 6, 3, 0.35);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        min-height: 100%;
-        font-family: var(--font-body);
-        color: var(--text);
-        background:
-          radial-gradient(circle at top left, rgba(232, 138, 46, 0.16), transparent 30%),
-          radial-gradient(circle at bottom right, rgba(201, 97, 20, 0.12), transparent 26%),
-          linear-gradient(180deg, #fdf8f1 0%, var(--bg) 100%);
-      }
-
-      .dark body {
-        background:
-          radial-gradient(circle at top left, rgba(240, 162, 78, 0.12), transparent 30%),
-          radial-gradient(circle at bottom right, rgba(201, 97, 20, 0.08), transparent 26%),
-          linear-gradient(180deg, #2c190f 0%, var(--bg) 100%);
-      }
-
-      body {
-        padding: 24px;
-      }
-
-      button,
-      input,
-      select {
-        font: inherit;
-      }
-
-      .page {
-        width: min(1380px, 100%);
-        margin: 0 auto;
-        border: 1px solid var(--line);
-        border-radius: 34px;
-        background: linear-gradient(180deg, rgba(255, 252, 247, 0.9), var(--panel));
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        backdrop-filter: blur(16px);
-      }
-
-      .dark .page {
-        background: linear-gradient(180deg, rgba(77, 46, 25, 0.9), var(--panel));
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        padding: 22px 28px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .brand-mark {
-        width: 48px;
-        height: 48px;
-        border-radius: 16px;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.78);
-        box-shadow: 0 10px 22px rgba(201, 97, 20, 0.14);
-      }
-
-      .brand-mark img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      .brand-copy small {
-        display: block;
-        margin-bottom: 4px;
-        color: var(--accent-strong);
-        font-size: 12px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-
-      .brand-copy h1 {
-        margin: 0;
-        font-size: 22px;
-        letter-spacing: -0.03em;
-      }
-
-      .brand-copy p {
-        margin: 4px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .topbar-badge {
-        display: none;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.72);
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .topbar-badge.visible {
-        display: inline-flex;
-      }
-
-      .hero {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
-        gap: 18px;
-        padding: 24px 28px 0;
-      }
-
-      .hero-card,
-      .aside-card,
-      .filters-card,
-      .stat-card,
-      .group-card,
-      .empty-card,
-      .detail-card {
-        border: 1px solid var(--line);
-        border-radius: var(--radius-xl);
-        background: var(--panel);
-        box-shadow: 0 12px 28px rgba(171, 89, 18, 0.08);
-        backdrop-filter: blur(14px);
-      }
-
-      .hero-card {
-        padding: 30px;
-      }
-
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--accent-strong);
-        font-size: 12px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .eyebrow::before {
-        content: "";
-        width: 34px;
-        height: 1px;
-        background: currentColor;
-      }
-
-      .hero-card h2 {
-        margin: 20px 0 0;
-        max-width: 11ch;
-        font-family: var(--font-display);
-        font-size: clamp(38px, 5vw, 60px);
-        line-height: 1.04;
-        letter-spacing: -0.04em;
-      }
-
-      .hero-card p {
-        margin: 22px 0 0;
-        max-width: 40em;
-        color: var(--muted);
-        font-size: 16px;
-        line-height: 1.9;
-      }
-
-      .hero-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      .hero-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.62);
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .hero-pill::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: linear-gradient(180deg, var(--accent), var(--accent-strong));
-      }
-
-      .aside-card {
-        padding: 22px;
-        display: grid;
-        gap: 14px;
-        align-content: start;
-      }
-
-      .aside-card h3 {
-        margin: 0;
-        font-size: 15px;
-        color: var(--muted);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-
-      .aside-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.8;
-        font-size: 14px;
-      }
-
-      .aside-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .aside-metric {
-        padding: 16px;
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.56);
-      }
-
-      .dark .aside-metric {
-        background: rgba(84, 49, 27, 0.46);
-      }
-
-      .aside-metric strong {
-        display: block;
-        font-size: 30px;
-        letter-spacing: -0.05em;
-      }
-
-      .aside-metric span {
-        display: block;
-        margin-top: 6px;
-        font-size: 12px;
-        color: var(--muted);
-      }
-
-      .layout {
-        display: grid;
-        grid-template-columns: 320px minmax(0, 1fr);
-        gap: 18px;
-        padding: 18px 28px 28px;
-      }
-
-      .filters-card {
-        padding: 18px;
-        display: grid;
-        gap: 16px;
-        align-content: start;
-        position: sticky;
-        top: 24px;
-      }
-
-      .filters-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .filters-head h3 {
-        margin: 0;
-        font-size: 16px;
-      }
-
-      .reset-btn {
-        border: 0;
-        background: none;
-        color: var(--accent-strong);
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .field {
-        display: grid;
-        gap: 8px;
-      }
-
-      .field label {
-        color: var(--muted);
-        font-size: 12px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        font-weight: 700;
-      }
-
-      .input,
-      .select {
-        width: 100%;
-        min-height: 50px;
-        padding: 0 16px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius-md);
-        background: rgba(255, 255, 255, 0.82);
-        color: var(--text);
-        outline: none;
-        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-      }
-
-      .dark .input,
-      .dark .select {
-        background: rgba(71, 42, 24, 0.84);
-        color: var(--text);
-      }
-
-      .input:focus,
-      .select:focus {
-        transform: translateY(-1px);
-        border-color: rgba(232, 138, 46, 0.42);
-        box-shadow: 0 0 0 4px rgba(232, 138, 46, 0.12);
-      }
-
-      .filter-stats {
-        display: grid;
-        gap: 10px;
-      }
-
-      .filter-stat {
-        padding: 14px;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.56);
-      }
-
-      .dark .filter-stat {
-        background: rgba(84, 49, 27, 0.46);
-      }
-
-      .filter-stat strong {
-        display: block;
-        font-size: 26px;
-        letter-spacing: -0.04em;
-      }
-
-      .filter-stat span {
-        display: block;
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .main {
-        display: grid;
-        gap: 18px;
-      }
-
-      .main-top {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .stat-card {
-        padding: 18px;
-      }
-
-      .stat-card h3 {
-        margin: 0;
-        font-size: 13px;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-
-      .stat-card strong {
-        display: block;
-        margin-top: 10px;
-        font-size: 34px;
-        letter-spacing: -0.05em;
-      }
-
-      .stat-card p {
-        margin: 8px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.8;
-      }
-
-      .group-list {
-        display: grid;
-        gap: 18px;
-      }
-
-      .group-card {
-        overflow: hidden;
-      }
-
-      .group-head {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 160px;
-        gap: 18px;
-        padding: 22px 24px 18px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .group-brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: var(--accent-soft);
-        color: var(--accent-strong);
-        font-size: 12px;
-        font-weight: 700;
-      }
-
-      .group-head h3 {
-        margin: 14px 0 0;
-        font-size: 24px;
-        letter-spacing: -0.03em;
-      }
-
-      .group-head p {
-        margin: 8px 0 0;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.8;
-      }
-
-      .group-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .meta-pill,
-      .tag-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.56);
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-      }
-
-      .dark .meta-pill,
-      .dark .tag-chip {
-        background: rgba(84, 49, 27, 0.46);
-      }
-
-      .group-multiplier {
-        padding: 16px;
-        border-radius: 22px;
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(232, 138, 46, 0.12), rgba(255, 255, 255, 0.7));
-        text-align: right;
-      }
-
-      .dark .group-multiplier {
-        background: linear-gradient(180deg, rgba(232, 138, 46, 0.12), rgba(84, 49, 27, 0.62));
-      }
-
-      .group-multiplier span {
-        display: block;
-        margin-bottom: 6px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .group-multiplier strong {
-        font-size: 30px;
-        letter-spacing: -0.05em;
-      }
-
-      .model-grid {
-        display: grid;
-        gap: 0;
-      }
-
-      .model-item {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto auto;
-        gap: 14px;
-        align-items: center;
-        width: 100%;
-        padding: 18px 24px;
-        border: 0;
-        border-top: 1px solid rgba(163, 94, 24, 0.08);
-        background: transparent;
-        color: inherit;
-        cursor: pointer;
-        text-align: left;
-        transition: background 180ms ease;
-      }
-
-      .model-item:hover {
-        background: rgba(232, 138, 46, 0.05);
-      }
-
-      .dark .model-item:hover {
-        background: rgba(232, 138, 46, 0.08);
-      }
-
-      .model-info strong {
-        display: block;
-        font-size: 17px;
-      }
-
-      .model-info p {
-        margin: 6px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.8;
-      }
-
-      .tag-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .model-multiplier {
-        min-width: 86px;
-        text-align: right;
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--accent-strong);
-      }
-
-      .model-arrow {
-        color: var(--soft);
-        font-size: 18px;
-      }
-
-      .empty-card,
-      .loading-card,
-      .error-card {
-        padding: 38px 26px;
-        text-align: center;
-      }
-
-      .loading-card,
-      .error-card,
-      .empty-card.hidden {
-        display: none;
-      }
-
-      .loading-card.visible,
-      .error-card.visible {
-        display: block;
-      }
-
-      .empty-card h3,
-      .error-card h3 {
-        margin: 0 0 10px;
-        font-size: 22px;
-      }
-
-      .empty-card p,
-      .error-card p,
-      .loading-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.8;
-      }
-
-      .detail-card {
-        padding: 22px;
-        display: grid;
-        gap: 16px;
-      }
-
-      .detail-card.hidden {
-        display: none;
-      }
-
-      .detail-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 14px;
-      }
-
-      .detail-head h3 {
-        margin: 12px 0 0;
-        font-size: 28px;
-        font-family: var(--font-display);
-        letter-spacing: -0.04em;
-      }
-
-      .copy-btn {
-        border: 0;
-        border-radius: 999px;
-        min-height: 48px;
-        padding: 0 18px;
-        background: linear-gradient(180deg, var(--accent), var(--accent-strong));
-        color: #fff;
-        cursor: pointer;
-        font-weight: 700;
-        box-shadow: 0 12px 24px rgba(201, 97, 20, 0.2);
-      }
-
-      .detail-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.85;
-      }
-
-      .detail-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .detail-box {
-        padding: 16px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.56);
-      }
-
-      .dark .detail-box {
-        background: rgba(84, 49, 27, 0.46);
-      }
-
-      .detail-box span {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .detail-box strong,
-      .detail-box div {
-        font-size: 15px;
-        line-height: 1.75;
-      }
-
-      @media (max-width: 1180px) {
-        .hero,
-        .layout,
-        .main-top {
-          grid-template-columns: 1fr;
-        }
-
-        .filters-card {
-          position: static;
-        }
-      }
-
-      @media (max-width: 760px) {
-        body {
-          padding: 0;
-        }
-
-        .page {
-          border-radius: 0;
-          border-left: 0;
-          border-right: 0;
-        }
-
-        .topbar,
-        .hero,
-        .layout {
-          padding-left: 18px;
-          padding-right: 18px;
-        }
-
-        .topbar {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .group-head,
-        .detail-grid,
-        .aside-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .model-item {
-          grid-template-columns: 1fr;
-        }
-
-        .tag-row,
-        .model-multiplier,
-        .model-arrow {
-          justify-content: flex-start;
-          text-align: left;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">
-            <img id="site-logo" src="./logo.png" alt="Logo" />
-          </div>
-          <div class="brand-copy">
-            <small id="brand-kicker">Model Marketplace</small>
-            <h1 id="brand-title">模型广场</h1>
-            <p id="brand-subtitle">用更克制的方式展示你的模型、倍率与推荐顺序</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模型广场 - TokenFlux</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #e6f2ff 0%, #f0f7ff 100%);
+      min-height: 100vh;
+      color: #1a1a2e;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      padding: 32px;
+    }
+    
+    /* Header Section */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    
+    .header-left h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    
+    .header-left p {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    
+    .header-left .sub-note {
+      font-size: 12px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .sub-note .tag {
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #6b7280;
+      font-size: 11px;
+    }
+    
+    .stats {
+      display: flex;
+      gap: 16px;
+    }
+    
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .stat-icon.blue { background: #dbeafe; color: #3b82f6; }
+    .stat-icon.green { background: #d1fae5; color: #10b981; }
+    .stat-icon.purple { background: #ede9fe; color: #8b5cf6; }
+    
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #374151;
+      line-height: 1;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+    
+    /* Filters Section */
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #374151;
+      background: #ffffff;
+      transition: all 0.2s;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .search-box input::placeholder {
+      color: #9ca3af;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    
+    .dropdown {
+      position: relative;
+      min-width: 140px;
+    }
+    
+    .dropdown-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+    
+    .dropdown-btn:hover {
+      border-color: #d1d5db;
+    }
+    
+    .dropdown-arrow {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    
+    /* Group Header */
+    .group-section {
+      margin-bottom: 24px;
+    }
+    
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .brand-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .brand-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .info-tag {
+      padding: 4px 10px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    
+    .info-tag.highlight {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .group-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 12px 0 4px;
+    }
+    
+    .group-desc {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    
+    /* Models Grid */
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    
+    .model-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    
+    .model-card:hover {
+      border-color: #d1d5db;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .model-title {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .model-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      line-height: 1.3;
+    }
+    
+    .model-id {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+    
+    .pricing-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .pricing-badge.token {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    
+    .pricing-badge.context {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    /* Pricing Rows */
+    .pricing-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .pricing-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+    
+    .pricing-row.context {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    
+    .pricing-label {
+      font-size: 13px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .pricing-label-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    
+    .pricing-value {
+      font-size: 13px;
+      color: #374151;
+      font-weight: 500;
+    }
+    
+    .pricing-value .price {
+      color: #1f2937;
+      font-weight: 600;
+    }
+    
+    .context-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    
+    .context-range {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    /* View Details Link */
+    .view-details {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #f3f4f6;
+      color: #3b82f6;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .view-details:hover {
+      opacity: 0.8;
+    }
+    
+    .view-details-icon {
+      font-size: 14px;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      .header { flex-direction: column; gap: 20px; }
+      .stats { width: 100%; justify-content: space-between;}
+      .filters { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: 100%; }
+      .models-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <h1>模型广场</h1>
+        <p>按公开分组浏览当前可用模型，并直接查看已包含分组倍率的实际扣费价格。</p>
+        <div class="sub-note">
+          <span>价格已按价格文件记录的基础价格乘以分组倍率计算，单位为</span>
+          <span class="tag">推理积分</span>
+          <span style="color: #9ca3af;">|</span>
+          <span style="color: #6b7280;">3 个分组</span>
+          <span style="color: #9ca3af;">|</span>
+          <span style="color: #6b7280;">12 个模型</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-icon blue">⊞</div>
+          <div class="stat-info">
+            <div class="stat-value">3</div>
+            <div class="stat-label">匹配分组</div>
           </div>
         </div>
-        <div class="topbar-badge" id="embed-badge">嵌入模式</div>
-      </header>
-
-      <section class="hero">
-        <article class="hero-card">
-          <div class="eyebrow" id="hero-eyebrow">Curated Catalog</div>
-          <h2 id="hero-title">把模型列表做成用户真的愿意浏览的模型广场。</h2>
-          <p id="hero-description">
-            这一页只做一件事：把模型、分组、倍率和推荐场景讲清楚。你后面只需要维护数据文件，就能快速调整展示内容，不用每次改页面结构。
-          </p>
-          <div class="hero-pills">
-            <div class="hero-pill" id="hero-pill-1">静态数据驱动</div>
-            <div class="hero-pill" id="hero-pill-2">倍率维护单独收口</div>
-            <div class="hero-pill" id="hero-pill-3">适合 Pages 独立部署</div>
+        <div class="stat-card">
+          <div class="stat-icon green">✦</div>
+          <div class="stat-info">
+            <div class="stat-value">12</div>
+            <div class="stat-label">匹配模型</div>
           </div>
-        </article>
-
-        <aside class="aside-card">
-          <h3 id="aside-title">Overview</h3>
-          <p id="aside-text">当前展示的是适合对外公开说明的模型目录，而不是后台的原始配置表。</p>
-          <div class="aside-grid">
-            <div class="aside-metric">
-              <strong id="total-groups">0</strong>
-              <span id="label-total-groups">分组数量</span>
-            </div>
-            <div class="aside-metric">
-              <strong id="total-models">0</strong>
-              <span id="label-total-models">模型数量</span>
-            </div>
-            <div class="aside-metric">
-              <strong id="total-platforms">0</strong>
-              <span id="label-total-platforms">平台数量</span>
-            </div>
-            <div class="aside-metric">
-              <strong id="total-visible">0</strong>
-              <span id="label-total-visible">当前可见模型</span>
-            </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">◉</div>
+          <div class="stat-info">
+            <div class="stat-value">3</div>
+            <div class="stat-label">个品牌</div>
           </div>
-        </aside>
-      </section>
-
-      <section class="layout">
-        <aside class="filters-card">
-          <div class="filters-head">
-            <h3 id="filters-title">筛选器</h3>
-            <button class="reset-btn" id="reset-btn" type="button">重置</button>
-          </div>
-
-          <div class="field">
-            <label for="search-input" id="search-label">搜索</label>
-            <input class="input" id="search-input" type="search" placeholder="搜索模型名、平台、标签、分组" />
-          </div>
-
-          <div class="field">
-            <label for="platform-filter" id="platform-label">平台</label>
-            <select class="select" id="platform-filter">
-              <option value="all">全部平台</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="group-filter" id="group-label">分组</label>
-            <select class="select" id="group-filter">
-              <option value="all">全部分组</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="tag-filter" id="tag-label">标签</label>
-            <select class="select" id="tag-filter">
-              <option value="all">全部标签</option>
-            </select>
-          </div>
-
-          <div class="filter-stats">
-            <div class="filter-stat">
-              <strong id="stat-visible-groups">0</strong>
-              <span id="stat-visible-groups-label">匹配分组</span>
-            </div>
-            <div class="filter-stat">
-              <strong id="stat-visible-models">0</strong>
-              <span id="stat-visible-models-label">匹配模型</span>
-            </div>
-            <div class="filter-stat">
-              <strong id="stat-visible-platforms">0</strong>
-              <span id="stat-visible-platforms-label">品牌覆盖</span>
-            </div>
-          </div>
-        </aside>
-
-        <main class="main">
-          <section class="main-top">
-            <article class="stat-card">
-              <h3 id="summary-groups-title">分组视图</h3>
-              <strong id="summary-groups">0</strong>
-              <p id="summary-groups-text">按你想展示给用户的分组方式整理模型，而不是直接堆原始列表。</p>
-            </article>
-            <article class="stat-card">
-              <h3 id="summary-models-title">模型条目</h3>
-              <strong id="summary-models">0</strong>
-              <p id="summary-models-text">这里统计的是当前筛选条件下真正展示给用户看的模型数量。</p>
-            </article>
-            <article class="stat-card">
-              <h3 id="summary-platforms-title">平台覆盖</h3>
-              <strong id="summary-platforms">0</strong>
-              <p id="summary-platforms-text">用于快速判断这份广场是否覆盖了 OpenAI、Claude、Gemini 等主流平台。</p>
-            </article>
-          </section>
-
-          <section class="loading-card visible" id="loading-card">
-            <p id="loading-text">正在加载模型广场数据...</p>
-          </section>
-
-          <section class="error-card" id="error-card">
-            <h3 id="error-title">数据加载失败</h3>
-            <p id="error-text">请检查 `model-marketplace-data.json` 是否存在、是否是合法 JSON。</p>
-          </section>
-
-          <section class="group-list" id="group-list" hidden></section>
-
-          <section class="empty-card hidden" id="empty-card">
-            <h3 id="empty-title">没有找到匹配结果</h3>
-            <p id="empty-text">可以试着清空筛选条件，或者换一个关键词继续搜索。</p>
-          </section>
-
-          <section class="detail-card hidden" id="detail-card">
-            <div class="detail-head">
-              <div>
-                <div class="group-brand" id="detail-brand">OpenAI</div>
-                <h3 id="detail-title">GPT-5.4</h3>
-              </div>
-              <button class="copy-btn" id="copy-btn" type="button">复制模型名</button>
-            </div>
-            <p id="detail-description"></p>
-            <div class="tag-row" id="detail-tags"></div>
-            <div class="detail-grid">
-              <div class="detail-box">
-                <span id="detail-platform-label">平台</span>
-                <div id="detail-platform"></div>
-              </div>
-              <div class="detail-box">
-                <span id="detail-channel-label">展示渠道</span>
-                <div id="detail-channel"></div>
-              </div>
-              <div class="detail-box">
-                <span id="detail-groups-label">所属分组</span>
-                <div id="detail-groups"></div>
-              </div>
-              <div class="detail-box">
-                <span id="detail-multiplier-label">当前倍率</span>
-                <strong id="detail-multiplier"></strong>
-              </div>
-            </div>
-          </section>
-        </main>
-      </section>
+        </div>
+      </div>
     </div>
-
-    <script>
-      const STRINGS = {
-        zh: {
-          title: "模型广场",
-          subtitle: "用更克制的方式展示你的模型、倍率与推荐顺序",
-          eyebrow: "Curated Catalog",
-          heroTitle: "把模型列表做成用户真的愿意浏览的模型广场。",
-          heroDescription:
-            "这一页只做一件事：把模型、分组、倍率和推荐场景讲清楚。你后面只需要维护数据文件，就能快速调整展示内容，不用每次改页面结构。",
-          pill1: "静态数据驱动",
-          pill2: "倍率维护单独收口",
-          pill3: "适合 Pages 独立部署",
-          asideTitle: "Overview",
-          asideText: "当前展示的是适合对外公开说明的模型目录，而不是后台的原始配置表。",
-          totalGroups: "分组数量",
-          totalModels: "模型数量",
-          totalPlatforms: "平台数量",
-          totalVisible: "当前可见模型",
-          filtersTitle: "筛选器",
-          reset: "重置",
-          searchLabel: "搜索",
-          searchPlaceholder: "搜索模型名、平台、标签、分组",
-          platformLabel: "平台",
-          groupLabel: "分组",
-          tagLabel: "标签",
-          allPlatforms: "全部平台",
-          allGroups: "全部分组",
-          allTags: "全部标签",
-          visibleGroups: "匹配分组",
-          visibleModels: "匹配模型",
-          visiblePlatforms: "品牌覆盖",
-          summaryGroupsTitle: "分组视图",
-          summaryGroupsText: "按你想展示给用户的分组方式整理模型，而不是直接堆原始列表。",
-          summaryModelsTitle: "模型条目",
-          summaryModelsText: "这里统计的是当前筛选条件下真正展示给用户看的模型数量。",
-          summaryPlatformsTitle: "平台覆盖",
-          summaryPlatformsText: "用于快速判断这份广场是否覆盖了 OpenAI、Claude、Gemini 等主流平台。",
-          loading: "正在加载模型广场数据...",
-          errorTitle: "数据加载失败",
-          errorText: "请检查 `model-marketplace-data.json` 是否存在、是否是合法 JSON。",
-          emptyTitle: "没有找到匹配结果",
-          emptyText: "可以试着清空筛选条件，或者换一个关键词继续搜索。",
-          modelsSuffix: "个模型",
-          tagsSuffix: "个标签",
-          multiplier: "当前倍率",
-          channel: "展示渠道",
-          copy: "复制模型名",
-          copied: "已复制",
-          detailPlatform: "平台",
-          detailChannel: "展示渠道",
-          detailGroups: "所属分组",
-          detailMultiplier: "当前倍率",
-          embed: "嵌入模式"
-        },
-        en: {
-          title: "Model Marketplace",
-          subtitle: "Present your models, multipliers, and recommendations with more restraint",
-          eyebrow: "Curated Catalog",
-          heroTitle: "Turn a raw model list into a marketplace people actually want to browse.",
-          heroDescription:
-            "This page focuses on one job only: explain your models, groups, multipliers, and recommendations clearly. Later on, you only need to maintain the data file instead of rewriting the page structure every time.",
-          pill1: "Static data driven",
-          pill2: "Multiplier maintenance is isolated",
-          pill3: "Works well as a standalone Pages site",
-          asideTitle: "Overview",
-          asideText: "What you see here is a curated public catalog, not a dump of raw backend configuration.",
-          totalGroups: "Groups",
-          totalModels: "Models",
-          totalPlatforms: "Platforms",
-          totalVisible: "Visible models",
-          filtersTitle: "Filters",
-          reset: "Reset",
-          searchLabel: "Search",
-          searchPlaceholder: "Search by model, platform, tag, or group",
-          platformLabel: "Platform",
-          groupLabel: "Group",
-          tagLabel: "Tag",
-          allPlatforms: "All platforms",
-          allGroups: "All groups",
-          allTags: "All tags",
-          visibleGroups: "Matching groups",
-          visibleModels: "Matching models",
-          visiblePlatforms: "Brand coverage",
-          summaryGroupsTitle: "Grouped view",
-          summaryGroupsText: "Organize models by the way you want users to browse them instead of exposing the raw source list.",
-          summaryModelsTitle: "Model entries",
-          summaryModelsText: "This count shows how many model entries are currently visible under the active filters.",
-          summaryPlatformsTitle: "Platform coverage",
-          summaryPlatformsText: "A quick way to judge whether the catalog covers OpenAI, Claude, Gemini, and other major platforms.",
-          loading: "Loading marketplace data...",
-          errorTitle: "Failed to load data",
-          errorText: "Please make sure `model-marketplace-data.json` exists and contains valid JSON.",
-          emptyTitle: "No matching results",
-          emptyText: "Try clearing the filters or searching with another keyword.",
-          modelsSuffix: "models",
-          tagsSuffix: "tags",
-          multiplier: "Multiplier",
-          channel: "Channel",
-          copy: "Copy model name",
-          copied: "Copied",
-          detailPlatform: "Platform",
-          detailChannel: "Channel",
-          detailGroups: "Groups",
-          detailMultiplier: "Multiplier",
-          embed: "Embedded mode"
-        }
-      };
-
-      const params = new URLSearchParams(window.location.search);
-      const lang = (params.get("lang") || "zh").toLowerCase().startsWith("en") ? "en" : "zh";
-      const t = STRINGS[lang];
-      if ((params.get("theme") || "").toLowerCase() === "dark") {
-        document.documentElement.classList.add("dark");
-      }
-
-      const els = {
-        brandTitle: document.getElementById("brand-title"),
-        brandSubtitle: document.getElementById("brand-subtitle"),
-        heroEyebrow: document.getElementById("hero-eyebrow"),
-        heroTitle: document.getElementById("hero-title"),
-        heroDescription: document.getElementById("hero-description"),
-        heroPill1: document.getElementById("hero-pill-1"),
-        heroPill2: document.getElementById("hero-pill-2"),
-        heroPill3: document.getElementById("hero-pill-3"),
-        asideTitle: document.getElementById("aside-title"),
-        asideText: document.getElementById("aside-text"),
-        totalGroups: document.getElementById("total-groups"),
-        totalModels: document.getElementById("total-models"),
-        totalPlatforms: document.getElementById("total-platforms"),
-        totalVisible: document.getElementById("total-visible"),
-        labelTotalGroups: document.getElementById("label-total-groups"),
-        labelTotalModels: document.getElementById("label-total-models"),
-        labelTotalPlatforms: document.getElementById("label-total-platforms"),
-        labelTotalVisible: document.getElementById("label-total-visible"),
-        filtersTitle: document.getElementById("filters-title"),
-        resetBtn: document.getElementById("reset-btn"),
-        searchLabel: document.getElementById("search-label"),
-        searchInput: document.getElementById("search-input"),
-        platformLabel: document.getElementById("platform-label"),
-        platformFilter: document.getElementById("platform-filter"),
-        groupLabel: document.getElementById("group-label"),
-        groupFilter: document.getElementById("group-filter"),
-        tagLabel: document.getElementById("tag-label"),
-        tagFilter: document.getElementById("tag-filter"),
-        statVisibleGroups: document.getElementById("stat-visible-groups"),
-        statVisibleGroupsLabel: document.getElementById("stat-visible-groups-label"),
-        statVisibleModels: document.getElementById("stat-visible-models"),
-        statVisibleModelsLabel: document.getElementById("stat-visible-models-label"),
-        statVisiblePlatforms: document.getElementById("stat-visible-platforms"),
-        statVisiblePlatformsLabel: document.getElementById("stat-visible-platforms-label"),
-        summaryGroupsTitle: document.getElementById("summary-groups-title"),
-        summaryGroups: document.getElementById("summary-groups"),
-        summaryGroupsText: document.getElementById("summary-groups-text"),
-        summaryModelsTitle: document.getElementById("summary-models-title"),
-        summaryModels: document.getElementById("summary-models"),
-        summaryModelsText: document.getElementById("summary-models-text"),
-        summaryPlatformsTitle: document.getElementById("summary-platforms-title"),
-        summaryPlatforms: document.getElementById("summary-platforms"),
-        summaryPlatformsText: document.getElementById("summary-platforms-text"),
-        loadingCard: document.getElementById("loading-card"),
-        loadingText: document.getElementById("loading-text"),
-        errorCard: document.getElementById("error-card"),
-        errorTitle: document.getElementById("error-title"),
-        errorText: document.getElementById("error-text"),
-        groupList: document.getElementById("group-list"),
-        emptyCard: document.getElementById("empty-card"),
-        emptyTitle: document.getElementById("empty-title"),
-        emptyText: document.getElementById("empty-text"),
-        detailCard: document.getElementById("detail-card"),
-        detailBrand: document.getElementById("detail-brand"),
-        detailTitle: document.getElementById("detail-title"),
-        detailDescription: document.getElementById("detail-description"),
-        detailTags: document.getElementById("detail-tags"),
-        detailPlatformLabel: document.getElementById("detail-platform-label"),
-        detailPlatform: document.getElementById("detail-platform"),
-        detailChannelLabel: document.getElementById("detail-channel-label"),
-        detailChannel: document.getElementById("detail-channel"),
-        detailGroupsLabel: document.getElementById("detail-groups-label"),
-        detailGroups: document.getElementById("detail-groups"),
-        detailMultiplierLabel: document.getElementById("detail-multiplier-label"),
-        detailMultiplier: document.getElementById("detail-multiplier"),
-        copyBtn: document.getElementById("copy-btn"),
-        embedBadge: document.getElementById("embed-badge")
-      };
-
-      const state = {
-        models: [],
-        selectedModelId: null
-      };
-
-      function applyText() {
-        document.title = t.title;
-        els.brandTitle.textContent = t.title;
-        els.brandSubtitle.textContent = t.subtitle;
-        els.heroEyebrow.textContent = t.eyebrow;
-        els.heroTitle.textContent = t.heroTitle;
-        els.heroDescription.textContent = t.heroDescription;
-        els.heroPill1.textContent = t.pill1;
-        els.heroPill2.textContent = t.pill2;
-        els.heroPill3.textContent = t.pill3;
-        els.asideTitle.textContent = t.asideTitle;
-        els.asideText.textContent = t.asideText;
-        els.labelTotalGroups.textContent = t.totalGroups;
-        els.labelTotalModels.textContent = t.totalModels;
-        els.labelTotalPlatforms.textContent = t.totalPlatforms;
-        els.labelTotalVisible.textContent = t.totalVisible;
-        els.filtersTitle.textContent = t.filtersTitle;
-        els.resetBtn.textContent = t.reset;
-        els.searchLabel.textContent = t.searchLabel;
-        els.searchInput.placeholder = t.searchPlaceholder;
-        els.platformLabel.textContent = t.platformLabel;
-        els.groupLabel.textContent = t.groupLabel;
-        els.tagLabel.textContent = t.tagLabel;
-        els.statVisibleGroupsLabel.textContent = t.visibleGroups;
-        els.statVisibleModelsLabel.textContent = t.visibleModels;
-        els.statVisiblePlatformsLabel.textContent = t.visiblePlatforms;
-        els.summaryGroupsTitle.textContent = t.summaryGroupsTitle;
-        els.summaryGroupsText.textContent = t.summaryGroupsText;
-        els.summaryModelsTitle.textContent = t.summaryModelsTitle;
-        els.summaryModelsText.textContent = t.summaryModelsText;
-        els.summaryPlatformsTitle.textContent = t.summaryPlatformsTitle;
-        els.summaryPlatformsText.textContent = t.summaryPlatformsText;
-        els.loadingText.textContent = t.loading;
-        els.errorTitle.textContent = t.errorTitle;
-        els.errorText.textContent = t.errorText;
-        els.emptyTitle.textContent = t.emptyTitle;
-        els.emptyText.textContent = t.emptyText;
-        els.detailPlatformLabel.textContent = t.detailPlatform;
-        els.detailChannelLabel.textContent = t.detailChannel;
-        els.detailGroupsLabel.textContent = t.detailGroups;
-        els.detailMultiplierLabel.textContent = t.detailMultiplier;
-        els.copyBtn.textContent = t.copy;
-
-        if ((params.get("ui_mode") || "") === "embedded") {
-          els.embedBadge.textContent = t.embed;
-          els.embedBadge.classList.add("visible");
-        }
-      }
-
-      function normalizeModels(models) {
-        return (models || []).map((model, index) => ({
-          id: model.id || `model-${index}`,
-          name: model.name || "Unnamed Model",
-          platform: model.platform || "Other",
-          channel: model.channel || "",
-          groups: Array.isArray(model.groups) && model.groups.length ? model.groups : ["默认分组"],
-          tags: Array.isArray(model.tags) ? model.tags : [],
-          description: model.description || "",
-          multiplier: model.multiplier || "1.00x"
-        }));
-      }
-
-      function buildGroups(models) {
-        const map = new Map();
-        for (const model of models) {
-          for (const groupName of model.groups) {
-            const key = `${groupName}::${model.platform}`;
-            if (!map.has(key)) {
-              map.set(key, {
-                id: key,
-                name: groupName,
-                platform: model.platform,
-                channel: model.channel,
-                models: [],
-                tags: new Set()
-              });
-            }
-            const group = map.get(key);
-            group.models.push(model);
-            model.tags.forEach((tag) => group.tags.add(tag));
-          }
-        }
-        return Array.from(map.values())
-          .map((group) => ({
-            ...group,
-            tags: Array.from(group.tags),
-            multiplier: group.models.length === 1
-              ? group.models[0].multiplier
-              : new Set(group.models.map((item) => item.multiplier)).size === 1
-                ? group.models[0].multiplier
-                : "多倍率",
-            description: group.channel
-              ? `${group.channel} 下的 ${group.name} 模型集合。`
-              : `${group.name} 模型集合。`
-          }))
-          .sort((a, b) => a.name.localeCompare(b.name));
-      }
-
-      function buildOptions(groups) {
-        const platforms = [...new Set(state.models.map((model) => model.platform))].sort();
-        const groupNames = [...new Set(groups.map((group) => group.name))].sort();
-        const tags = [...new Set(state.models.flatMap((model) => model.tags))].sort();
-
-        els.platformFilter.innerHTML = `<option value="all">${t.allPlatforms}</option>` + platforms.map((item) => `<option value="${item}">${item}</option>`).join("");
-        els.groupFilter.innerHTML = `<option value="all">${t.allGroups}</option>` + groupNames.map((item) => `<option value="${item}">${item}</option>`).join("");
-        els.tagFilter.innerHTML = `<option value="all">${t.allTags}</option>` + tags.map((item) => `<option value="${item}">${item}</option>`).join("");
-      }
-
-      function updateGlobalStats(groups) {
-        const platforms = new Set(state.models.map((model) => model.platform));
-        els.totalGroups.textContent = String(groups.length);
-        els.totalModels.textContent = String(state.models.length);
-        els.totalPlatforms.textContent = String(platforms.size);
-      }
-
-      function getFilteredGroups() {
-        const keyword = els.searchInput.value.trim().toLowerCase();
-        const platform = els.platformFilter.value;
-        const groupName = els.groupFilter.value;
-        const tag = els.tagFilter.value;
-        const allGroups = buildGroups(state.models);
-
-        return allGroups
-          .map((group) => {
-            if (platform !== "all" && group.platform !== platform) return null;
-            if (groupName !== "all" && group.name !== groupName) return null;
-
-            const models = group.models.filter((model) => {
-              if (tag !== "all" && !model.tags.includes(tag)) return false;
-              if (!keyword) return true;
-              return [
-                model.name,
-                model.platform,
-                model.channel,
-                group.name,
-                ...model.tags
-              ].filter(Boolean).some((value) => value.toLowerCase().includes(keyword));
-            });
-
-            if (models.length === 0) return null;
-
-            return {
-              ...group,
-              models,
-              multiplier:
-                models.length === 1
-                  ? models[0].multiplier
-                  : new Set(models.map((item) => item.multiplier)).size === 1
-                    ? models[0].multiplier
-                    : "多倍率"
-            };
-          })
-          .filter(Boolean);
-      }
-
-      function tagChip(textValue) {
-        return `<span class="tag-chip">${textValue}</span>`;
-      }
-
-      function renderDetails(modelId) {
-        const model = state.models.find((item) => item.id === modelId);
-        if (!model) {
-          els.detailCard.classList.add("hidden");
-          return;
-        }
-        state.selectedModelId = modelId;
-        els.detailCard.classList.remove("hidden");
-        els.detailBrand.textContent = model.platform;
-        els.detailTitle.textContent = model.name;
-        els.detailDescription.textContent = model.description;
-        els.detailTags.innerHTML = model.tags.map(tagChip).join("");
-        els.detailPlatform.textContent = model.platform;
-        els.detailChannel.textContent = model.channel || "-";
-        els.detailGroups.textContent = model.groups.join(" / ");
-        els.detailMultiplier.textContent = model.multiplier;
-      }
-
-      function renderGroups() {
-        const groups = getFilteredGroups();
-        const visibleModels = groups.reduce((sum, group) => sum + group.models.length, 0);
-        const visiblePlatforms = new Set(groups.map((group) => group.platform));
-
-        els.totalVisible.textContent = String(visibleModels);
-        els.statVisibleGroups.textContent = String(groups.length);
-        els.statVisibleModels.textContent = String(visibleModels);
-        els.statVisiblePlatforms.textContent = String(visiblePlatforms.size);
-        els.summaryGroups.textContent = String(groups.length);
-        els.summaryModels.textContent = String(visibleModels);
-        els.summaryPlatforms.textContent = String(visiblePlatforms.size);
-
-        els.groupList.hidden = groups.length === 0;
-        els.emptyCard.classList.toggle("hidden", groups.length !== 0);
-
-        els.groupList.innerHTML = groups.map((group) => `
-          <article class="group-card">
-            <div class="group-head">
-              <div>
-                <div class="group-brand">${group.platform}</div>
-                <h3>${group.name}</h3>
-                <p>${group.description}</p>
-                <div class="group-meta">
-                  <span class="meta-pill">${group.channel || t.channel}</span>
-                  <span class="meta-pill">${group.models.length} ${t.modelsSuffix}</span>
-                  <span class="meta-pill">${group.tags.length} ${t.tagsSuffix}</span>
-                </div>
-              </div>
-              <div class="group-multiplier">
-                <span>${t.multiplier}</span>
-                <strong>${group.multiplier}</strong>
-              </div>
+    
+    <!-- Filters -->
+    <div class="filters">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="搜索品牌、分组名称、模型 ID 或显示名称">
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-btn">
+          <span>全部品牌</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-btn">
+          <span>全部类型</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+      <div class="dropdown">
+        <button class="dropdown-btn">
+          <span>全部分组</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Group Section -->
+    <div class="group-section">
+      <div class="group-header">
+        <div class="brand-tag">
+          <div class="brand-icon"></div>
+          <span>OpenAI</span>
+        </div>
+        <span class="info-tag">分组倍率 x2.50</span>
+        <span class="info-tag">8 个模型</span>
+        <span class="info-tag">容量</span>
+        <span class="info-tag">按 51 / 58</span>
+        <span class="info-tag highlight">最低至官方价格的0.22折</span>
+        <span class="info-tag highlight">最低 0.15 元相当于 1 美元</span>
+      </div>
+      
+      <div class="group-title">ChatGPT Pro</div>
+      <div class="group-desc">ChatGPT Pro 20x号池</div>
+    </div>
+    
+    <!-- Models Grid -->
+    <div class="models-grid">
+      <!-- codex-auto-review -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">codex-auto-review</div>
+            <div class="model-id">codex-auto-review</div>
+          </div>
+          <span class="pricing-badge token">Token 计费</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
+            <div class="pricing-value"><span class="price">12.50</span> 推理积分 / 1M Token</div>
+          </div>
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
+            <div class="pricing-value"><span class="price">75.00</span> 推理积分 / 1M Token</div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- GPT-5.2 -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">GPT-5.2</div>
+            <div class="model-id">gpt-5.2</div>
+          </div>
+          <span class="pricing-badge token">Token 计费</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
+            <div class="pricing-value"><span class="price">4.38</span> 推理积分 / 1M Token</div>
+          </div>
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
+            <div class="pricing-value"><span class="price">35.00</span> 推理积分 / 1M Token</div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- GPT-5.3 -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">GPT-5.3</div>
+            <div class="model-id">gpt-5.3</div>
+          </div>
+          <span class="pricing-badge token">Token 计费</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
+            <div class="pricing-value"><span class="price">6.25</span> 推理积分 / 1M Token</div>
+          </div>
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
+            <div class="pricing-value"><span class="price">37.50</span> 推理积分 / 1M Token</div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- gpt-5.3-spark -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">gpt-5.3-spark</div>
+            <div class="model-id">gpt-5.3-spark</div>
+          </div>
+          <span class="pricing-badge token">Token 计费</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
+            <div class="pricing-value"><span class="price">6.25</span> 推理积分 / 1M Token</div>
+          </div>
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
+            <div class="pricing-value"><span class="price">37.50</span> 推理积分 / 1M Token</div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- GPT-5.4 (Context) -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">GPT-5.4</div>
+            <div class="model-id">gpt-5.4</div>
+          </div>
+          <span class="pricing-badge context">按上下文区间定价</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">0-272k</span>
+              <span class="pricing-value">输入 <span class="price">6.25</span> / 输出 <span class="price">37.50</span></span>
             </div>
-            <div class="model-grid">
-              ${group.models.map((model) => `
-                <button class="model-item" type="button" data-model-id="${model.id}">
-                  <div class="model-info">
-                    <strong>${model.name}</strong>
-                    <p>${model.description}</p>
-                  </div>
-                  <div class="tag-row">${model.tags.map(tagChip).join("")}</div>
-                  <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">
-                    <span class="model-multiplier">${model.multiplier}</span>
-                    <span class="model-arrow">›</span>
-                  </div>
-                </button>
-              `).join("")}
+          </div>
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">272k+</span>
+              <span class="pricing-value">输入 <span class="price">12.50</span> / 输出 <span class="price">56.25</span></span>
             </div>
-          </article>
-        `).join("");
-
-        els.groupList.querySelectorAll("[data-model-id]").forEach((button) => {
-          button.addEventListener("click", () => renderDetails(button.getAttribute("data-model-id")));
-        });
-
-        if (state.selectedModelId) {
-          renderDetails(state.selectedModelId);
-        } else if (groups[0] && groups[0].models[0]) {
-          renderDetails(groups[0].models[0].id);
-        }
-      }
-
-      async function loadData() {
-        try {
-          const response = await fetch("./model-marketplace-data.json");
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const payload = await response.json();
-          state.models = normalizeModels(payload.models);
-
-          if (payload.meta) {
-            els.brandTitle.textContent = payload.meta.site_name || t.title;
-            els.brandSubtitle.textContent = payload.meta.site_subtitle || t.subtitle;
-            els.heroTitle.textContent = payload.meta.hero_headline || t.heroTitle;
-            els.heroDescription.textContent = payload.meta.hero_description || t.heroDescription;
-            els.heroPill1.textContent = payload.meta.pill_one || t.pill1;
-            els.heroPill2.textContent = payload.meta.pill_two || t.pill2;
-            els.heroPill3.textContent = payload.meta.pill_three || t.pill3;
-          }
-
-          const groups = buildGroups(state.models);
-          buildOptions(groups);
-          updateGlobalStats(groups);
-          renderGroups();
-
-          els.loadingCard.classList.remove("visible");
-          els.loadingCard.classList.add("hidden");
-          els.groupList.hidden = false;
-        } catch (error) {
-          console.error(error);
-          els.loadingCard.classList.remove("visible");
-          els.loadingCard.classList.add("hidden");
-          els.errorCard.classList.add("visible");
-        }
-      }
-
-      function resetFilters() {
-        els.searchInput.value = "";
-        els.platformFilter.value = "all";
-        els.groupFilter.value = "all";
-        els.tagFilter.value = "all";
-        renderGroups();
-      }
-
-      els.searchInput.addEventListener("input", renderGroups);
-      els.platformFilter.addEventListener("change", renderGroups);
-      els.groupFilter.addEventListener("change", renderGroups);
-      els.tagFilter.addEventListener("change", renderGroups);
-      els.resetBtn.addEventListener("click", resetFilters);
-      els.copyBtn.addEventListener("click", async () => {
-        const model = state.models.find((item) => item.id === state.selectedModelId);
-        if (!model) return;
-        try {
-          await navigator.clipboard.writeText(model.name);
-          els.copyBtn.textContent = t.copied;
-          setTimeout(() => {
-            els.copyBtn.textContent = t.copy;
-          }, 1200);
-        } catch (error) {
-          console.error(error);
-        }
-      });
-
-      applyText();
-      loadData();
-    </script>
-  </body>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- GPT-5.4 Mini -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">GPT-5.4 Mini</div>
+            <div class="model-id">gpt-5.4-mini</div>
+          </div>
+          <span class="pricing-badge token">Token 计费</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #3b82f6;"></span>输入</div>
+            <div class="pricing-value"><span class="price">1.88</span> 推理积分 / 1M Token</div>
+          </div>
+          <div class="pricing-row">
+            <div class="pricing-label"><span class="pricing-label-dot" style="background: #8b5cf6;"></span>输出</div>
+            <div class="pricing-value"><span class="price">11.25</span> 推理积分 / 1M Token</div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- gpt-5.4-pro (Context) -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">gpt-5.4-pro</div>
+            <div class="model-id">gpt-5.4-pro</div>
+          </div>
+          <span class="pricing-badge context">按上下文区间定价</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">0-272k</span>
+              <span class="pricing-value">输入 <span class="price">75.00</span> / 输出 <span class="price">450.00</span></span>
+            </div>
+          </div>
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">272k+</span>
+              <span class="pricing-value">输入 <span class="price">150.00</span> / 输出 <span class="price">675.00</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+      
+      <!-- GPT-5.5 (Context) -->
+      <div class="model-card">
+        <div class="model-header">
+          <div class="model-title">
+            <div class="model-name">GPT-5.5</div>
+            <div class="model-id">gpt-5.5</div>
+          </div>
+          <span class="pricing-badge context">按上下文区间定价</span>
+        </div>
+        <div class="pricing-rows">
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">0-272k</span>
+              <span class="pricing-value">输入 <span class="price">12.50</span> / 输出 <span class="price">75.00</span></span>
+            </div>
+          </div>
+          <div class="pricing-row context">
+            <div class="context-row-header">
+              <span class="context-range">272k+</span>
+              <span class="pricing-value">输入 <span class="price">25.00</span> / 输出 <span class="price">112.50</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="view-details">
+          <span class="view-details-icon">◉</span>
+          <span>查看详细定价</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
