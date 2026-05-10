@@ -7,6 +7,7 @@
       "brand": "OpenAI",
       "name": "ChatGPT Pro",
       "description": "ChatGPT Pro 20x号池",
+      "groupMultiplier": 2.5,
       "tags": [
         { "text": "分组倍率 x2.50", "highlight": false },
         { "text": "8 个模型", "highlight": false },
@@ -22,10 +23,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 12.50,
-            "output": 75.00,
-            "cacheRead": 0.625,
-            "cacheWrite": 7.50
+            "input": 5.00,
+            "output": 30.00,
+            "cacheRead": 0.50
           },
           "features": ["支持代码审查", "自动补全"]
         },
@@ -35,10 +35,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 4.38,
-            "output": 35.00,
-            "cacheRead": 0.22,
-            "cacheWrite": 3.50
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
           },
           "features": ["128K上下文", "多模态输入"]
         },
@@ -48,10 +47,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 6.25,
-            "output": 37.50,
-            "cacheRead": 0.31,
-            "cacheWrite": 3.75
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
           },
           "features": ["256K上下文", "高级推理"]
         },
@@ -61,10 +59,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 6.25,
-            "output": 37.50,
-            "cacheRead": 0.31,
-            "cacheWrite": 3.75
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
           },
           "features": ["快速响应", "流式输出"]
         },
@@ -75,8 +72,8 @@
           "pricingLabel": "按上下文区间定价",
           "pricing": {
             "ranges": [
-              { "label": "0-272k", "input": 6.25, "output": 37.50, "cacheRead": 0.31, "cacheWrite": 3.75 },
-              { "label": "272k+", "input": 12.50, "output": 56.25, "cacheRead": 0.62, "cacheWrite": 5.62 }
+              { "label": "0-272k", "input": 2.50, "output": 15.00, "cacheRead": 0.25 },
+              { "label": "272k+", "input": 5.00, "output": 22.50, "cacheRead": 0.50 }
             ]
           },
           "features": ["超长上下文", "复杂推理"]
@@ -87,10 +84,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 1.88,
-            "output": 11.25,
-            "cacheRead": 0.09,
-            "cacheWrite": 1.12
+            "input": 0.75,
+            "output": 4.50,
+            "cacheRead": 0.075
           },
           "features": ["轻量级", "低成本"]
         },
@@ -101,8 +97,8 @@
           "pricingLabel": "按上下文区间定价",
           "pricing": {
             "ranges": [
-              { "label": "0-272k", "input": 75.00, "output": 450.00, "cacheRead": 3.75, "cacheWrite": 45.00 },
-              { "label": "272k+", "input": 150.00, "output": 675.00, "cacheRead": 7.50, "cacheWrite": 67.50 }
+              { "label": "0-272k", "input": 30.00, "output": 180.00 },
+              { "label": "272k+", "input": 60.00, "output": 270.00 }
             ]
           },
           "features": ["专业级", "多步骤推理"]
@@ -114,8 +110,8 @@
           "pricingLabel": "按上下文区间定价",
           "pricing": {
             "ranges": [
-              { "label": "0-272k", "input": 12.50, "output": 75.00, "cacheRead": 0.62, "cacheWrite": 7.50 },
-              { "label": "272k+", "input": 25.00, "output": 112.50, "cacheRead": 1.25, "cacheWrite": 11.25 }
+              { "label": "0-272k", "input": 5.00, "output": 30.00, "cacheRead": 0.50 },
+              { "label": "272k+", "input": 10.00, "output": 45.00, "cacheRead": 1.00 }
             ]
           },
           "features": ["旗舰级", "全能推理"]
@@ -126,6 +122,7 @@
       "brand": "DeepSeek",
       "name": "DeepSeek V4",
       "description": "DeepSeek V4 系列模型",
+      "groupMultiplier": 1,
       "tags": [
         { "text": "分组倍率 x1.00", "highlight": false },
         { "text": "2 个模型", "highlight": false }
@@ -137,10 +134,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 7.95,
-            "output": 15.90,
-            "cacheRead": 0.40,
-            "cacheWrite": 1.59
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.028
           },
           "features": ["极速推理", "高效缓存"]
         },
@@ -150,10 +146,9 @@
           "pricingType": "token",
           "pricingLabel": "Token 计费",
           "pricing": {
-            "input": 24.71,
-            "output": 49.42,
-            "cacheRead": 1.24,
-            "cacheWrite": 4.94
+            "input": 1.74,
+            "output": 3.48,
+            "cacheRead": 0.145
           },
           "features": ["专业推理", "深度分析"]
         }
@@ -163,6 +158,7 @@
       "brand": "Mistral",
       "name": "Mimo",
       "description": "Mimo 系列模型",
+      "groupMultiplier": 1.5,
       "tags": [
         { "text": "分组倍率 x1.50", "highlight": false },
         { "text": "2 个模型", "highlight": false }
@@ -175,8 +171,8 @@
           "pricingLabel": "按上下文区间定价",
           "pricing": {
             "ranges": [
-              { "label": "0-256k", "input": 1.20, "output": 6.00, "cacheRead": 0.06, "cacheWrite": 0.60 },
-              { "label": "256k+", "input": 2.40, "output": 12.00, "cacheRead": 0.12, "cacheWrite": 1.20 }
+              { "label": "0-256k", "input": 0.80, "output": 4.00, "cacheRead": 0.04, "cacheWrite": 0.40 },
+              { "label": "256k+", "input": 1.60, "output": 8.00, "cacheRead": 0.08, "cacheWrite": 0.80 }
             ]
           },
           "features": ["超长上下文", "低成本"]
@@ -188,8 +184,8 @@
           "pricingLabel": "按上下文区间定价",
           "pricing": {
             "ranges": [
-              { "label": "0-256k", "input": 3.00, "output": 9.00, "cacheRead": 0.15, "cacheWrite": 0.90 },
-              { "label": "256k+", "input": 6.00, "output": 18.00, "cacheRead": 0.30, "cacheWrite": 1.80 }
+              { "label": "0-256k", "input": 2.00, "output": 6.00, "cacheRead": 0.10, "cacheWrite": 0.60 },
+              { "label": "256k+", "input": 4.00, "output": 12.00, "cacheRead": 0.20, "cacheWrite": 1.20 }
             ]
           },
           "features": ["专业级", "高精度"]

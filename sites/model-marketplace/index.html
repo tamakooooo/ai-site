@@ -538,6 +538,53 @@
       color: var(--accent);
     }
 
+    .context-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in oklch, var(--surface) 85%, white);
+      margin-bottom: 14px;
+    }
+
+    .context-toggle-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+
+    .context-toggle-btn:hover {
+      color: var(--accent-strong);
+    }
+
+    .context-toggle-btn.active {
+      background: color-mix(in oklch, var(--accent) 14%, white);
+      color: var(--accent-strong);
+      box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
+    }
+
+    .context-panels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .context-panel {
+      display: none;
+    }
+
+    .context-panel.active {
+      display: block;
+    }
+
     .feature-tags {
       display: flex;
       flex-wrap: wrap;
@@ -721,15 +768,22 @@ function renderContent(groups) {
       ${group.description ? `<p class="group-desc">${group.description}</p>` : ''}
       
       <div class="models-grid">
-        ${group.models?.map(model => renderModelCard(model)).join('') || ''}
+        ${group.models?.map(model => renderModelCard(model, group)).join('') || ''}
       </div>
     </div>
   `).join('');
 }
 
-function renderModelCard(model) {
+function applyGroupMultiplier(value, groupMultiplier) {
+  if (typeof value !== 'number') return value;
+  return value * (groupMultiplier || 1);
+}
+
+function renderModelCard(model, group) {
   const isToken = model.pricingType === 'token';
-  const pricingHTML = isToken ? renderTokenPricing(model.pricing) : renderContextPricing(model.pricing);
+  const pricingHTML = isToken
+    ? renderTokenPricing(model.pricing, group?.groupMultiplier)
+    : renderContextPricing(model.pricing, group?.groupMultiplier);
   const featureHTML = model.features?.length
     ? `<div class="feature-tags">${model.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}</div>`
     : '';
@@ -749,7 +803,7 @@ function renderModelCard(model) {
   `;
 }
 
-function renderTokenPricing(pricing) {
+function renderTokenPricing(pricing, groupMultiplier = 1) {
   const rows = [
     { label: '输入', value: pricing.input, color: '#3b82f6' },
     { label: '输出', value: pricing.output, color: '#8b5cf6' }
@@ -765,19 +819,19 @@ function renderTokenPricing(pricing) {
   return rows.map(row => `
     <div class="pricing-row">
       <div class="pricing-label"><span class="pricing-label-dot" style="background: ${row.color};"></span>${row.label}</div>
-      <div class="pricing-value"><span class="price">${row.value.toFixed(2)}</span> 推理积分 / 1M Token</div>
+      <div class="pricing-value"><span class="price">${applyGroupMultiplier(row.value, groupMultiplier).toFixed(2)}</span> 推理积分 / 1M Token</div>
     </div>
   `).join('');
 }
 
-function renderContextPricing(pricing) {
+function renderContextPricing(pricing, groupMultiplier = 1) {
   return pricing.ranges.map(range => {
     const extras = [];
     if (typeof range.cacheRead === 'number') {
-      extras.push(`缓存读取 <span class="price">${range.cacheRead.toFixed(2)}</span>`);
+      extras.push(`缓存读取 <span class="price">${applyGroupMultiplier(range.cacheRead, groupMultiplier).toFixed(2)}</span>`);
     }
     if (typeof range.cacheWrite === 'number') {
-      extras.push(`缓存写入 <span class="price">${range.cacheWrite.toFixed(2)}</span>`);
+      extras.push(`缓存写入 <span class="price">${applyGroupMultiplier(range.cacheWrite, groupMultiplier).toFixed(2)}</span>`);
     }
 
     const extraText = extras.length ? ` / ${extras.join(' / ')}` : '';
@@ -786,7 +840,7 @@ function renderContextPricing(pricing) {
       <div class="pricing-row context">
         <div class="context-row-header">
           <span class="context-range">${range.label}</span>
-          <span class="pricing-value">输入 <span class="price">${range.input.toFixed(2)}</span> / 输出 <span class="price">${range.output.toFixed(2)}</span>${extraText}</span>
+          <span class="pricing-value">输入 <span class="price">${applyGroupMultiplier(range.input, groupMultiplier).toFixed(2)}</span> / 输出 <span class="price">${applyGroupMultiplier(range.output, groupMultiplier).toFixed(2)}</span>${extraText}</span>
         </div>
       </div>
     `;
