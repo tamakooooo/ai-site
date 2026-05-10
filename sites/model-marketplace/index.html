@@ -250,6 +250,60 @@
       overflow: hidden;
     }
 
+    .group-switcher-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(154, 185, 212, 0.18);
+      background: rgba(244, 250, 255, 0.78);
+    }
+
+    .group-switcher-label {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .group-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .group-switch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(154, 185, 212, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .group-switch-btn:hover {
+      border-color: rgba(75, 159, 225, 0.34);
+      color: var(--accent-strong);
+    }
+
+    .group-switch-btn.active {
+      border-color: rgba(75, 159, 225, 0.38);
+      background: rgba(75, 159, 225, 0.1);
+      color: var(--accent-strong);
+      box-shadow: inset 0 0 0 1px rgba(75, 159, 225, 0.08);
+    }
+
+    .group-switch-brand {
+      color: var(--soft);
+      font-size: 11px;
+    }
+
     .group-head {
       display: flex;
       align-items: flex-start;
@@ -307,8 +361,7 @@
 
     .tag,
     .metric-pill,
-    .type-pill,
-    .feature-tag {
+    .type-pill {
       display: inline-flex;
       align-items: center;
       min-height: 28px;
@@ -353,29 +406,25 @@
       padding: 10px 12px 12px;
     }
 
-    .models-head,
-    .model-row {
+    .model-grid {
       display: grid;
-      grid-template-columns: minmax(220px, 1.25fr) minmax(120px, 0.45fr) minmax(300px, 1fr) minmax(180px, 0.7fr);
-      gap: 14px;
-      align-items: start;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .models-head {
-      padding: 0 12px 10px;
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .model-card {
+      border: 1px solid rgba(154, 185, 212, 0.2);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      padding: 16px;
     }
 
-    .model-row {
-      padding: 14px 12px;
-      border-top: 1px solid rgba(154, 185, 212, 0.16);
-    }
-
-    .model-row:first-of-type {
-      border-top: 0;
+    .model-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .model-name {
@@ -384,7 +433,7 @@
 
     .model-name strong {
       display: block;
-      font-size: 15px;
+      font-size: 18px;
       letter-spacing: -0.01em;
     }
 
@@ -398,6 +447,7 @@
 
     .type-pill {
       justify-content: center;
+      flex: 0 0 auto;
       border: 1px solid rgba(75, 159, 225, 0.18);
       background: rgba(75, 159, 225, 0.08);
       color: var(--accent-strong);
@@ -439,19 +489,6 @@
       letter-spacing: -0.02em;
     }
 
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-start;
-    }
-
-    .feature-tag {
-      border: 1px solid rgba(154, 185, 212, 0.22);
-      background: rgba(238, 247, 255, 0.72);
-      color: var(--muted);
-    }
-
     .empty-note {
       color: var(--soft);
       font-size: 13px;
@@ -461,21 +498,6 @@
       .toolbar {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-
-      .models-head,
-      .model-row {
-        grid-template-columns: minmax(0, 1fr) minmax(120px, 0.4fr);
-      }
-
-      .models-head div:nth-child(3),
-      .models-head div:nth-child(4) {
-        display: none;
-      }
-
-      .model-pricing,
-      .model-features {
-        grid-column: 1 / -1;
-      }
     }
 
     @media (max-width: 820px) {
@@ -484,9 +506,14 @@
       }
 
       .topbar,
+      .group-switcher-row,
       .group-head {
         flex-direction: column;
         align-items: stretch;
+      }
+
+      .group-switcher {
+        justify-content: flex-start;
       }
 
       .group-metrics {
@@ -498,13 +525,8 @@
         grid-template-columns: 1fr;
       }
 
-      .models-head {
-        display: none;
-      }
-
-      .model-row {
+      .model-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
       }
 
       .price-line {
@@ -574,6 +596,9 @@
 
   <script>
     let configData = null;
+    const state = {
+      activeGroupKey: null
+    };
 
     const els = {
       brandTitle: document.getElementById("brandTitle"),
@@ -610,6 +635,10 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
+    }
+
+    function getGroupKey(group) {
+      return `${group.brand || ""}::${group.name || ""}`;
     }
 
     function buildOptions() {
@@ -682,6 +711,47 @@
         .join("");
     }
 
+    function syncActiveGroup(groups) {
+      if (!groups.length) {
+        state.activeGroupKey = null;
+        return null;
+      }
+
+      const hasActive = groups.some((group) => getGroupKey(group) === state.activeGroupKey);
+      if (!hasActive) {
+        state.activeGroupKey = getGroupKey(groups[0]);
+      }
+
+      return groups.find((group) => getGroupKey(group) === state.activeGroupKey) || groups[0];
+    }
+
+    function renderGroupSwitcher(groups) {
+      if (groups.length <= 1) {
+        return "";
+      }
+
+      return `
+        <div class="group-switcher-row">
+          <span class="group-switcher-label">切换查看分组</span>
+          <div class="group-switcher">
+            ${groups.map((group) => {
+              const key = getGroupKey(group);
+              return `
+                <button
+                  class="group-switch-btn ${key === state.activeGroupKey ? "active" : ""}"
+                  type="button"
+                  data-group-key="${escapeHTML(key)}"
+                >
+                  <span>${escapeHTML(group.name || "未命名分组")}</span>
+                  <span class="group-switch-brand">${escapeHTML(group.brand || "")}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
     function renderTokenPricing(pricing, groupMultiplier) {
       const unit = escapeHTML(getUnitLabel());
       const rows = [
@@ -737,70 +807,69 @@
       `;
     }
 
-    function renderFeatures(features) {
-      if (!features?.length) {
-        return '<span class="empty-note">无额外说明</span>';
-      }
-
-      return `
-        <div class="features">
-          ${features.map((feature) => `<span class="feature-tag">${escapeHTML(feature)}</span>`).join("")}
-        </div>
-      `;
-    }
-
-    function renderModelRow(model, group) {
+    function renderModelCard(model, group) {
       const pricing = model.pricingType === "context"
         ? renderContextPricing(model.pricing || {}, group.groupMultiplier)
         : renderTokenPricing(model.pricing || {}, group.groupMultiplier);
 
       return `
-        <div class="model-row">
-          <div class="model-name">
-            <strong>${escapeHTML(model.name || model.id || "Unnamed model")}</strong>
-            <div class="model-id">${escapeHTML(model.id || "")}</div>
-          </div>
-          <div class="model-type">
+        <article class="model-card">
+          <div class="model-card-head">
+            <div class="model-name">
+              <strong>${escapeHTML(model.name || model.id || "Unnamed model")}</strong>
+              <div class="model-id">${escapeHTML(model.id || "")}</div>
+            </div>
             <span class="type-pill">${escapeHTML(model.pricingLabel || "")}</span>
           </div>
-          <div class="model-pricing">${pricing}</div>
-          <div class="model-features">${renderFeatures(model.features || [])}</div>
-        </div>
+          <div class="model-pricing">
+            ${pricing}
+          </div>
+        </article>
       `;
     }
 
     function renderGroups() {
       const groups = getFilteredGroups();
+      const activeGroup = syncActiveGroup(groups);
 
       els.loadingState.hidden = true;
       els.emptyState.hidden = groups.length !== 0;
       els.groupList.hidden = groups.length === 0;
 
-      els.groupList.innerHTML = groups.map((group) => `
+      if (!activeGroup) {
+        els.groupList.innerHTML = "";
+        return;
+      }
+
+      els.groupList.innerHTML = `
         <section class="group-section">
+          ${renderGroupSwitcher(groups)}
           <div class="group-head">
             <div class="group-main">
-              <div class="group-brand">${escapeHTML(group.brand || "Unknown")}</div>
-              <h2 class="group-title">${escapeHTML(group.name || "未命名分组")}</h2>
-              ${group.description ? `<p class="group-desc">${escapeHTML(group.description)}</p>` : ""}
-              <div class="group-tags">${renderGroupTags(group.tags || [])}</div>
+              <div class="group-brand">${escapeHTML(activeGroup.brand || "Unknown")}</div>
+              <h2 class="group-title">${escapeHTML(activeGroup.name || "未命名分组")}</h2>
+              ${activeGroup.description ? `<p class="group-desc">${escapeHTML(activeGroup.description)}</p>` : ""}
+              <div class="group-tags">${renderGroupTags(activeGroup.tags || [])}</div>
             </div>
             <div class="group-metrics">
-              <span class="metric-pill">分组倍率<strong>x${formatPrice(group.groupMultiplier || 1)}</strong></span>
-              <span class="metric-pill">模型数<strong>${group.models?.length || 0}</strong></span>
+              <span class="metric-pill">分组倍率<strong>x${formatPrice(activeGroup.groupMultiplier || 1)}</strong></span>
+              <span class="metric-pill">模型数<strong>${activeGroup.models?.length || 0}</strong></span>
             </div>
           </div>
           <div class="models">
-            <div class="models-head">
-              <div>模型</div>
-              <div>计费类型</div>
-              <div>价格</div>
-              <div>特性</div>
+            <div class="model-grid">
+              ${(activeGroup.models || []).map((model) => renderModelCard(model, activeGroup)).join("")}
             </div>
-            ${(group.models || []).map((model) => renderModelRow(model, group)).join("")}
           </div>
         </section>
-      `).join("");
+      `;
+
+      els.groupList.querySelectorAll("[data-group-key]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeGroupKey = button.getAttribute("data-group-key");
+          renderGroups();
+        });
+      });
     }
 
     async function loadConfig() {
