@@ -481,6 +481,82 @@
       letter-spacing: -0.02em;
     }
 
+    .context-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .context-row {
+      display: grid;
+      grid-template-columns: minmax(92px, 0.34fr) minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(184, 108, 31, 0.16);
+      background:
+        linear-gradient(180deg, rgba(255, 250, 244, 0.96), rgba(255, 247, 238, 0.92)),
+        #fffdf9;
+    }
+
+    .context-range {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .context-range-pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(242, 140, 40, 0.22);
+      background: rgba(242, 140, 40, 0.08);
+      color: var(--accent-strong);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .context-range-note {
+      margin-top: 6px;
+      color: var(--soft);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .context-price {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      min-width: 0;
+      text-align: right;
+    }
+
+    .context-price-main {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    .context-price-main strong {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .context-price-meta {
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
     .empty-note {
       color: var(--soft);
       font-size: 13px;
@@ -527,6 +603,15 @@
       }
 
       .price-value {
+        text-align: left;
+      }
+
+      .context-row {
+        grid-template-columns: 1fr;
+      }
+
+      .context-price {
+        align-items: flex-start;
         text-align: left;
       }
     }
@@ -773,9 +858,8 @@
 
     function renderContextPricing(pricing, groupMultiplier) {
       const unit = escapeHTML(getUnitLabel());
-      const unitSuffix = unit ? ` ${unit}` : "";
       return `
-        <div class="price-list">
+        <div class="context-list">
           ${(pricing.ranges || []).map((range) => {
             const extras = [];
 
@@ -787,13 +871,18 @@
             }
 
             return `
-              <div class="price-line">
-                <span class="price-label">${escapeHTML(range.label)}</span>
-                <span class="price-value">
-                  输入 <strong>${formatPrice(applyGroupMultiplier(range.input, groupMultiplier))}</strong>
-                  / 输出 <strong>${formatPrice(applyGroupMultiplier(range.output, groupMultiplier))}</strong>
-                  ${extras.length ? `<br><span class="empty-note">${escapeHTML(extras.join(" / "))}${unitSuffix}</span>` : ""}
-                </span>
+              <div class="context-row">
+                <div class="context-range">
+                  <span class="context-range-pill">${escapeHTML(range.label)}</span>
+                  ${extras.length ? `<span class="context-range-note">${escapeHTML(extras.join(" / "))}</span>` : ""}
+                </div>
+                <div class="context-price">
+                  <div class="context-price-main">
+                    输入 <strong>${formatPrice(applyGroupMultiplier(range.input, groupMultiplier))}</strong>
+                    / 输出 <strong>${formatPrice(applyGroupMultiplier(range.output, groupMultiplier))}</strong>
+                  </div>
+                  ${unit ? `<div class="context-price-meta">${unit} / 1M Token</div>` : ""}
+                </div>
               </div>
             `;
           }).join("")}
