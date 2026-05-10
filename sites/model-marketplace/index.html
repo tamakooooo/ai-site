@@ -8,9 +8,7 @@
     :root {
       color-scheme: light;
       --bg: #f8f2e9;
-      --bg-soft: #fffaf4;
-      --panel: rgba(255, 251, 246, 0.82);
-      --panel-strong: rgba(255, 248, 241, 0.94);
+      --panel: rgba(255, 251, 246, 0.84);
       --line: rgba(163, 94, 24, 0.14);
       --text: #2c1b10;
       --muted: #7f5b44;
@@ -30,9 +28,7 @@
     :root.dark {
       color-scheme: dark;
       --bg: #22150d;
-      --bg-soft: #2a190f;
-      --panel: rgba(64, 39, 23, 0.8);
-      --panel-strong: rgba(73, 44, 26, 0.94);
+      --panel: rgba(64, 39, 23, 0.82);
       --line: rgba(243, 184, 126, 0.16);
       --text: #fff4ea;
       --muted: #e2c6b0;
@@ -63,17 +59,14 @@
         linear-gradient(180deg, #2b190f 0%, var(--bg) 100%);
     }
 
-    body {
-      padding: 24px;
-    }
-
+    body { padding: 18px; }
     button, input, select { font: inherit; }
 
     .page {
-      width: min(1440px, 100%);
+      width: min(1360px, 100%);
       margin: 0 auto;
       border: 1px solid var(--line);
-      border-radius: 34px;
+      border-radius: 32px;
       background: linear-gradient(180deg, rgba(255, 252, 247, 0.92), var(--panel));
       box-shadow: var(--shadow);
       overflow: hidden;
@@ -89,7 +82,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      padding: 22px 28px;
+      padding: 20px 24px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -97,12 +90,13 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      min-width: 0;
     }
 
     .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.76);
       box-shadow: 0 12px 22px rgba(201, 97, 20, 0.14);
@@ -126,7 +120,7 @@
 
     .brand-copy h1 {
       margin: 0;
-      font-size: 23px;
+      font-size: 22px;
       letter-spacing: -0.03em;
     }
 
@@ -146,20 +140,21 @@
       background: rgba(255, 255, 255, 0.66);
       color: var(--muted);
       font-size: 13px;
+      white-space: nowrap;
     }
 
     .embed-badge.visible { display: inline-flex; }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
       gap: 18px;
-      padding: 24px 28px 0;
+      padding: 22px 24px 0;
     }
 
     .hero-card,
     .hero-aside,
-    .sidebar-card,
+    .toolbar-card,
     .stat-card,
     .group-card,
     .detail-card,
@@ -173,7 +168,7 @@
       backdrop-filter: blur(14px);
     }
 
-    .hero-card { padding: 30px; }
+    .hero-card { padding: 28px; }
 
     .eyebrow {
       display: inline-flex;
@@ -194,27 +189,27 @@
     }
 
     .hero-card h2 {
-      margin: 20px 0 0;
-      max-width: 11ch;
+      margin: 18px 0 0;
+      max-width: 12ch;
       font-family: var(--font-display);
-      font-size: clamp(40px, 5vw, 62px);
-      line-height: 1.02;
+      font-size: clamp(36px, 4.8vw, 58px);
+      line-height: 1.04;
       letter-spacing: -0.05em;
     }
 
     .hero-card p {
-      margin: 22px 0 0;
-      max-width: 42em;
+      margin: 20px 0 0;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.9;
+      max-width: 42em;
     }
 
     .hero-pills {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 24px;
+      margin-top: 22px;
     }
 
     .hero-pill {
@@ -239,7 +234,7 @@
     }
 
     .hero-aside {
-      padding: 22px;
+      padding: 20px;
       display: grid;
       gap: 14px;
       align-content: start;
@@ -267,8 +262,8 @@
     }
 
     .aside-metric {
-      padding: 16px;
-      border-radius: 22px;
+      padding: 15px;
+      border-radius: 20px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.54);
     }
@@ -277,7 +272,7 @@
 
     .aside-metric strong {
       display: block;
-      font-size: 30px;
+      font-size: 28px;
       letter-spacing: -0.05em;
     }
 
@@ -288,35 +283,26 @@
       font-size: 12px;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
-      gap: 18px;
-      padding: 18px 28px 28px;
-      align-items: start;
-    }
-
-    .sidebar {
+    .main {
       display: grid;
       gap: 18px;
-      position: sticky;
-      top: 24px;
+      padding: 18px 24px 24px;
     }
 
-    .sidebar-card {
+    .toolbar-card {
       padding: 18px;
       display: grid;
       gap: 16px;
     }
 
-    .sidebar-head {
+    .toolbar-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
 
-    .sidebar-head h3 {
+    .toolbar-head h3 {
       margin: 0;
       font-size: 16px;
     }
@@ -328,6 +314,13 @@
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    .toolbar-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.4fr) repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: end;
     }
 
     .field {
@@ -369,17 +362,20 @@
 
     .filter-stats {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }
 
-    .filter-stat {
+    .filter-stat,
+    .detail-meta {
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.56);
     }
 
-    .dark .filter-stat { background: rgba(82, 50, 29, 0.46); }
+    .dark .filter-stat,
+    .dark .detail-meta { background: rgba(82, 50, 29, 0.46); }
 
     .filter-stat strong {
       display: block;
@@ -387,7 +383,8 @@
       letter-spacing: -0.04em;
     }
 
-    .filter-stat span {
+    .filter-stat span,
+    .detail-meta span {
       display: block;
       margin-top: 6px;
       color: var(--muted);
@@ -409,7 +406,8 @@
       gap: 16px;
     }
 
-    .detail-brand {
+    .detail-brand,
+    .group-brand {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -448,7 +446,9 @@
       white-space: nowrap;
     }
 
-    .detail-tags {
+    .detail-tags,
+    .group-meta,
+    .tag-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -456,35 +456,14 @@
 
     .detail-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
-    }
-
-    .detail-meta {
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.56);
-    }
-
-    .dark .detail-meta { background: rgba(82, 50, 29, 0.46); }
-
-    .detail-meta span {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
     }
 
     .detail-meta strong {
       display: block;
       font-size: 15px;
       line-height: 1.6;
-    }
-
-    .main {
-      display: grid;
-      gap: 18px;
     }
 
     .stats-row {
@@ -524,7 +503,9 @@
       gap: 18px;
     }
 
-    .group-card { overflow: hidden; }
+    .group-card {
+      overflow: hidden;
+    }
 
     .group-head {
       display: grid;
@@ -532,20 +513,6 @@
       gap: 18px;
       padding: 22px 24px 18px;
       border-bottom: 1px solid var(--line);
-    }
-
-    .group-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
     }
 
     .group-head h3 {
@@ -559,13 +526,6 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.8;
-    }
-
-    .group-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
     }
 
     .meta-pill,
@@ -616,7 +576,7 @@
     .model-item {
       width: 100%;
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(180px, 0.8fr) auto;
+      grid-template-columns: minmax(0, 1.2fr) minmax(160px, 0.7fr) auto;
       gap: 16px;
       align-items: center;
       padding: 18px 24px;
@@ -629,13 +589,8 @@
       transition: background 180ms ease;
     }
 
-    .model-item:hover {
-      background: rgba(233, 139, 49, 0.05);
-    }
-
-    .dark .model-item:hover {
-      background: rgba(233, 139, 49, 0.08);
-    }
+    .model-item:hover { background: rgba(233, 139, 49, 0.05); }
+    .dark .model-item:hover { background: rgba(233, 139, 49, 0.08); }
 
     .model-main strong {
       display: block;
@@ -659,12 +614,6 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.8;
-    }
-
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
     }
 
     .model-side {
@@ -715,29 +664,34 @@
 
     @media (max-width: 1180px) {
       .hero,
-      .layout {
-        grid-template-columns: 1fr;
+      .toolbar-grid,
+      .detail-grid {
+        grid-template-columns: 1fr 1fr;
       }
 
-      .sidebar {
-        position: static;
+      .hero {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 900px) {
-      body { padding: 14px; }
+      body { padding: 12px; }
       .topbar,
       .hero,
-      .layout { padding-left: 18px; padding-right: 18px; }
+      .main { padding-left: 16px; padding-right: 16px; }
       .hero-card h2 { max-width: none; }
+      .aside-grid,
+      .toolbar-grid,
+      .filter-stats,
       .stats-row,
       .detail-grid,
-      .aside-grid { grid-template-columns: 1fr; }
       .group-head,
       .model-item { grid-template-columns: 1fr; }
       .group-multiplier,
       .model-side { justify-self: start; text-align: left; }
       .model-side { justify-content: flex-start; }
+      .detail-head,
+      .topbar { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
@@ -793,123 +747,116 @@
       </aside>
     </section>
 
-    <section class="layout">
-      <aside class="sidebar">
-        <section class="sidebar-card">
-          <div class="sidebar-head">
-            <h3 id="filters-title">筛选器</h3>
-            <button class="reset-btn" id="reset-btn" type="button">重置</button>
-          </div>
-
+    <main class="main">
+      <section class="toolbar-card">
+        <div class="toolbar-head">
+          <h3 id="filters-title">筛选器</h3>
+          <button class="reset-btn" id="reset-btn" type="button">重置</button>
+        </div>
+        <div class="toolbar-grid">
           <div class="field">
             <label for="search-input" id="search-label">搜索</label>
             <input class="input" id="search-input" type="text" placeholder="搜索模型名、平台、标签或分组">
           </div>
-
           <div class="field">
             <label for="platform-filter" id="platform-label">平台</label>
             <select class="select" id="platform-filter">
               <option value="all">全部平台</option>
             </select>
           </div>
-
           <div class="field">
             <label for="group-filter" id="group-label">分组</label>
             <select class="select" id="group-filter">
               <option value="all">全部分组</option>
             </select>
           </div>
-
           <div class="field">
             <label for="tag-filter" id="tag-label">标签</label>
             <select class="select" id="tag-filter">
               <option value="all">全部标签</option>
             </select>
           </div>
-
-          <div class="filter-stats">
-            <div class="filter-stat">
-              <strong id="visible-groups">0</strong>
-              <span id="visible-groups-label">匹配分组</span>
-            </div>
-            <div class="filter-stat">
-              <strong id="visible-models">0</strong>
-              <span id="visible-models-label">匹配模型</span>
-            </div>
-            <div class="filter-stat">
-              <strong id="visible-platforms">0</strong>
-              <span id="visible-platforms-label">品牌覆盖</span>
-            </div>
+        </div>
+        <div class="filter-stats">
+          <div class="filter-stat">
+            <strong id="visible-groups">0</strong>
+            <span id="visible-groups-label">匹配分组</span>
           </div>
-        </section>
-
-        <section class="detail-card hidden" id="detail-card">
-          <div class="detail-head">
-            <div>
-              <div class="detail-brand" id="detail-brand">OpenAI</div>
-              <h3 class="detail-title" id="detail-title">GPT-5.4</h3>
-            </div>
-            <button class="copy-btn" id="copy-btn" type="button">复制模型名</button>
+          <div class="filter-stat">
+            <strong id="visible-models">0</strong>
+            <span id="visible-models-label">匹配模型</span>
           </div>
-          <p class="detail-description" id="detail-description">模型说明</p>
-          <div class="detail-tags" id="detail-tags"></div>
-          <div class="detail-grid">
-            <div class="detail-meta">
-              <span id="detail-platform-label">平台</span>
-              <strong id="detail-platform">-</strong>
-            </div>
-            <div class="detail-meta">
-              <span id="detail-channel-label">展示渠道</span>
-              <strong id="detail-channel">-</strong>
-            </div>
-            <div class="detail-meta">
-              <span id="detail-groups-label">所属分组</span>
-              <strong id="detail-groups">-</strong>
-            </div>
-            <div class="detail-meta">
-              <span id="detail-multiplier-label">当前倍率</span>
-              <strong id="detail-multiplier">-</strong>
-            </div>
+          <div class="filter-stat">
+            <strong id="visible-platforms">0</strong>
+            <span id="visible-platforms-label">品牌覆盖</span>
           </div>
-        </section>
-      </aside>
+        </div>
+      </section>
 
-      <main class="main">
-        <section class="stats-row">
-          <article class="stat-card">
-            <h3 id="summary-groups-title">分组视图</h3>
-            <strong id="summary-groups">0</strong>
-            <p id="summary-groups-text">按你希望用户浏览的方式整理模型，而不是直接堆原始来源列表。</p>
-          </article>
-          <article class="stat-card">
-            <h3 id="summary-models-title">模型条目</h3>
-            <strong id="summary-models">0</strong>
-            <p id="summary-models-text">这里统计的是当前筛选条件下真正展示给用户看的模型数量。</p>
-          </article>
-          <article class="stat-card">
-            <h3 id="summary-platforms-title">平台覆盖</h3>
-            <strong id="summary-platforms">0</strong>
-            <p id="summary-platforms-text">可以快速判断这份目录是否覆盖了 OpenAI、Claude、Gemini 等主流平台。</p>
-          </article>
-        </section>
+      <section class="detail-card hidden" id="detail-card">
+        <div class="detail-head">
+          <div>
+            <div class="detail-brand" id="detail-brand">OpenAI</div>
+            <h3 class="detail-title" id="detail-title">GPT-5.4</h3>
+          </div>
+          <button class="copy-btn" id="copy-btn" type="button">复制模型名</button>
+        </div>
+        <p class="detail-description" id="detail-description">模型说明</p>
+        <div class="detail-tags" id="detail-tags"></div>
+        <div class="detail-grid">
+          <div class="detail-meta">
+            <span id="detail-platform-label">平台</span>
+            <strong id="detail-platform">-</strong>
+          </div>
+          <div class="detail-meta">
+            <span id="detail-channel-label">展示渠道</span>
+            <strong id="detail-channel">-</strong>
+          </div>
+          <div class="detail-meta">
+            <span id="detail-groups-label">所属分组</span>
+            <strong id="detail-groups">-</strong>
+          </div>
+          <div class="detail-meta">
+            <span id="detail-multiplier-label">当前倍率</span>
+            <strong id="detail-multiplier">-</strong>
+          </div>
+        </div>
+      </section>
 
-        <section class="loading-card visible" id="loading-card">
-          <p id="loading-text">正在加载模型广场数据...</p>
-        </section>
+      <section class="stats-row">
+        <article class="stat-card">
+          <h3 id="summary-groups-title">分组视图</h3>
+          <strong id="summary-groups">0</strong>
+          <p id="summary-groups-text">按你希望用户浏览的方式整理模型，而不是直接堆原始来源列表。</p>
+        </article>
+        <article class="stat-card">
+          <h3 id="summary-models-title">模型条目</h3>
+          <strong id="summary-models">0</strong>
+          <p id="summary-models-text">这里统计的是当前筛选条件下真正展示给用户看的模型数量。</p>
+        </article>
+        <article class="stat-card">
+          <h3 id="summary-platforms-title">平台覆盖</h3>
+          <strong id="summary-platforms">0</strong>
+          <p id="summary-platforms-text">可以快速判断这份目录是否覆盖了 OpenAI、Claude、Gemini 等主流平台。</p>
+        </article>
+      </section>
 
-        <section class="error-card hidden" id="error-card">
-          <h3 id="error-title">数据加载失败</h3>
-          <p id="error-text">请检查 `model-marketplace-data.json` 是否存在，以及内容是否是合法 JSON。</p>
-        </section>
+      <section class="loading-card visible" id="loading-card">
+        <p id="loading-text">正在加载模型广场数据...</p>
+      </section>
 
-        <section class="empty-card hidden" id="empty-card">
-          <h3 id="empty-title">没有找到匹配结果</h3>
-          <p id="empty-text">可以试着清空筛选条件，或者换一个关键词继续搜索。</p>
-        </section>
+      <section class="error-card hidden" id="error-card">
+        <h3 id="error-title">数据加载失败</h3>
+        <p id="error-text">请检查 `model-marketplace-data.json` 是否存在，以及内容是否是合法 JSON。</p>
+      </section>
 
-        <section class="group-list" id="group-list" hidden></section>
-      </main>
-    </section>
+      <section class="empty-card hidden" id="empty-card">
+        <h3 id="empty-title">没有找到匹配结果</h3>
+        <p id="empty-text">可以试着清空筛选条件，或者换一个关键词继续搜索。</p>
+      </section>
+
+      <section class="group-list" id="group-list" hidden></section>
+    </main>
   </div>
 
   <script>
@@ -1097,10 +1044,7 @@
       embedBadge: document.getElementById("embed-badge")
     };
 
-    const state = {
-      models: [],
-      selectedModelId: null
-    };
+    const state = { models: [], selectedModelId: null };
 
     function applyText() {
       document.title = t.title;
@@ -1185,21 +1129,19 @@
         }
       }
 
-      return Array.from(map.values())
-        .map((group) => ({
-          ...group,
-          tags: Array.from(group.tags),
-          multiplier:
-            group.models.length === 1
+      return Array.from(map.values()).map((group) => ({
+        ...group,
+        tags: Array.from(group.tags),
+        multiplier:
+          group.models.length === 1
+            ? group.models[0].multiplier
+            : new Set(group.models.map((item) => item.multiplier)).size === 1
               ? group.models[0].multiplier
-              : new Set(group.models.map((item) => item.multiplier)).size === 1
-                ? group.models[0].multiplier
-                : (lang === "zh" ? "多倍率" : "Mixed"),
-          description: group.channel
-            ? `${group.channel} ${lang === "zh" ? `下的 ${group.name} ${t.groupCollectionSuffix}` : `${t.groupCollectionSuffix}`}`
-            : `${group.name} ${t.groupCollectionSuffix}`
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+              : (lang === "zh" ? "多倍率" : "Mixed"),
+        description: group.channel
+          ? `${group.channel}${lang === "zh" ? ` 下的 ${group.name}${t.groupCollectionSuffix}` : ` ${t.groupCollectionSuffix}`}`
+          : `${group.name}${lang === "zh" ? t.groupCollectionSuffix : ` ${t.groupCollectionSuffix}`}`
+      })).sort((a, b) => a.name.localeCompare(b.name));
     }
 
     function buildOptions(groups) {
@@ -1226,37 +1168,35 @@
       const tag = els.tagFilter.value;
       const allGroups = buildGroups(state.models);
 
-      return allGroups
-        .map((group) => {
-          if (platform !== "all" && group.platform !== platform) return null;
-          if (groupName !== "all" && group.name !== groupName) return null;
+      return allGroups.map((group) => {
+        if (platform !== "all" && group.platform !== platform) return null;
+        if (groupName !== "all" && group.name !== groupName) return null;
 
-          const models = group.models.filter((model) => {
-            if (tag !== "all" && !model.tags.includes(tag)) return false;
-            if (!keyword) return true;
-            return [model.name, model.id, model.platform, model.channel, group.name, ...model.tags]
-              .filter(Boolean)
-              .some((value) => String(value).toLowerCase().includes(keyword));
-          });
+        const models = group.models.filter((model) => {
+          if (tag !== "all" && !model.tags.includes(tag)) return false;
+          if (!keyword) return true;
+          return [model.name, model.id, model.platform, model.channel, group.name, ...model.tags]
+            .filter(Boolean)
+            .some((value) => String(value).toLowerCase().includes(keyword));
+        });
 
-          if (!models.length) return null;
+        if (!models.length) return null;
 
-          return {
-            ...group,
-            models,
-            multiplier:
-              models.length === 1
+        return {
+          ...group,
+          models,
+          multiplier:
+            models.length === 1
+              ? models[0].multiplier
+              : new Set(models.map((item) => item.multiplier)).size === 1
                 ? models[0].multiplier
-                : new Set(models.map((item) => item.multiplier)).size === 1
-                  ? models[0].multiplier
-                  : (lang === "zh" ? "多倍率" : "Mixed")
-          };
-        })
-        .filter(Boolean);
+                : (lang === "zh" ? "多倍率" : "Mixed")
+        };
+      }).filter(Boolean);
     }
 
-    function tagChip(value) {
-      return `<span class="tag-chip">${value}</span>`;
+    function tagChip(text) {
+      return `<span class="tag-chip">${text}</span>`;
     }
 
     function renderDetails(modelId) {
@@ -1362,7 +1302,6 @@
         buildOptions(groups);
         updateGlobalStats(groups);
         renderGroups();
-
         els.loadingCard.classList.add("hidden");
         els.groupList.hidden = false;
       } catch (error) {
@@ -1391,9 +1330,7 @@
       try {
         await navigator.clipboard.writeText(model.name);
         els.copyBtn.textContent = t.copied;
-        setTimeout(() => {
-          els.copyBtn.textContent = t.copy;
-        }, 1200);
+        setTimeout(() => { els.copyBtn.textContent = t.copy; }, 1200);
       } catch (error) {
         console.error(error);
       }
