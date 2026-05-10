@@ -8,20 +8,15 @@
       :root {
         color-scheme: light;
         --bg: #fcf8f3;
-        --bg-accent: rgba(242, 140, 40, 0.14);
-        --panel: rgba(255, 255, 255, 0.78);
-        --panel-strong: #fffaf4;
-        --panel-border: rgba(184, 108, 31, 0.16);
-        --text: #2f1d10;
-        --text-soft: #7b5b45;
-        --text-faint: #9a7458;
-        --primary: #f28c28;
-        --primary-strong: #d86512;
-        --primary-soft: rgba(242, 140, 40, 0.12);
+        --surface: rgba(255, 255, 255, 0.78);
+        --surface-strong: #fffaf4;
+        --fg: #2f1d10;
+        --muted: #7b5b45;
+        --line: rgba(184, 108, 31, 0.16);
+        --accent: #f28c28;
+        --accent-strong: #d86512;
         --shadow: 0 22px 64px rgba(216, 101, 18, 0.18);
-        --shadow-soft: 0 12px 28px rgba(184, 108, 31, 0.08);
-        --ring: rgba(242, 140, 40, 0.24);
-        --hero-grid: rgba(242, 140, 40, 0.04);
+        --radius: 28px;
         --font-display: "Iowan Old Style", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
         --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
       }
@@ -29,20 +24,14 @@
       :root.dark {
         color-scheme: dark;
         --bg: #23160d;
-        --bg-accent: rgba(242, 140, 40, 0.12);
-        --panel: rgba(58, 37, 23, 0.72);
-        --panel-strong: rgba(69, 42, 24, 0.9);
-        --panel-border: rgba(242, 181, 122, 0.18);
-        --text: #fff7ef;
-        --text-soft: #ebd2bf;
-        --text-faint: #d8b69a;
-        --primary: #f6a24a;
-        --primary-strong: #ffbd70;
-        --primary-soft: rgba(242, 140, 40, 0.14);
+        --surface: rgba(58, 37, 23, 0.76);
+        --surface-strong: rgba(72, 44, 26, 0.92);
+        --fg: #fff7ef;
+        --muted: #ebd2bf;
+        --line: rgba(242, 181, 122, 0.18);
+        --accent: #f6a24a;
+        --accent-strong: #ffbd70;
         --shadow: 0 28px 72px rgba(29, 18, 10, 0.4);
-        --shadow-soft: 0 14px 36px rgba(29, 18, 10, 0.28);
-        --ring: rgba(246, 162, 74, 0.24);
-        --hero-grid: rgba(242, 140, 40, 0.06);
       }
 
       * {
@@ -54,16 +43,16 @@
         margin: 0;
         min-height: 100%;
         font-family: var(--font-body);
+        color: var(--fg);
         background:
-          radial-gradient(circle at top left, var(--bg-accent), transparent 32%),
+          radial-gradient(circle at top left, rgba(242, 140, 40, 0.14), transparent 32%),
           radial-gradient(circle at bottom right, rgba(216, 101, 18, 0.1), transparent 28%),
           linear-gradient(180deg, #fefcf8 0%, var(--bg) 100%);
-        color: var(--text);
       }
 
       .dark body {
         background:
-          radial-gradient(circle at top left, var(--bg-accent), transparent 32%),
+          radial-gradient(circle at top left, rgba(242, 140, 40, 0.12), transparent 32%),
           radial-gradient(circle at bottom right, rgba(216, 101, 18, 0.08), transparent 28%),
           linear-gradient(180deg, #2b1a10 0%, var(--bg) 100%);
       }
@@ -72,50 +61,25 @@
         padding: 24px;
       }
 
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
       .shell {
-        position: relative;
-        min-height: calc(100vh - 48px);
-        overflow: hidden;
-        border: 1px solid var(--panel-border);
-        border-radius: 28px;
-        background:
-          linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, transparent), var(--panel)),
-          linear-gradient(var(--hero-grid) 1px, transparent 1px),
-          linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px);
-        background-size: auto, 64px 64px, 64px 64px;
-        backdrop-filter: blur(18px);
-        box-shadow: var(--shadow);
-      }
-
-      .shell::before,
-      .shell::after {
-        content: "";
-        position: absolute;
-        z-index: 0;
-        width: 420px;
-        height: 420px;
-        border-radius: 999px;
-        filter: blur(72px);
-        opacity: 0.58;
-        pointer-events: none;
-      }
-
-      .shell::before {
-        top: -140px;
-        right: -100px;
-        background: rgba(242, 140, 40, 0.22);
-      }
-
-      .shell::after {
-        bottom: -180px;
-        left: -140px;
-        background: rgba(216, 101, 18, 0.16);
-      }
-
-      .content {
-        position: relative;
-        z-index: 1;
+        width: min(1320px, 100%);
+        margin: 0 auto;
         padding: 28px;
+        border-radius: 32px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), var(--surface));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .dark .shell {
+        background: linear-gradient(180deg, rgba(63, 39, 22, 0.9), var(--surface));
       }
 
       .topbar {
@@ -123,22 +87,22 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        margin-bottom: 28px;
+        margin-bottom: 20px;
       }
 
       .brand {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 14px;
       }
 
       .brand-logo {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
+        width: 46px;
+        height: 46px;
         overflow: hidden;
-        background: linear-gradient(135deg, rgba(242, 140, 40, 0.16), rgba(242, 140, 40, 0.04));
-        box-shadow: 0 8px 20px rgba(216, 101, 18, 0.18);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 20px rgba(216, 101, 18, 0.16);
       }
 
       .brand-logo img {
@@ -147,157 +111,165 @@
         object-fit: contain;
       }
 
-      .brand-kicker {
-        margin: 0 0 4px;
+      .brand-copy small {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--accent-strong);
         font-size: 12px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: var(--primary-strong);
       }
 
-      .brand-title {
+      .brand-copy h1 {
         margin: 0;
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 22px;
         letter-spacing: -0.03em;
       }
 
-      .brand-subtitle {
+      .brand-copy p {
         margin: 4px 0 0;
-        color: var(--text-faint);
+        color: var(--muted);
         font-size: 13px;
       }
 
       .embed-badge {
         display: none;
-        align-items: center;
-        gap: 8px;
         padding: 10px 14px;
         border-radius: 999px;
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.78);
-        color: var(--text-soft);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--muted);
         font-size: 13px;
-        box-shadow: var(--shadow-soft);
       }
 
-      .dark .embed-badge {
-        background: rgba(15, 23, 42, 0.84);
-      }
-
-      .embed-badge.is-visible {
+      .embed-badge.visible {
         display: inline-flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .hero {
         display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 24px;
-        margin-bottom: 24px;
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+        gap: 20px;
+        margin-bottom: 20px;
       }
 
-      .hero-card,
-      .stats-card,
-      .toolbar,
-      .empty-state,
-      .notice,
-      .card {
-        border: 1px solid var(--panel-border);
-        border-radius: 24px;
-        background: var(--panel);
-        backdrop-filter: blur(16px);
-        box-shadow: var(--shadow-soft);
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: 0 12px 28px rgba(184, 108, 31, 0.08);
+        backdrop-filter: blur(14px);
       }
 
-      .hero-card {
+      .hero-copy {
         padding: 28px;
       }
 
-      .hero-headline {
-        margin: 0 0 14px;
-        font-size: clamp(32px, 4vw, 52px);
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--accent-strong);
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 1px;
+        background: currentColor;
+      }
+
+      .hero-copy h2 {
+        margin: 18px 0 0;
+        font-family: var(--font-display);
+        font-size: clamp(38px, 5vw, 58px);
         line-height: 1.04;
         letter-spacing: -0.04em;
-        font-family: var(--font-display);
       }
 
-      .hero-desc {
-        margin: 0;
-        max-width: 760px;
+      .hero-copy p {
+        margin: 22px 0 0;
+        max-width: 40em;
+        color: var(--muted);
         font-size: 16px;
-        line-height: 1.8;
-        color: var(--text-soft);
+        line-height: 1.9;
       }
 
-      .hero-pills {
+      .hero-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
         margin-top: 26px;
       }
 
-      .hero-pill {
+      .hero-tag {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 11px 15px;
+        padding: 10px 14px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.62);
-        border: 1px solid var(--panel-border);
-        color: var(--text-soft);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
         font-size: 13px;
         font-weight: 600;
       }
 
-      .hero-pill-dot {
+      .tag-dot {
         width: 8px;
         height: 8px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), #60a5fa);
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--accent), var(--accent-strong));
       }
 
-      .stats-card {
+      .hero-stats {
         padding: 22px;
         display: grid;
-        gap: 16px;
         align-content: start;
-      }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px;
       }
 
-      .stat-block {
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat-box {
         padding: 16px;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.68);
-        border: 1px solid var(--panel-border);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.64);
       }
 
-      .dark .stat-block {
-        background: rgba(15, 23, 42, 0.52);
+      .dark .stat-box {
+        background: rgba(77, 48, 29, 0.5);
       }
 
-      .stat-value {
-        font-size: 30px;
-        font-weight: 800;
+      .stat-box strong {
+        display: block;
+        font-size: 28px;
         letter-spacing: -0.04em;
       }
 
-      .stat-label {
+      .stat-box span {
+        display: block;
         margin-top: 6px;
-        color: var(--text-faint);
+        color: var(--muted);
         font-size: 12px;
       }
 
       .toolbar {
         display: grid;
-        grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(160px, 0.35fr));
+        grid-template-columns: minmax(0, 1.1fr) repeat(3, minmax(160px, 0.3fr));
         gap: 14px;
         padding: 18px;
-        margin-bottom: 22px;
+        margin-bottom: 18px;
       }
 
       .field {
@@ -305,823 +277,1052 @@
         gap: 8px;
       }
 
-      .field-label {
-        color: var(--text-faint);
+      .field label {
+        color: var(--muted);
         font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.03em;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
+        font-weight: 700;
       }
 
       .input,
       .select {
         width: 100%;
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.78);
-        color: var(--text);
-        border-radius: 16px;
-        padding: 14px 16px;
-        font-size: 14px;
+        min-height: 50px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.84);
+        color: var(--fg);
         outline: none;
-        transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+        transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
       }
 
       .dark .input,
       .dark .select {
-        background: rgba(15, 23, 42, 0.74);
+        background: rgba(72, 44, 26, 0.78);
+        color: var(--fg);
       }
 
       .input:focus,
       .select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px var(--ring);
+        border-color: rgba(242, 140, 40, 0.42);
+        box-shadow: 0 0 0 4px rgba(242, 140, 40, 0.12);
         transform: translateY(-1px);
       }
 
-      .cards {
+      .summary-strip {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .summary-card {
+        padding: 18px;
+      }
+
+      .summary-card h3 {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .summary-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 34px;
+        letter-spacing: -0.04em;
+      }
+
+      .summary-card p {
+        margin: 8px 0 0;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .group-list {
+        display: grid;
         gap: 18px;
       }
 
-      .card {
-        position: relative;
-        padding: 22px;
+      .group-card {
         overflow: hidden;
       }
 
-      .card::before {
-        content: "";
-        position: absolute;
-        inset: auto -42px -68px auto;
-        width: 160px;
-        height: 160px;
-        border-radius: 999px;
-        opacity: 0.12;
-        background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-        filter: blur(18px);
-      }
-
-      .card-head {
+      .group-head {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 14px;
-        margin-bottom: 14px;
+        gap: 16px;
+        padding: 22px 24px 18px;
+        border-bottom: 1px solid var(--line);
       }
 
-      .platform-pill {
+      .group-head-left {
+        min-width: 0;
+      }
+
+      .group-brand {
         display: inline-flex;
         align-items: center;
         gap: 8px;
         padding: 8px 12px;
         border-radius: 999px;
+        background: rgba(242, 140, 40, 0.1);
+        color: var(--accent-strong);
         font-size: 12px;
         font-weight: 700;
-        background: var(--primary-soft);
-        color: #9a4d12;
       }
 
-      .dark .platform-pill {
-        color: #fff0de;
-      }
-
-      .model-name {
-        margin: 0;
+      .group-head h3 {
+        margin: 14px 0 0;
         font-size: 24px;
         letter-spacing: -0.03em;
-        font-family: var(--font-display);
       }
 
-      .model-summary {
-        margin: 0 0 18px;
-        color: var(--text-soft);
+      .group-head p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.75;
         font-size: 14px;
-        line-height: 1.7;
       }
 
-      .chip-row,
-      .meta-row {
+      .group-meta {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        margin-top: 14px;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.6);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .dark .meta-pill {
+        background: rgba(77, 48, 29, 0.5);
+      }
+
+      .group-head-right {
+        display: grid;
+        gap: 12px;
+        min-width: 180px;
+      }
+
+      .multiplier-card {
+        padding: 16px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(242, 140, 40, 0.12), rgba(255, 255, 255, 0.82));
+        text-align: right;
+      }
+
+      .dark .multiplier-card {
+        background: linear-gradient(180deg, rgba(242, 140, 40, 0.12), rgba(72, 44, 26, 0.82));
+      }
+
+      .multiplier-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .multiplier-card strong {
+        font-size: 30px;
+        letter-spacing: -0.05em;
+      }
+
+      .model-list {
+        display: grid;
+        gap: 0;
+      }
+
+      .model-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 14px;
+        align-items: center;
+        padding: 18px 24px;
+        border-top: 1px solid rgba(184, 108, 31, 0.1);
+        cursor: pointer;
+        transition: background 180ms ease;
+      }
+
+      .model-row:hover {
+        background: rgba(242, 140, 40, 0.05);
+      }
+
+      .dark .model-row:hover {
+        background: rgba(242, 140, 40, 0.08);
+      }
+
+      .model-main {
+        min-width: 0;
+      }
+
+      .model-main strong {
+        display: block;
+        font-size: 17px;
+      }
+
+      .model-main p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .model-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
       }
 
       .chip {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
+        gap: 6px;
+        padding: 7px 10px;
         border-radius: 999px;
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.62);
-        color: var(--text-soft);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--muted);
         font-size: 12px;
         font-weight: 600;
       }
 
       .dark .chip {
-        background: rgba(15, 23, 42, 0.54);
+        background: rgba(77, 48, 29, 0.48);
       }
 
-      .meta-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 18px;
+      .model-multiplier {
+        min-width: 86px;
+        text-align: right;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--accent-strong);
       }
 
-      .meta-item {
-        padding: 14px;
-        border-radius: 18px;
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.62);
+      .model-arrow {
+        color: var(--muted);
+        font-size: 18px;
       }
 
-      .dark .meta-item {
-        background: rgba(15, 23, 42, 0.52);
-      }
-
-      .meta-label {
-        font-size: 12px;
-        color: var(--text-faint);
-        margin-bottom: 8px;
-      }
-
-      .meta-value {
-        font-size: 15px;
-        color: var(--text);
-        line-height: 1.55;
-        word-break: break-word;
-      }
-
-      .copy-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 18px;
-        width: 100%;
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.74);
-        color: var(--text-soft);
-        border-radius: 18px;
-        padding: 13px 16px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 700;
-        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-      }
-
-      .dark .copy-button {
-        background: rgba(15, 23, 42, 0.66);
-      }
-
-      .copy-button:hover {
-        transform: translateY(-1px);
-        border-color: var(--primary);
-        background: rgba(255, 255, 255, 0.98);
-      }
-
-      .dark .copy-button:hover {
-        background: rgba(15, 23, 42, 0.88);
-      }
-
-      .empty-state,
-      .notice {
-        padding: 28px;
+      .empty,
+      .loading,
+      .error {
+        padding: 40px 28px;
         text-align: center;
       }
 
-      .empty-state {
+      .loading,
+      .error {
         display: none;
       }
 
-      .empty-state.is-visible {
+      .empty.hidden,
+      .loading.hidden,
+      .error.hidden {
+        display: none;
+      }
+
+      .loading.visible,
+      .error.visible {
         display: block;
       }
 
-      .notice {
-        margin-bottom: 18px;
+      .empty h3,
+      .error h3 {
+        margin: 0 0 10px;
+        font-size: 22px;
       }
 
-      .notice.is-hidden {
-        display: none;
-      }
-
-      .notice-title,
-      .empty-title {
-        margin: 0 0 8px;
-        font-size: 20px;
-        font-weight: 700;
-      }
-
-      .notice-text,
-      .empty-text {
+      .empty p,
+      .error p,
+      .loading p {
         margin: 0;
-        color: var(--text-soft);
-        line-height: 1.75;
-      }
-
-      .footer-note {
-        margin-top: 24px;
-        padding: 18px 20px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid var(--panel-border);
-        color: var(--text-faint);
-        font-size: 13px;
+        color: var(--muted);
         line-height: 1.8;
       }
 
-      .dark .footer-note {
-        background: rgba(15, 23, 42, 0.48);
-      }
-
-      .loading {
-        display: flex;
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
         align-items: center;
         justify-content: center;
-        min-height: 280px;
-        color: var(--text-soft);
-        gap: 12px;
+        padding: 24px;
+        background: rgba(23, 14, 8, 0.46);
+        backdrop-filter: blur(8px);
       }
 
-      .spinner {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid var(--panel-border);
-        border-top-color: var(--primary);
-        animation: spin 0.9s linear infinite;
+      .modal.visible {
+        display: flex;
       }
 
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+      .modal-card {
+        width: min(760px, 100%);
+        border-radius: 30px;
+        border: 1px solid var(--line);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
 
-      @media (max-width: 1200px) {
+      .dark .modal-card {
+        background: var(--surface-strong);
+      }
+
+      .modal-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-head h3 {
+        margin: 10px 0 0;
+        font-size: 30px;
+        font-family: var(--font-display);
+        letter-spacing: -0.03em;
+      }
+
+      .modal-close {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 999px;
+        cursor: pointer;
+        background: rgba(242, 140, 40, 0.12);
+        color: var(--accent-strong);
+        font-size: 18px;
+      }
+
+      .modal-body {
+        padding: 22px 24px 26px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .modal-copy {
+        display: grid;
+        gap: 10px;
+      }
+
+      .modal-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.85;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .detail-card {
+        padding: 16px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.56);
+      }
+
+      .dark .detail-card {
+        background: rgba(77, 48, 29, 0.46);
+      }
+
+      .detail-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .detail-card strong,
+      .detail-card div {
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        padding: 0 18px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        box-shadow: 0 12px 28px rgba(216, 101, 18, 0.24);
+      }
+
+      @media (max-width: 1120px) {
         .hero,
-        .toolbar {
+        .toolbar,
+        .summary-strip {
           grid-template-columns: 1fr;
         }
 
-        .cards {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+        .group-head {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+
+        .group-head-right {
+          min-width: 0;
         }
       }
 
-      @media (max-width: 760px) {
+      @media (max-width: 768px) {
         body {
           padding: 0;
         }
 
         .shell {
-          min-height: 100vh;
           border-radius: 0;
           border-left: 0;
           border-right: 0;
-        }
-
-        .content {
           padding: 18px;
         }
 
         .topbar {
-          align-items: flex-start;
           flex-direction: column;
+          align-items: flex-start;
         }
 
-        .cards,
-        .stats-grid,
-        .meta-grid {
+        .stat-grid,
+        .detail-grid {
           grid-template-columns: 1fr;
+        }
+
+        .model-row {
+          grid-template-columns: 1fr;
+        }
+
+        .model-multiplier,
+        .model-arrow {
+          text-align: left;
         }
       }
     </style>
   </head>
   <body>
     <div class="shell">
-      <div class="content">
-        <header class="topbar">
-          <div class="brand">
-            <div class="brand-logo">
-              <img id="site-logo" src="/logo.png" alt="Logo" />
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-logo">
+            <img id="site-logo" src="./logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/92x92/ffffff/f28c28&text=AI'" />
+          </div>
+          <div class="brand-copy">
+            <small id="brand-kicker">Model Marketplace</small>
+            <h1 id="brand-title">模型广场</h1>
+            <p id="brand-subtitle">按分组整理当前推荐模型与倍率信息</p>
+          </div>
+        </div>
+        <div class="embed-badge" id="embed-badge">嵌入模式</div>
+      </header>
+
+      <section class="hero">
+        <article class="panel hero-copy">
+          <div class="eyebrow" id="hero-eyebrow">Route Policy</div>
+          <h2 id="hero-title">把模型、倍率和分组，整理成更自然的使用秩序。</h2>
+          <p id="hero-description">
+            这里不是把模型堆成一面参数墙，而是按照你给用户看的方式重新组织。每个分组展示自己适合的模型、倍率和说明，方便用户更快挑选，也方便你后续维护。
+          </p>
+          <div class="hero-tags">
+            <div class="hero-tag"><span class="tag-dot"></span><span id="hero-pill-1">按分组展示模型能力</span></div>
+            <div class="hero-tag"><span class="tag-dot"></span><span id="hero-pill-2">倍率维护收口在数据文件</span></div>
+            <div class="hero-tag"><span class="tag-dot"></span><span id="hero-pill-3">适合嵌入自定义菜单</span></div>
+          </div>
+        </article>
+
+        <aside class="panel hero-stats">
+          <div class="stat-grid">
+            <div class="stat-box">
+              <strong id="total-groups">0</strong>
+              <span id="label-groups">分组数量</span>
             </div>
-            <div>
-              <p class="brand-kicker" id="brand-kicker">Model Marketplace</p>
-              <h1 class="brand-title" id="brand-title">模型广场</h1>
-          <p class="brand-subtitle" id="brand-subtitle">统一查看当前可用模型、平台与倍率信息</p>
+            <div class="stat-box">
+              <strong id="total-models">0</strong>
+              <span id="label-models">模型数量</span>
+            </div>
+            <div class="stat-box">
+              <strong id="total-brands">0</strong>
+              <span id="label-brands">平台数量</span>
+            </div>
+            <div class="stat-box">
+              <strong id="total-visible">0</strong>
+              <span id="label-visible">当前可见模型</span>
             </div>
           </div>
-          <div class="embed-badge" id="embed-badge">嵌入模式</div>
-        </header>
+        </aside>
+      </section>
 
-        <section class="hero">
-          <article class="hero-card">
-            <h2 class="hero-headline" id="hero-headline">把常用模型整理成一个真正清爽好找的模型广场</h2>
-            <p class="hero-desc" id="hero-desc">
-              这个页面采用纯静态数据驱动，不依赖登录态和接口权限。后面你只需要维护每个模型的倍率，就能快速更新给用户看的模型目录。
-            </p>
-            <div class="hero-pills">
-              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-one">纯静态页面，嵌入最省事</span></div>
-              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-two">维护时只改倍率字段</span></div>
-              <div class="hero-pill"><span class="hero-pill-dot"></span><span id="pill-three">适合放进自定义菜单当展示页</span></div>
-            </div>
-          </article>
-
-          <aside class="stats-card">
-            <div class="stats-grid">
-              <div class="stat-block">
-                <div class="stat-value" id="stat-models">--</div>
-                <div class="stat-label" id="stat-models-label">模型数量</div>
-              </div>
-              <div class="stat-block">
-                <div class="stat-value" id="stat-platforms">--</div>
-                <div class="stat-label" id="stat-platforms-label">平台数量</div>
-              </div>
-              <div class="stat-block">
-                <div class="stat-value" id="stat-channels">--</div>
-                <div class="stat-label" id="stat-channels-label">渠道数量</div>
-              </div>
-              <div class="stat-block">
-                <div class="stat-value" id="stat-groups">--</div>
-                <div class="stat-label" id="stat-groups-label">分组数量</div>
-              </div>
-            </div>
-          </aside>
-        </section>
-
-        <section class="notice is-hidden" id="notice">
-          <h3 class="notice-title" id="notice-title">需要通过自定义菜单打开</h3>
-          <p class="notice-text" id="notice-text">这个页面使用静态数据文件，不依赖用户登录态。你只需要在 `model-marketplace-data.json` 里维护模型倍率，就能更新展示内容。</p>
-        </section>
-
-        <section class="toolbar">
-          <label class="field">
-            <span class="field-label" id="search-label">搜索</span>
-            <input class="input" id="search-input" type="search" placeholder="搜索模型名、平台、渠道、分组、标签" />
-          </label>
-          <label class="field">
-            <span class="field-label" id="platform-label">平台筛选</span>
-            <select class="select" id="platform-filter">
-              <option value="">全部平台</option>
-            </select>
-          </label>
-          <label class="field">
-            <span class="field-label" id="group-label">分组筛选</span>
-            <select class="select" id="group-filter">
-              <option value="">全部分组</option>
-            </select>
-          </label>
-        </section>
-
-        <div class="loading" id="loading">
-          <span class="spinner"></span>
-          <span id="loading-text">正在加载模型列表...</span>
+      <section class="panel toolbar">
+        <div class="field">
+          <label for="search-input" id="label-search">搜索</label>
+          <input class="input" id="search-input" type="search" placeholder="搜索模型名、平台、分组、标签" />
         </div>
+        <div class="field">
+          <label for="platform-filter" id="label-platform">平台</label>
+          <select class="select" id="platform-filter">
+            <option value="all">全部平台</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="group-filter" id="label-group">分组</label>
+          <select class="select" id="group-filter">
+            <option value="all">全部分组</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="tag-filter" id="label-tag">标签</label>
+          <select class="select" id="tag-filter">
+            <option value="all">全部标签</option>
+          </select>
+        </div>
+      </section>
 
-        <section class="cards" id="cards" hidden></section>
+      <section class="summary-strip">
+        <article class="panel summary-card">
+          <h3 id="summary-title-groups">匹配分组</h3>
+          <strong id="summary-groups">0</strong>
+          <p id="summary-text-groups">筛选后仍然显示的模型分组数量。</p>
+        </article>
+        <article class="panel summary-card">
+          <h3 id="summary-title-models">匹配模型</h3>
+          <strong id="summary-models">0</strong>
+          <p id="summary-text-models">当前筛选条件下，用户实际会看到的模型条目数。</p>
+        </article>
+        <article class="panel summary-card">
+          <h3 id="summary-title-brands">品牌覆盖</h3>
+          <strong id="summary-brands">0</strong>
+          <p id="summary-text-brands">当前展示结果覆盖的模型平台数量。</p>
+        </article>
+      </section>
 
-        <section class="empty-state" id="empty-state">
-          <h3 class="empty-title" id="empty-title">没有找到匹配的模型</h3>
-          <p class="empty-text" id="empty-text">可以试试更换搜索词，或者把平台与分组筛选切回“全部”。</p>
-        </section>
+      <section class="loading visible" id="loading">
+        <p id="loading-text">正在加载模型广场数据...</p>
+      </section>
 
-        <footer class="footer-note" id="footer-note">
-          这个页面的数据来自同目录下的 `model-marketplace-data.json`。如果你后面只想调整展示价格，直接改每个模型的 `multiplier` 字段即可，不需要动页面结构。
-        </footer>
+      <section class="error hidden panel" id="error">
+        <h3 id="error-title">数据加载失败</h3>
+        <p id="error-text">请检查 `model-marketplace-data.json` 是否存在且格式正确。</p>
+      </section>
+
+      <section class="group-list" id="group-list" hidden></section>
+
+      <section class="empty panel hidden" id="empty">
+        <h3 id="empty-title">没有找到匹配的模型</h3>
+        <p id="empty-text">可以试着切回全部筛选，或者换一个关键词继续搜索。</p>
+      </section>
+    </div>
+
+    <div class="modal" id="detail-modal">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div>
+            <div class="group-brand" id="modal-brand">OpenAI</div>
+            <h3 id="modal-title">GPT-5.4</h3>
+          </div>
+          <button class="modal-close" id="modal-close" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-copy">
+            <p id="modal-description"></p>
+            <div class="model-tags" id="modal-tags"></div>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-card">
+              <span id="modal-label-group">所属分组</span>
+              <div id="modal-groups"></div>
+            </div>
+            <div class="detail-card">
+              <span id="modal-label-channel">展示渠道</span>
+              <div id="modal-channel"></div>
+            </div>
+            <div class="detail-card">
+              <span id="modal-label-multiplier">当前倍率</span>
+              <strong id="modal-multiplier"></strong>
+            </div>
+            <div class="detail-card">
+              <span id="modal-label-id">模型名称</span>
+              <div id="modal-id"></div>
+            </div>
+          </div>
+          <button class="copy-btn" id="copy-btn" type="button">复制模型名</button>
+        </div>
       </div>
     </div>
 
     <script>
       const STRINGS = {
         zh: {
-          pageTitle: "模型广场",
-          brandKicker: "Model Marketplace",
-          brandTitle: "模型广场",
-          brandSubtitle: "统一查看当前可用模型、平台与倍率信息",
-          heroHeadline: "把常用模型整理成一个真正清爽好找的模型广场",
-          heroDesc:
-            "这个页面采用纯静态数据驱动，不依赖登录态和接口权限。后面你只需要维护每个模型的倍率，就能快速更新给用户看的模型目录。",
-          pillOne: "纯静态页面，嵌入最省事",
-          pillTwo: "维护时只改倍率字段",
-          pillThree: "适合放进自定义菜单当展示页",
-          statModels: "模型数量",
-          statPlatforms: "平台数量",
-          statChannels: "渠道数量",
+          title: "模型广场",
+          subtitle: "按分组整理当前推荐模型与倍率信息",
+          eyebrow: "Route Policy",
+          heroTitle: "把模型、倍率和分组，整理成更自然的使用秩序。",
+          heroDescription:
+            "这里不是把模型堆成一面参数墙，而是按照你给用户看的方式重新组织。每个分组展示自己适合的模型、倍率和说明，方便用户更快挑选，也方便你后续维护。",
+          pill1: "按分组展示模型能力",
+          pill2: "倍率维护收口在数据文件",
+          pill3: "适合嵌入自定义菜单",
           statGroups: "分组数量",
-          noticeTitle: "需要通过自定义菜单打开",
-          noticeText:
-            "这个页面使用静态数据文件，不依赖用户登录态。你只需要在 `model-marketplace-data.json` 里维护模型倍率，就能更新展示内容。",
-          searchLabel: "搜索",
-          searchPlaceholder: "搜索模型名、平台、渠道、分组、标签",
-          platformLabel: "平台筛选",
-          groupLabel: "分组筛选",
+          statModels: "模型数量",
+          statBrands: "平台数量",
+          statVisible: "当前可见模型",
+          labelSearch: "搜索",
+          labelPlatform: "平台",
+          labelGroup: "分组",
+          labelTag: "标签",
+          searchPlaceholder: "搜索模型名、平台、分组、标签",
           allPlatforms: "全部平台",
           allGroups: "全部分组",
-          loading: "正在加载模型列表...",
+          allTags: "全部标签",
+          summaryGroups: "匹配分组",
+          summaryModels: "匹配模型",
+          summaryBrands: "品牌覆盖",
+          summaryGroupsText: "筛选后仍然显示的模型分组数量。",
+          summaryModelsText: "当前筛选条件下，用户实际会看到的模型条目数。",
+          summaryBrandsText: "当前展示结果覆盖的模型平台数量。",
+          loading: "正在加载模型广场数据...",
+          errorTitle: "数据加载失败",
+          errorText: "请检查 `model-marketplace-data.json` 是否存在且格式正确。",
           emptyTitle: "没有找到匹配的模型",
-          emptyText: "可以试试更换搜索词，或者把平台与分组筛选切回“全部”。",
-          footerNote:
-            "这个页面的数据来自同目录下的 `model-marketplace-data.json`。如果你后面只想调整展示价格，直接改每个模型的 `multiplier` 字段即可，不需要动页面结构。",
-          copyModel: "复制模型名",
-          copied: "已复制",
-          channel: "渠道",
+          emptyText: "可以试着切回全部筛选，或者换一个关键词继续搜索。",
+          models: "个模型",
           groups: "分组",
-          billing: "计费说明",
-          pricing: "倍率",
-          noDescription: "当前没有额外说明，这个模型会沿用渠道与分组权限控制。",
-          noPricing: "未配置",
-          tokenBilling: "按倍率展示",
-          requestBilling: "按倍率展示",
-          tieredBilling: "按倍率展示",
-          embedMode: "嵌入模式",
-          authRequired: "静态模型页",
-          authHint: "这是一个纯静态的模型展示页，适合直接嵌入自定义菜单使用。",
-          tieredPriceHint: "请查看倍率配置",
-          mixedPriceHint: "请查看倍率配置",
+          multiplier: "当前倍率",
+          channel: "展示渠道",
+          copy: "复制模型名",
+          copied: "已复制",
+          modalGroup: "所属分组",
+          modalChannel: "展示渠道",
+          modalMultiplier: "当前倍率",
+          modalId: "模型名称",
+          embed: "嵌入模式"
         },
         en: {
-          pageTitle: "Model Marketplace",
-          brandKicker: "Model Marketplace",
-          brandTitle: "Model Marketplace",
-          brandSubtitle: "Browse available models, platforms, and multipliers in one place",
-          heroHeadline: "Turn your common models into a clean marketplace-style catalog",
-          heroDesc:
-            "This page is powered by a static data file and does not depend on login state or permission APIs. To update what users see, you only need to edit each model's multiplier value.",
-          pillOne: "Static page, easiest to embed",
-          pillTwo: "Maintain only the multiplier field",
-          pillThree: "Great fit for a custom menu showcase page",
-          statModels: "Models",
-          statPlatforms: "Platforms",
-          statChannels: "Channels",
+          title: "Model Marketplace",
+          subtitle: "Browse recommended models and multipliers by group",
+          eyebrow: "Route Policy",
+          heroTitle: "Bring models, multipliers, and groups into a cleaner order.",
+          heroDescription:
+            "Instead of showing users a wall of parameters, this page reorganizes your model offering by the way you want it presented. Each group carries its own models, multiplier, and notes so the experience feels easier to browse and easier to maintain.",
+          pill1: "Present model capabilities by group",
+          pill2: "Keep multiplier maintenance inside the data file",
+          pill3: "Works well as a custom menu embed page",
           statGroups: "Groups",
-          noticeTitle: "Open this from the custom menu",
-          noticeText:
-            "This page uses a static data file and does not depend on login state. Update model visibility by editing the multiplier values inside `model-marketplace-data.json`.",
-          searchLabel: "Search",
-          searchPlaceholder: "Search by model, platform, channel, group, or tag",
-          platformLabel: "Platform",
-          groupLabel: "Group",
+          statModels: "Models",
+          statBrands: "Brands",
+          statVisible: "Visible models",
+          labelSearch: "Search",
+          labelPlatform: "Platform",
+          labelGroup: "Group",
+          labelTag: "Tag",
+          searchPlaceholder: "Search by model, platform, group, or tag",
           allPlatforms: "All platforms",
           allGroups: "All groups",
-          loading: "Loading available models...",
-          emptyTitle: "No models match your filters",
-          emptyText: "Try a different keyword or reset the platform and group filters.",
-          footerNote:
-            "The page reads from `model-marketplace-data.json` in the same directory. If you only want to adjust pricing presentation later, edit the `multiplier` field for each model and keep the page untouched.",
-          copyModel: "Copy model name",
-          copied: "Copied",
+          allTags: "All tags",
+          summaryGroups: "Matching groups",
+          summaryModels: "Matching models",
+          summaryBrands: "Brand coverage",
+          summaryGroupsText: "Groups still visible after the current filters are applied.",
+          summaryModelsText: "Total model entries that remain visible under the current filters.",
+          summaryBrandsText: "Model platforms represented in the current result set.",
+          loading: "Loading marketplace data...",
+          errorTitle: "Failed to load data",
+          errorText: "Please make sure `model-marketplace-data.json` exists and contains valid JSON.",
+          emptyTitle: "No models match the current filters",
+          emptyText: "Try switching the filters back to all or search with another keyword.",
+          models: "models",
+          groups: "groups",
+          multiplier: "Current multiplier",
           channel: "Channel",
-          groups: "Groups",
-          billing: "Billing note",
-          pricing: "Multiplier",
-          noDescription: "No extra description is configured for this model. Access is still controlled by channel and group permissions.",
-          noPricing: "Not configured",
-          tokenBilling: "Multiplier display",
-          requestBilling: "Multiplier display",
-          tieredBilling: "Multiplier display",
-          embedMode: "Embedded mode",
-          authRequired: "Static model page",
-          authHint: "This is a static showcase page and can be embedded directly through the custom menu.",
-          tieredPriceHint: "See multiplier config",
-          mixedPriceHint: "See multiplier config",
-        },
-      };
-
-      const PLATFORM_ACCENTS = {
-        openai: ["#10b981", "#14b8a6"],
-        anthropic: ["#fb923c", "#f97316"],
-        gemini: ["#60a5fa", "#2563eb"],
-        google: ["#60a5fa", "#2563eb"],
-        antigravity: ["#a78bfa", "#7c3aed"],
-      };
-
-      const state = {
-        strings: STRINGS.zh,
-        models: [],
-        settings: null,
+          copy: "Copy model name",
+          copied: "Copied",
+          modalGroup: "Groups",
+          modalChannel: "Channel",
+          modalMultiplier: "Multiplier",
+          modalId: "Model name",
+          embed: "Embedded mode"
+        }
       };
 
       const params = new URLSearchParams(window.location.search);
       const lang = (params.get("lang") || "zh").toLowerCase().startsWith("en") ? "en" : "zh";
-      state.strings = STRINGS[lang];
-      const uiMode = params.get("ui_mode") || "";
-      const theme = params.get("theme") || "light";
+      const text = STRINGS[lang];
+      const isDark = (params.get("theme") || "").toLowerCase() === "dark";
+      if (isDark) document.documentElement.classList.add("dark");
 
-      const els = {
-        siteLogo: document.getElementById("site-logo"),
-        brandKicker: document.getElementById("brand-kicker"),
+      const elements = {
         brandTitle: document.getElementById("brand-title"),
         brandSubtitle: document.getElementById("brand-subtitle"),
-        embedBadge: document.getElementById("embed-badge"),
-        heroHeadline: document.getElementById("hero-headline"),
-        heroDesc: document.getElementById("hero-desc"),
-        pillOne: document.getElementById("pill-one"),
-        pillTwo: document.getElementById("pill-two"),
-        pillThree: document.getElementById("pill-three"),
-        statModels: document.getElementById("stat-models"),
-        statPlatforms: document.getElementById("stat-platforms"),
-        statChannels: document.getElementById("stat-channels"),
-        statGroups: document.getElementById("stat-groups"),
-        statModelsLabel: document.getElementById("stat-models-label"),
-        statPlatformsLabel: document.getElementById("stat-platforms-label"),
-        statChannelsLabel: document.getElementById("stat-channels-label"),
-        statGroupsLabel: document.getElementById("stat-groups-label"),
-        notice: document.getElementById("notice"),
-        noticeTitle: document.getElementById("notice-title"),
-        noticeText: document.getElementById("notice-text"),
-        searchLabel: document.getElementById("search-label"),
+        heroEyebrow: document.getElementById("hero-eyebrow"),
+        heroTitle: document.getElementById("hero-title"),
+        heroDescription: document.getElementById("hero-description"),
+        heroPill1: document.getElementById("hero-pill-1"),
+        heroPill2: document.getElementById("hero-pill-2"),
+        heroPill3: document.getElementById("hero-pill-3"),
+        totalGroups: document.getElementById("total-groups"),
+        totalModels: document.getElementById("total-models"),
+        totalBrands: document.getElementById("total-brands"),
+        totalVisible: document.getElementById("total-visible"),
+        labelGroups: document.getElementById("label-groups"),
+        labelModels: document.getElementById("label-models"),
+        labelBrands: document.getElementById("label-brands"),
+        labelVisible: document.getElementById("label-visible"),
+        labelSearch: document.getElementById("label-search"),
+        labelPlatform: document.getElementById("label-platform"),
+        labelGroup: document.getElementById("label-group"),
+        labelTag: document.getElementById("label-tag"),
         searchInput: document.getElementById("search-input"),
-        platformLabel: document.getElementById("platform-label"),
         platformFilter: document.getElementById("platform-filter"),
-        groupLabel: document.getElementById("group-label"),
         groupFilter: document.getElementById("group-filter"),
+        tagFilter: document.getElementById("tag-filter"),
+        summaryTitleGroups: document.getElementById("summary-title-groups"),
+        summaryTitleModels: document.getElementById("summary-title-models"),
+        summaryTitleBrands: document.getElementById("summary-title-brands"),
+        summaryGroups: document.getElementById("summary-groups"),
+        summaryModels: document.getElementById("summary-models"),
+        summaryBrands: document.getElementById("summary-brands"),
+        summaryTextGroups: document.getElementById("summary-text-groups"),
+        summaryTextModels: document.getElementById("summary-text-models"),
+        summaryTextBrands: document.getElementById("summary-text-brands"),
         loading: document.getElementById("loading"),
         loadingText: document.getElementById("loading-text"),
-        cards: document.getElementById("cards"),
-        emptyState: document.getElementById("empty-state"),
+        error: document.getElementById("error"),
+        errorTitle: document.getElementById("error-title"),
+        errorText: document.getElementById("error-text"),
+        groupList: document.getElementById("group-list"),
+        empty: document.getElementById("empty"),
         emptyTitle: document.getElementById("empty-title"),
         emptyText: document.getElementById("empty-text"),
-        footerNote: document.getElementById("footer-note"),
+        modal: document.getElementById("detail-modal"),
+        modalBrand: document.getElementById("modal-brand"),
+        modalTitle: document.getElementById("modal-title"),
+        modalDescription: document.getElementById("modal-description"),
+        modalTags: document.getElementById("modal-tags"),
+        modalGroups: document.getElementById("modal-groups"),
+        modalChannel: document.getElementById("modal-channel"),
+        modalMultiplier: document.getElementById("modal-multiplier"),
+        modalId: document.getElementById("modal-id"),
+        modalLabelGroup: document.getElementById("modal-label-group"),
+        modalLabelChannel: document.getElementById("modal-label-channel"),
+        modalLabelMultiplier: document.getElementById("modal-label-multiplier"),
+        modalLabelId: document.getElementById("modal-label-id"),
+        copyBtn: document.getElementById("copy-btn"),
+        modalClose: document.getElementById("modal-close"),
+        embedBadge: document.getElementById("embed-badge")
       };
 
-      function setTheme() {
-        const root = document.documentElement;
-        root.classList.toggle("dark", theme === "dark");
-      }
+      const state = {
+        models: [],
+        groups: [],
+        currentModel: null
+      };
 
-      function applyStrings() {
-        document.title = state.strings.pageTitle;
-        els.brandKicker.textContent = state.strings.brandKicker;
-        els.brandTitle.textContent = state.strings.brandTitle;
-        els.brandSubtitle.textContent = state.strings.brandSubtitle;
-        els.heroHeadline.textContent = state.strings.heroHeadline;
-        els.heroDesc.textContent = state.strings.heroDesc;
-        els.pillOne.textContent = state.strings.pillOne;
-        els.pillTwo.textContent = state.strings.pillTwo;
-        els.pillThree.textContent = state.strings.pillThree;
-        els.statModelsLabel.textContent = state.strings.statModels;
-        els.statPlatformsLabel.textContent = state.strings.statPlatforms;
-        els.statChannelsLabel.textContent = state.strings.statChannels;
-        els.statGroupsLabel.textContent = state.strings.statGroups;
-        els.noticeTitle.textContent = state.strings.noticeTitle;
-        els.noticeText.textContent = state.strings.noticeText;
-        els.searchLabel.textContent = state.strings.searchLabel;
-        els.searchInput.placeholder = state.strings.searchPlaceholder;
-        els.platformLabel.textContent = state.strings.platformLabel;
-        els.groupLabel.textContent = state.strings.groupLabel;
-        els.loadingText.textContent = state.strings.loading;
-        els.emptyTitle.textContent = state.strings.emptyTitle;
-        els.emptyText.textContent = state.strings.emptyText;
-        els.footerNote.textContent = state.strings.footerNote;
-        els.platformFilter.innerHTML = `<option value="">${state.strings.allPlatforms}</option>`;
-        els.groupFilter.innerHTML = `<option value="">${state.strings.allGroups}</option>`;
-      }
-
-      function updateEmbedBadge() {
-        if (uiMode === "embedded") {
-          els.embedBadge.classList.add("is-visible");
-          els.embedBadge.textContent = state.strings.embedMode;
+      function applyStaticText() {
+        document.title = text.title;
+        elements.brandTitle.textContent = text.title;
+        elements.brandSubtitle.textContent = text.subtitle;
+        elements.heroEyebrow.textContent = text.eyebrow;
+        elements.heroTitle.textContent = text.heroTitle;
+        elements.heroDescription.textContent = text.heroDescription;
+        elements.heroPill1.textContent = text.pill1;
+        elements.heroPill2.textContent = text.pill2;
+        elements.heroPill3.textContent = text.pill3;
+        elements.labelGroups.textContent = text.statGroups;
+        elements.labelModels.textContent = text.statModels;
+        elements.labelBrands.textContent = text.statBrands;
+        elements.labelVisible.textContent = text.statVisible;
+        elements.labelSearch.textContent = text.labelSearch;
+        elements.labelPlatform.textContent = text.labelPlatform;
+        elements.labelGroup.textContent = text.labelGroup;
+        elements.labelTag.textContent = text.labelTag;
+        elements.searchInput.placeholder = text.searchPlaceholder;
+        elements.summaryTitleGroups.textContent = text.summaryGroups;
+        elements.summaryTitleModels.textContent = text.summaryModels;
+        elements.summaryTitleBrands.textContent = text.summaryBrands;
+        elements.summaryTextGroups.textContent = text.summaryGroupsText;
+        elements.summaryTextModels.textContent = text.summaryModelsText;
+        elements.summaryTextBrands.textContent = text.summaryBrandsText;
+        elements.loadingText.textContent = text.loading;
+        elements.errorTitle.textContent = text.errorTitle;
+        elements.errorText.textContent = text.errorText;
+        elements.emptyTitle.textContent = text.emptyTitle;
+        elements.emptyText.textContent = text.emptyText;
+        elements.modalLabelGroup.textContent = text.modalGroup;
+        elements.modalLabelChannel.textContent = text.modalChannel;
+        elements.modalLabelMultiplier.textContent = text.modalMultiplier;
+        elements.modalLabelId.textContent = text.modalId;
+        elements.copyBtn.textContent = text.copy;
+        if ((params.get("ui_mode") || "") === "embedded") {
+          elements.embedBadge.textContent = text.embed;
+          elements.embedBadge.classList.add("visible");
         }
       }
 
-      async function fetchJson(url, options = {}) {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          const message = `HTTP ${response.status}`;
-          throw new Error(message);
+      function normalizeModels(models) {
+        return (models || []).map((model, index) => ({
+          id: model.id || `model-${index}`,
+          name: model.name || "Unnamed Model",
+          platform: model.platform || "Other",
+          channel: model.channel || "",
+          groups: model.groups || [],
+          tags: model.tags || [],
+          description: model.description || "",
+          multiplier: model.multiplier || "1.00x"
+        }));
+      }
+
+      function deriveGroups(models) {
+        const groupMap = new Map();
+        for (const model of models) {
+          const groups = model.groups.length ? model.groups : ["默认分组"];
+          for (const groupName of groups) {
+            const key = `${groupName}::${model.platform}`;
+            if (!groupMap.has(key)) {
+              groupMap.set(key, {
+                id: key,
+                name: groupName,
+                platform: model.platform,
+                description: model.channel ? `${model.channel} 下的模型展示分组。` : "用于给用户展示这一组可用模型。",
+                models: [],
+                tags: new Set(),
+                channels: new Set()
+              });
+            }
+            const group = groupMap.get(key);
+            group.models.push(model);
+            model.tags.forEach((tag) => group.tags.add(tag));
+            if (model.channel) group.channels.add(model.channel);
+          }
         }
-        return response.json();
-      }
-
-      function getAccent(platform) {
-        const key = String(platform || "").toLowerCase();
-        const [a, b] = PLATFORM_ACCENTS[key] || ["#14b8a6", "#60a5fa"];
-        return { a, b };
-      }
-
-      function billingLabel() {
-        return state.strings.tokenBilling;
-      }
-
-      function describePricing(multiplier) {
-        return multiplier || state.strings.noPricing;
-      }
-
-      function dedupe(values) {
-        return [...new Set(values.filter(Boolean))];
-      }
-
-      function normalizeStaticModels(models) {
-        return (models || [])
-          .map((item) => ({
-            id: item.id || item.name,
-            name: item.name || "-",
-            platform: item.platform || "Other",
-            description: item.description || state.strings.noDescription,
-            channels: dedupe([item.channel, ...(item.channels || [])]),
-            groups: dedupe(item.groups || []),
-            tags: dedupe(item.tags || []),
-            multiplier: item.multiplier || "",
+        return Array.from(groupMap.values())
+          .map((group) => ({
+            ...group,
+            channels: Array.from(group.channels),
+            tags: Array.from(group.tags),
+            multiplier: group.models.length === 1 ? group.models[0].multiplier : "多倍率",
+            description:
+              group.channels.length > 0
+                ? `${group.channels.join(" / ")} 下的模型展示分组。`
+                : group.description
           }))
           .sort((a, b) => a.name.localeCompare(b.name));
       }
 
-      function updateStats() {
-        els.statModels.textContent = String(state.models.length);
-        els.statPlatforms.textContent = String(new Set(state.models.map((item) => item.platform)).size);
-        els.statChannels.textContent = String(new Set(state.models.flatMap((item) => item.channels)).size);
-        els.statGroups.textContent = String(new Set(state.models.flatMap((item) => item.groups)).size);
+      function buildOptions() {
+        const platforms = [...new Set(state.models.map((model) => model.platform))].sort();
+        const groups = [...new Set(state.groups.map((group) => group.name))].sort();
+        const tags = [...new Set(state.models.flatMap((model) => model.tags))].sort();
+
+        elements.platformFilter.innerHTML = `<option value="all">${text.allPlatforms}</option>` +
+          platforms.map((item) => `<option value="${item}">${item}</option>`).join("");
+        elements.groupFilter.innerHTML = `<option value="all">${text.allGroups}</option>` +
+          groups.map((item) => `<option value="${item}">${item}</option>`).join("");
+        elements.tagFilter.innerHTML = `<option value="all">${text.allTags}</option>` +
+          tags.map((item) => `<option value="${item}">${item}</option>`).join("");
       }
 
-      function buildFilters() {
-        const platforms = dedupe(state.models.map((item) => item.platform)).sort();
-        const groups = dedupe(state.models.flatMap((item) => item.groups)).sort();
-
-        els.platformFilter.innerHTML = [
-          `<option value="">${state.strings.allPlatforms}</option>`,
-          ...platforms.map((platform) => `<option value="${platform}">${platform}</option>`),
-        ].join("");
-
-        els.groupFilter.innerHTML = [
-          `<option value="">${state.strings.allGroups}</option>`,
-          ...groups.map((group) => `<option value="${group}">${group}</option>`),
-        ].join("");
+      function updateTotals() {
+        const brands = new Set(state.models.map((model) => model.platform));
+        elements.totalGroups.textContent = String(state.groups.length);
+        elements.totalModels.textContent = String(state.models.length);
+        elements.totalBrands.textContent = String(brands.size);
       }
 
-      function createChip(text) {
-        return `<span class="chip">${text}</span>`;
-      }
+      function filterGroups() {
+        const keyword = elements.searchInput.value.trim().toLowerCase();
+        const platform = elements.platformFilter.value;
+        const groupName = elements.groupFilter.value;
+        const tag = elements.tagFilter.value;
 
-      function renderCards() {
-        const query = els.searchInput.value.trim().toLowerCase();
-        const platform = els.platformFilter.value;
-        const group = els.groupFilter.value;
-
-        const items = state.models.filter((item) => {
-          const matchesQuery =
-            !query ||
-            item.name.toLowerCase().includes(query) ||
-            item.platform.toLowerCase().includes(query) ||
-            item.channels.some((value) => value.toLowerCase().includes(query)) ||
-            item.groups.some((value) => value.toLowerCase().includes(query)) ||
-            item.tags.some((value) => value.toLowerCase().includes(query));
-          const matchesPlatform = !platform || item.platform === platform;
-          const matchesGroup = !group || item.groups.includes(group);
-          return matchesQuery && matchesPlatform && matchesGroup;
-        });
-
-        els.cards.hidden = items.length === 0;
-        els.emptyState.classList.toggle("is-visible", items.length === 0);
-
-        els.cards.innerHTML = items
-          .map((item) => {
-            const accent = getAccent(item.platform);
-            const channels = item.channels.map(createChip).join("");
-            const groups = item.groups.map(createChip).join("");
-            const tags = (item.tags || []).map(createChip).join("");
-            const price = describePricing(item.multiplier);
-            const billing = billingLabel();
-
-            return `
-              <article class="card" style="--accent-a:${accent.a};--accent-b:${accent.b};">
-                <div class="card-head">
-                  <div>
-                    <div class="platform-pill">${item.platform}</div>
-                    <h3 class="model-name">${item.name}</h3>
-                  </div>
-                </div>
-                <p class="model-summary">${item.description || state.strings.noDescription}</p>
-                ${tags ? `<div class="chip-row" style="margin-bottom:18px;">${tags}</div>` : ""}
-                <div class="meta-grid">
-                  <div class="meta-item">
-                    <div class="meta-label">${state.strings.channel}</div>
-                    <div class="meta-row">${channels || createChip("-")}</div>
-                  </div>
-                  <div class="meta-item">
-                    <div class="meta-label">${state.strings.groups}</div>
-                    <div class="meta-row">${groups || createChip("-")}</div>
-                  </div>
-                  <div class="meta-item">
-                    <div class="meta-label">${state.strings.billing}</div>
-                    <div class="meta-value">${billing}</div>
-                  </div>
-                  <div class="meta-item">
-                    <div class="meta-label">${state.strings.pricing}</div>
-                    <div class="meta-value">${price}</div>
-                  </div>
-                </div>
-                <button class="copy-button" data-model="${item.name}">
-                  ${state.strings.copyModel}
-                </button>
-              </article>
-            `;
+        return state.groups
+          .map((group) => {
+            if (platform !== "all" && group.platform !== platform) return null;
+            if (groupName !== "all" && group.name !== groupName) return null;
+            const models = group.models.filter((model) => {
+              if (tag !== "all" && !model.tags.includes(tag)) return false;
+              if (!keyword) return true;
+              return [
+                model.name,
+                model.platform,
+                model.channel,
+                group.name,
+                ...model.tags
+              ]
+                .filter(Boolean)
+                .some((value) => value.toLowerCase().includes(keyword));
+            });
+            if (models.length === 0) return null;
+            return { ...group, models };
           })
+          .filter(Boolean);
+      }
+
+      function renderSummary(groups) {
+        const brands = new Set(groups.map((group) => group.platform));
+        const visibleModels = groups.reduce((sum, group) => sum + group.models.length, 0);
+        elements.totalVisible.textContent = String(visibleModels);
+        elements.summaryGroups.textContent = String(groups.length);
+        elements.summaryModels.textContent = String(visibleModels);
+        elements.summaryBrands.textContent = String(brands.size);
+      }
+
+      function chip(textValue) {
+        return `<span class="chip">${textValue}</span>`;
+      }
+
+      function renderGroups() {
+        const groups = filterGroups();
+        renderSummary(groups);
+
+        elements.groupList.hidden = groups.length === 0;
+        elements.empty.classList.toggle("hidden", groups.length !== 0);
+
+        elements.groupList.innerHTML = groups
+          .map((group) => `
+            <article class="panel group-card">
+              <div class="group-head">
+                <div class="group-head-left">
+                  <div class="group-brand">${group.platform}</div>
+                  <h3>${group.name}</h3>
+                  <p>${group.description}</p>
+                  <div class="group-meta">
+                    <span class="meta-pill">${group.channels.join(" / ") || text.channel}</span>
+                    <span class="meta-pill">${group.models.length} ${text.models}</span>
+                    <span class="meta-pill">${group.tags.length || 0} ${text.labelTag}</span>
+                  </div>
+                </div>
+                <div class="group-head-right">
+                  <div class="multiplier-card">
+                    <span>${text.multiplier}</span>
+                    <strong>${group.multiplier}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="model-list">
+                ${group.models.map((model) => `
+                  <button type="button" class="model-row" data-model-id="${model.id}">
+                    <div class="model-main">
+                      <strong>${model.name}</strong>
+                      <p>${model.description}</p>
+                    </div>
+                    <div class="model-tags">${model.tags.map(chip).join("")}</div>
+                    <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">
+                      <span class="model-multiplier">${model.multiplier}</span>
+                      <span class="model-arrow">›</span>
+                    </div>
+                  </button>
+                `).join("")}
+              </div>
+            </article>
+          `)
           .join("");
-      }
 
-      function bindCopyActions() {
-        els.cards.addEventListener("click", async (event) => {
-          const button = event.target.closest("[data-model]");
-          if (!button) return;
-          const model = button.getAttribute("data-model");
-          if (!model) return;
-          try {
-            await navigator.clipboard.writeText(model);
-            const original = button.textContent;
-            button.textContent = state.strings.copied;
-            setTimeout(() => {
-              button.textContent = original;
-            }, 1200);
-          } catch (error) {
-            console.error("Copy failed:", error);
-          }
+        elements.groupList.querySelectorAll("[data-model-id]").forEach((button) => {
+          button.addEventListener("click", () => openDetail(button.getAttribute("data-model-id")));
         });
       }
 
-      function bindFilters() {
-        [els.searchInput, els.platformFilter, els.groupFilter].forEach((node) => {
-          node.addEventListener("input", renderCards);
-          node.addEventListener("change", renderCards);
-        });
+      function openDetail(modelId) {
+        const model = state.models.find((item) => item.id === modelId);
+        if (!model) return;
+        state.currentModel = model;
+        elements.modalBrand.textContent = model.platform;
+        elements.modalTitle.textContent = model.name;
+        elements.modalDescription.textContent = model.description;
+        elements.modalTags.innerHTML = model.tags.map(chip).join("");
+        elements.modalGroups.innerHTML = model.groups.map(chip).join("");
+        elements.modalChannel.textContent = model.channel || "-";
+        elements.modalMultiplier.textContent = model.multiplier;
+        elements.modalId.textContent = model.name;
+        elements.copyBtn.textContent = text.copy;
+        elements.modal.classList.add("visible");
       }
 
-      async function loadSettings() {
+      function closeDetail() {
+        elements.modal.classList.remove("visible");
+        state.currentModel = null;
+      }
+
+      async function loadData() {
         try {
-          const payload = await fetchJson("/api/v1/settings/public");
-          const settings = payload.data || payload;
-          state.settings = settings;
-          if (settings.site_logo) {
-            els.siteLogo.src = settings.site_logo;
+          const response = await fetch("./model-marketplace-data.json");
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+
+          if (payload.meta) {
+            elements.brandTitle.textContent = payload.meta.site_name || text.title;
+            elements.brandSubtitle.textContent = payload.meta.site_subtitle || text.subtitle;
+            elements.heroTitle.textContent = payload.meta.hero_headline || text.heroTitle;
+            elements.heroDescription.textContent = payload.meta.hero_description || text.heroDescription;
+            elements.heroPill1.textContent = payload.meta.pill_one || text.pill1;
+            elements.heroPill2.textContent = payload.meta.pill_two || text.pill2;
+            elements.heroPill3.textContent = payload.meta.pill_three || text.pill3;
           }
-          if (settings.site_name) {
-            els.brandTitle.textContent = `${settings.site_name} · ${state.strings.pageTitle}`;
-          }
-        } catch (error) {
-          console.warn("Failed to load public settings:", error);
-        }
-      }
 
-      function applyMeta(meta) {
-        if (!meta) return;
-        if (meta.site_name) {
-          els.brandTitle.textContent = meta.site_name;
-        }
-        if (meta.site_subtitle) {
-          els.brandSubtitle.textContent = meta.site_subtitle;
-        }
-        if (meta.hero_headline) {
-          els.heroHeadline.textContent = meta.hero_headline;
-        }
-        if (meta.hero_description) {
-          els.heroDesc.textContent = meta.hero_description;
-        }
-        if (meta.pill_one) {
-          els.pillOne.textContent = meta.pill_one;
-        }
-        if (meta.pill_two) {
-          els.pillTwo.textContent = meta.pill_two;
-        }
-        if (meta.pill_three) {
-          els.pillThree.textContent = meta.pill_three;
-        }
-      }
+          state.models = normalizeModels(payload.models);
+          state.groups = deriveGroups(state.models);
+          buildOptions();
+          updateTotals();
+          renderGroups();
 
-      async function loadModels() {
-        const payload = await fetchJson("./model-marketplace-data.json");
-        applyMeta(payload.meta || {});
-        state.models = normalizeStaticModels(payload.models || []);
-        updateStats();
-        buildFilters();
-        renderCards();
-        els.loading.hidden = true;
-        els.cards.hidden = state.models.length === 0;
-      }
-
-      async function boot() {
-        setTheme();
-        applyStrings();
-        updateEmbedBadge();
-        bindFilters();
-        bindCopyActions();
-        await loadSettings();
-        try {
-          await loadModels();
+          elements.loading.classList.remove("visible");
+          elements.loading.classList.add("hidden");
+          elements.groupList.hidden = false;
         } catch (error) {
           console.error(error);
-          els.loading.hidden = true;
-          els.notice.classList.remove("is-hidden");
-          els.noticeTitle.textContent = "数据文件加载失败";
-          els.noticeText.textContent = error.message;
-          els.emptyState.classList.add("is-visible");
+          elements.loading.classList.remove("visible");
+          elements.loading.classList.add("hidden");
+          elements.error.classList.remove("hidden");
+          elements.error.classList.add("visible");
         }
       }
 
-      boot();
+      elements.searchInput.addEventListener("input", renderGroups);
+      elements.platformFilter.addEventListener("change", renderGroups);
+      elements.groupFilter.addEventListener("change", renderGroups);
+      elements.tagFilter.addEventListener("change", renderGroups);
+      elements.modalClose.addEventListener("click", closeDetail);
+      elements.modal.addEventListener("click", (event) => {
+        if (event.target === elements.modal) closeDetail();
+      });
+      elements.copyBtn.addEventListener("click", async () => {
+        if (!state.currentModel) return;
+        try {
+          await navigator.clipboard.writeText(state.currentModel.name);
+          elements.copyBtn.textContent = text.copied;
+          setTimeout(() => {
+            elements.copyBtn.textContent = text.copy;
+          }, 1200);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      applyStaticText();
+      loadData();
     </script>
   </body>
 </html>
