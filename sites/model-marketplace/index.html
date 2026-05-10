@@ -606,7 +606,7 @@
     };
 
     function getUnitLabel() {
-      return configData?.unit || "美元";
+      return configData?.unit || "";
     }
 
     function applyGroupMultiplier(value, groupMultiplier) {
@@ -689,7 +689,7 @@
 
       document.title = title;
       els.brandTitle.textContent = title;
-      els.brandSubtitle.textContent = `价格单位：${getUnitLabel()}，已包含分组倍率`;
+      els.brandSubtitle.textContent = "已包含分组倍率";
 
       const params = new URLSearchParams(window.location.search);
       if ((params.get("ui_mode") || "") === "embedded") {
@@ -746,6 +746,7 @@
 
     function renderTokenPricing(pricing, groupMultiplier) {
       const unit = escapeHTML(getUnitLabel());
+      const unitSuffix = unit ? ` ${unit}` : "";
       const rows = [
         { label: "输入", value: pricing.input },
         { label: "输出", value: pricing.output }
@@ -763,7 +764,7 @@
           ${rows.map((row) => `
             <div class="price-line">
               <span class="price-label">${row.label}</span>
-              <span class="price-value"><strong>${formatPrice(applyGroupMultiplier(row.value, groupMultiplier))}</strong> ${unit} / 1M Token</span>
+              <span class="price-value"><strong>${formatPrice(applyGroupMultiplier(row.value, groupMultiplier))}</strong>${unitSuffix} / 1M Token</span>
             </div>
           `).join("")}
         </div>
@@ -772,6 +773,7 @@
 
     function renderContextPricing(pricing, groupMultiplier) {
       const unit = escapeHTML(getUnitLabel());
+      const unitSuffix = unit ? ` ${unit}` : "";
       return `
         <div class="price-list">
           ${(pricing.ranges || []).map((range) => {
@@ -790,7 +792,7 @@
                 <span class="price-value">
                   输入 <strong>${formatPrice(applyGroupMultiplier(range.input, groupMultiplier))}</strong>
                   / 输出 <strong>${formatPrice(applyGroupMultiplier(range.output, groupMultiplier))}</strong>
-                  ${extras.length ? `<br><span class="empty-note">${escapeHTML(extras.join(" / "))} ${unit}</span>` : ""}
+                  ${extras.length ? `<br><span class="empty-note">${escapeHTML(extras.join(" / "))}${unitSuffix}</span>` : ""}
                 </span>
               </div>
             `;
