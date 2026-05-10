@@ -119,6 +119,106 @@
       ]
     },
     {
+      "brand": "OpenAI",
+      "name": "0.2倍率-GPT",
+      "description": "GPT 系列 0.2 倍率分组",
+      "groupMultiplier": 0.2,
+      "tags": [
+        { "text": "分组倍率 x0.20", "highlight": false },
+        { "text": "7 个模型", "highlight": false },
+        { "text": "GPT 系列", "highlight": true }
+      ],
+      "models": [
+        {
+          "id": "gpt-5.2",
+          "name": "GPT-5.2",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
+          },
+          "features": ["128K上下文", "多模态输入"]
+        },
+        {
+          "id": "gpt-5.3",
+          "name": "GPT-5.3",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
+          },
+          "features": ["256K上下文", "高级推理"]
+        },
+        {
+          "id": "gpt-5.3-spark",
+          "name": "gpt-5.3-spark",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 1.75,
+            "output": 14.00,
+            "cacheRead": 0.175
+          },
+          "features": ["快速响应", "流式输出"]
+        },
+        {
+          "id": "gpt-5.4",
+          "name": "GPT-5.4",
+          "pricingType": "context",
+          "pricingLabel": "按上下文区间定价",
+          "pricing": {
+            "ranges": [
+              { "label": "0-272k", "input": 2.50, "output": 15.00, "cacheRead": 0.25 },
+              { "label": "272k+", "input": 5.00, "output": 22.50, "cacheRead": 0.50 }
+            ]
+          },
+          "features": ["超长上下文", "复杂推理"]
+        },
+        {
+          "id": "gpt-5.4-mini",
+          "name": "GPT-5.4 Mini",
+          "pricingType": "token",
+          "pricingLabel": "Token 计费",
+          "pricing": {
+            "input": 0.75,
+            "output": 4.50,
+            "cacheRead": 0.075
+          },
+          "features": ["轻量级", "低成本"]
+        },
+        {
+          "id": "gpt-5.4-pro",
+          "name": "gpt-5.4-pro",
+          "pricingType": "context",
+          "pricingLabel": "按上下文区间定价",
+          "pricing": {
+            "ranges": [
+              { "label": "0-272k", "input": 30.00, "output": 180.00 },
+              { "label": "272k+", "input": 60.00, "output": 270.00 }
+            ]
+          },
+          "features": ["专业级", "多步骤推理"]
+        },
+        {
+          "id": "gpt-5.5",
+          "name": "GPT-5.5",
+          "pricingType": "context",
+          "pricingLabel": "按上下文区间定价",
+          "pricing": {
+            "ranges": [
+              { "label": "0-272k", "input": 5.00, "output": 30.00, "cacheRead": 0.50 },
+              { "label": "272k+", "input": 10.00, "output": 45.00, "cacheRead": 1.00 }
+            ]
+          },
+          "features": ["旗舰级", "全能推理"]
+        }
+      ]
+    },
+    {
       "brand": "DeepSeek",
       "name": "DeepSeek V4",
       "description": "DeepSeek V4 系列模型",
