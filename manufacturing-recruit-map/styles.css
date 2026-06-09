@@ -95,6 +95,23 @@ body::before {
   line-height: 1.8;
 }
 
+.hero-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hero-points span {
+  padding: 9px 12px;
+  border: 1px solid rgba(23, 33, 38, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .hero-stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -129,6 +146,44 @@ body::before {
   border-radius: var(--radius-lg);
   background: var(--panel);
   box-shadow: var(--shadow);
+}
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.intro-card {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 241, 235, 0.9));
+  box-shadow: var(--shadow);
+}
+
+.intro-kicker {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro-card h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.intro-card p:last-child {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
 }
 
 .search-field,
@@ -545,6 +600,24 @@ select:focus {
   background: rgba(23, 33, 38, 0.42);
 }
 
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
 .dialog-head,
 .dialog-body {
   padding: 24px;
@@ -642,6 +715,7 @@ select:focus {
   }
 
   .hero-stats,
+  .intro-grid,
   .filter-grid,
   .flow-strip,
   .job-grid {

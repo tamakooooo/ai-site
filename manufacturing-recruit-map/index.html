@@ -6,7 +6,27 @@
     <title>造车制造招聘学习地图</title>
     <meta
       name="description"
-      content="面向制造中心招聘的造车全流程岗位学习地图，支持按流程、模块、岗位类型和关键词快速筛选。"
+      content="面向制造中心招聘的造车全流程岗位学习地图，覆盖冲压、焊装、涂装、总装、PACK、电驱、一体压铸、质量、设备、物流、EHS 与数字化岗位，支持按流程、模块、岗位类型和关键词快速筛选。"
+    />
+    <meta
+      name="keywords"
+      content="造车招聘,制造中心招聘,汽车制造岗位,新能源汽车招聘,冲压,焊装,涂装,总装,PACK,电驱,一体压铸,质量管理,设备维修,仓储物流,EHS,数字化制造"
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#172126" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="造车制造招聘学习地图" />
+    <meta property="og:title" content="造车制造招聘学习地图" />
+    <meta
+      property="og:description"
+      content="从产品定义到整车交付，按流程查看制造中心相关岗位、工作内容和招聘关键词。"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="造车制造招聘学习地图" />
+    <meta
+      name="twitter:description"
+      content="面向制造中心招聘的造车岗位知识地图，支持流程导航、岗位筛选和关键词检索。"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,6 +35,21 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "造车制造招聘学习地图",
+        "description": "面向制造中心招聘的造车全流程岗位学习地图，覆盖岗位、工作内容和招聘关键词。",
+        "inLanguage": "zh-CN",
+        "about": [
+          "汽车制造",
+          "新能源汽车",
+          "制造中心招聘",
+          "岗位学习地图"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div class="shell">
@@ -25,9 +60,38 @@
           <p class="hero-text">
             按造车流程拆解岗位、工作内容和招聘关键词。适合制造中心招聘、岗位 mapping、面试准备和行业学习。
           </p>
+          <div class="hero-points">
+            <span>覆盖 20 个流程模块</span>
+            <span>覆盖制造主线与新能源特色工艺</span>
+            <span>适合招聘、学习、面试和人才 mapping</span>
+          </div>
         </div>
         <div class="hero-stats" id="hero-stats"></div>
       </header>
+
+      <section class="intro-grid" aria-label="站点说明">
+        <article class="intro-card">
+          <p class="intro-kicker">适用场景</p>
+          <h2>这不是岗位列表页，而是一份招聘工作台</h2>
+          <p>
+            适合制造中心招聘、行业入门学习、JD 关键词整理、人才 mapping 和面试提问准备。页面按造车真实流程组织，方便先看环节，再看岗位。
+          </p>
+        </article>
+        <article class="intro-card">
+          <p class="intro-kicker">如何使用</p>
+          <h2>先按流程定位，再按关键词缩小范围</h2>
+          <p>
+            可以先点击流程总览锁定车间或模块，再用搜索框输入工艺名、设备名、质量工具或岗位名称。点击岗位卡片后会展开工作内容和招聘关键词。
+          </p>
+        </article>
+        <article class="intro-card">
+          <p class="intro-kicker">数据口径</p>
+          <h2>按招聘视角整理，不等于企业内部唯一编制</h2>
+          <p>
+            同类岗位在不同车企名称可能不同，页面采用行业里更常见的叫法做归并展示，重点保留招聘时最常检索、最常沟通的岗位表达。
+          </p>
+        </article>
+      </section>
 
       <section class="toolbar">
         <label class="search-field">
@@ -113,6 +177,11 @@
           </div>
         </main>
       </div>
+
+      <footer class="site-footer">
+        <p>内容定位：制造中心招聘学习与岗位 mapping。</p>
+        <p>数据结构：流程模块 → 岗位 → 工作内容 → 招聘关键词。</p>
+      </footer>
     </div>
 
     <dialog id="job-dialog" class="job-dialog">
