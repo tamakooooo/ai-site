@@ -321,11 +321,44 @@ select:focus {
   font-size: 16px;
 }
 
-.flow-card p {
+.flow-card-copy {
   margin: 8px 0 0;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.flow-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.flow-type {
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(23, 33, 38, 0.06);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.flow-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.flow-preview-chip {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(217, 111, 50, 0.08);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .flow-meta {
@@ -371,9 +404,19 @@ select:focus {
 .section-nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   max-height: calc(100vh - 120px);
   overflow: auto;
+}
+
+.nav-group {
+  padding: 4px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.nav-group.is-active {
+  background: rgba(217, 111, 50, 0.08);
 }
 
 .nav-link {
@@ -397,6 +440,42 @@ select:focus {
 
 .nav-link small {
   color: var(--muted);
+}
+
+.nav-link span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-link strong {
+  font-size: 14px;
+}
+
+.nav-sublist {
+  display: grid;
+  gap: 6px;
+  padding: 8px 8px 6px 16px;
+}
+
+.nav-sublink {
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.66);
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.nav-sublink:hover {
+  transform: translateX(2px);
+  border-color: rgba(217, 111, 50, 0.18);
+  background: rgba(255, 248, 242, 0.95);
+  color: var(--ink);
 }
 
 .results-panel {
@@ -505,6 +584,21 @@ select:focus {
   transform: translateY(-3px);
   border-color: rgba(217, 111, 50, 0.22);
   box-shadow: 0 16px 30px rgba(31, 41, 46, 0.08);
+}
+
+.job-card-pulse {
+  animation: jobPulse 1.2s ease;
+}
+
+@keyframes jobPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(217, 111, 50, 0.32);
+    border-color: rgba(217, 111, 50, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(217, 111, 50, 0);
+    border-color: rgba(23, 33, 38, 0.1);
+  }
 }
 
 .job-topline {

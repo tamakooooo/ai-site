@@ -224,17 +224,25 @@ function fillProcessFilter() {
 
 function renderOverview() {
   const cards = JOB_DATA.map((section) => {
-    const keywords = new Set(
-      section.jobs.flatMap((job) => job.keywords).slice(0, 4)
-    );
+    const topJobs = getSectionSubtitles(section).slice(0, 3);
+    const hotCount = section.jobs.filter((job) => job.isHighFrequency).length;
+    const energyCount = section.jobs.filter((job) => job.isNewEnergy).length;
 
     return `
       <button class="flow-card ${state.process === section.id ? "is-active" : ""}" data-process="${section.id}" type="button">
-        <h3>${section.section}</h3>
-        <p>${Array.from(keywords).slice(0, 3).join(" / ") || "岗位学习地图"}</p>
+        <div class="flow-card-head">
+          <h3>${section.section}</h3>
+          <span class="flow-type">${TYPE_LABELS[section.type]}</span>
+        </div>
+        <p class="flow-card-copy">覆盖 ${section.jobs.length} 个岗位，适合从 ${topJobs.join(" / ") || "核心岗位"} 切入。</p>
+        <div class="flow-preview-row">
+          ${topJobs
+            .map((jobName) => `<span class="flow-preview-chip">${jobName}</span>`)
+            .join("")}
+        </div>
         <div class="flow-meta">
-          <span>${TYPE_LABELS[section.type]}</span>
-          <strong>${section.jobs.length} 岗位</strong>
+          <span>${hotCount} 高频</span>
+          <strong>${energyCount} 新能源</strong>
         </div>
       </button>
     `;
@@ -311,18 +319,51 @@ function getFilteredSections() {
     .filter((section) => section.jobs.length > 0);
 }
 
+function getSectionSubtitles(section) {
+  return section.jobs
+    .slice()
+    .sort((a, b) => {
+      const aScore = (a.isHighFrequency ? 2 : 0) + (a.level === "engineer" ? 1 : 0);
+      const bScore = (b.isHighFrequency ? 2 : 0) + (b.level === "engineer" ? 1 : 0);
+      return bScore - aScore;
+    })
+    .map((job) => job.name)
+    .slice(0, 5);
+}
+
+function getJobAnchor(sectionId, jobName) {
+  return `${encodeURIComponent(sectionId)}::${encodeURIComponent(jobName)}`;
+}
+
 function renderNav(sections) {
   elements.nav.innerHTML = sections
-    .map(
-      (section) => `
+    .map((section) => {
+      const subtitles = getSectionSubtitles(section);
+      return `
+        <div class="nav-group ${state.activeSection === section.id ? "is-active" : ""}">
         <a href="#${encodeURIComponent(section.id)}" class="nav-link ${
           state.activeSection === section.id ? "is-active" : ""
         }" data-nav="${section.id}">
-          <span>${section.section}</span>
+          <span>
+            <strong>${section.section}</strong>
+            <small>${TYPE_LABELS[section.type]}</small>
+          </span>
           <small>${section.jobs.length}</small>
         </a>
-      `
-    )
+        <div class="nav-sublist" ${state.activeSection === section.id ? "" : "hidden"}>
+          ${subtitles
+            .map(
+              (jobName) => `
+                <button type="button" class="nav-sublink" data-section="${section.id}" data-job="${jobName}">
+                  ${jobName}
+                </button>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+      `;
+    })
     .join("");
 
   elements.nav.querySelectorAll("[data-nav]").forEach((link) => {
@@ -334,6 +375,18 @@ function renderNav(sections) {
       scrollToSection(nav);
     });
   });
+
+  elements.nav.querySelectorAll(".nav-sublink").forEach((button) => {
+    button.addEventListener("click", () => {
+      const sectionId = button.dataset.section;
+      const jobName = button.dataset.job;
+      state.process = sectionId;
+      state.activeSection = sectionId;
+      elements.process.value = sectionId;
+      render();
+      scrollToJob(sectionId, jobName);
+    });
+  });
 }
 
 function renderSections(sections) {
@@ -342,7 +395,7 @@ function renderSections(sections) {
       const cards = section.jobs
         .map(
           (job) => `
-            <article class="job-card" tabindex="0" data-job='${escapeAttribute(
+            <article class="job-card" id="${getJobAnchor(section.id, job.name)}" tabindex="0" data-job='${escapeAttribute(
               JSON.stringify({
                 ...job,
                 sectionName: section.section,
@@ -774,6 +827,17 @@ function scrollToSection(sectionId) {
   const target = document.getElementById(encodeURIComponent(sectionId));
   if (target) {
     target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function scrollToJob(sectionId, jobName) {
+  const target = document.getElementById(getJobAnchor(sectionId, jobName));
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.classList.add("job-card-pulse");
+    window.setTimeout(() => target.classList.remove("job-card-pulse"), 1400);
+  } else {
+    scrollToSection(sectionId);
   }
 }
 
