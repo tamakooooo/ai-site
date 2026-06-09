@@ -14,6 +14,37 @@ const LEVEL_LABELS = {
   operator: "技工/操作岗",
 };
 
+const PROCESS_DIAGRAM = {
+  upstream: [
+    "产品定义与项目管理",
+    "整车研发",
+    "试制、验证与新车型导入",
+    "采购、供应链与供应商导入",
+    "制造工程与工业化",
+  ],
+  mainline: [
+    "冲压车间",
+    "焊装车间",
+    "涂装车间",
+    "总装车间",
+    "整车终检与交付放行",
+  ],
+  feeders: [
+    "一体压铸",
+    "机加与后处理",
+    "电池 PACK / 模组制造",
+    "电驱/电机/电控制造",
+  ],
+  support: [
+    "质量管理",
+    "设备维修与公辅保障",
+    "计划、仓储与物流",
+    "生产运营与现场管理",
+    "EHS、环保与职业健康",
+    "数字化制造与 OT/IT",
+  ],
+};
+
 const SECTION_INTEL = {
   "产品定义与项目管理": {
     companies: ["主机厂产品规划中心", "新能源品牌战略部", "咨询/研究机构", "智能汽车项目管理团队"],
@@ -223,40 +254,120 @@ function fillProcessFilter() {
   elements.process.insertAdjacentHTML("beforeend", options);
 }
 
-function renderOverview() {
-  const cards = JOB_DATA.map((section) => {
-    const topJobs = getSectionSubtitles(section).slice(0, 3);
-    const hotCount = section.jobs.filter((job) => job.isHighFrequency).length;
-    const energyCount = section.jobs.filter((job) => job.isNewEnergy).length;
+function getSectionByName(name) {
+  return JOB_DATA.find((section) => section.section === name);
+}
 
-    return `
-      <button class="flow-card ${state.process === section.id ? "is-active" : ""}" data-process="${section.id}" type="button">
-        <div class="flow-card-head">
-          <h3>${section.section}</h3>
-          <span class="flow-type">${TYPE_LABELS[section.type]}</span>
-        </div>
-        <p class="flow-card-copy">覆盖 ${section.jobs.length} 个岗位，适合从 ${topJobs.join(" / ") || "核心岗位"} 切入。</p>
-        <div class="flow-preview-row">
-          ${topJobs
-            .map((jobName) => `<span class="flow-preview-chip">${jobName}</span>`)
-            .join("")}
-        </div>
-        <div class="flow-meta">
-          <span>${hotCount} 高频</span>
-          <strong>${energyCount} 新能源</strong>
-        </div>
-      </button>
-    `;
-  }).join("");
+function renderProcessNode(sectionName, options = {}) {
+  const section = getSectionByName(sectionName);
+  if (!section) {
+    return "";
+  }
+
+  const topJobs = getSectionSubtitles(section).slice(0, options.previewCount || 2);
+  const hotCount = section.jobs.filter((job) => job.isHighFrequency).length;
+  const energyCount = section.jobs.filter((job) => job.isNewEnergy).length;
+  const sizeClass = options.sizeClass || "";
+  const isActive = state.process === section.id;
+
+  return `
+    <button
+      class="process-node ${sizeClass} ${isActive ? "is-active" : ""}"
+      data-process="${section.id}"
+      type="button"
+    >
+      <div class="process-node-head">
+        <span class="process-node-type">${TYPE_LABELS[section.type]}</span>
+        <span class="process-node-count">${section.jobs.length} 岗位</span>
+      </div>
+      <h3>${section.section}</h3>
+      <p>${options.description || `适合从 ${topJobs.join(" / ") || "核心岗位"} 切入。`}</p>
+      <div class="process-node-preview">
+        ${topJobs.map((jobName) => `<span class="process-node-chip">${jobName}</span>`).join("")}
+      </div>
+      <div class="process-node-meta">
+        <span>${hotCount} 高频</span>
+        <strong>${energyCount} 新能源</strong>
+      </div>
+    </button>
+  `;
+}
+
+function renderOverview() {
+  const upstreamNodes = PROCESS_DIAGRAM.upstream
+    .map((name) =>
+      renderProcessNode(name, {
+        sizeClass: "process-node--compact",
+      })
+    )
+    .join("");
+
+  const mainlineNodes = PROCESS_DIAGRAM.mainline
+    .map((name, index) =>
+      renderProcessNode(name, {
+        sizeClass: index === 3 ? "process-node--wide" : "",
+        previewCount: 3,
+      })
+    )
+    .join("");
+
+  const feederNodes = PROCESS_DIAGRAM.feeders
+    .map((name) =>
+      renderProcessNode(name, {
+        sizeClass: "process-node--compact",
+      })
+    )
+    .join("");
+
+  const supportNodes = PROCESS_DIAGRAM.support
+    .map((name) =>
+      renderProcessNode(name, {
+        sizeClass: "process-node--support",
+        previewCount: 2,
+      })
+    )
+    .join("");
 
   elements.overview.innerHTML = `
     <div class="overview-header">
       <div>
         <h2>流程总览</h2>
-        <p>按造车流程快速定位岗位密集区。点击任意流程可直接筛选。</p>
+        <p>按真实造车节奏查看：前端定义与开发先行，工业化完成导入，主线经过冲压、焊装、涂装、总装和终检交付，新能源支路与全流程支持模块并行协同。</p>
       </div>
     </div>
-    <div class="flow-strip">${cards}</div>
+    <div class="process-diagram">
+      <section class="diagram-lane">
+        <div class="diagram-lane-head">
+          <span class="diagram-lane-label">前端开发与工业化</span>
+          <p>决定车型、设计方案、验证路径、供应商导入与产线落地方式。</p>
+        </div>
+        <div class="diagram-track diagram-track--upstream">${upstreamNodes}</div>
+      </section>
+
+      <section class="diagram-lane">
+        <div class="diagram-lane-head">
+          <span class="diagram-lane-label">整车制造主线</span>
+          <p>白车身成形与连接后进入表面处理、总装集成，最后完成终检与交付放行。</p>
+        </div>
+        <div class="diagram-track diagram-track--mainline">${mainlineNodes}</div>
+      </section>
+
+      <section class="diagram-lane">
+        <div class="diagram-lane-head">
+          <span class="diagram-lane-label">新能源与零部件支路</span>
+          <p>压铸、机加、电池 PACK、电驱制造等模块与主线并行，最终向总装集成供给总成与结构件。</p>
+        </div>
+        <div class="diagram-track diagram-track--feeders">${feederNodes}</div>
+      </section>
+
+      <section class="diagram-lane">
+        <div class="diagram-lane-head">
+          <span class="diagram-lane-label">全流程支持模块</span>
+          <p>质量、设备、物流、运营、EHS 与数字化从项目导入到量产爬坡全程参与。</p>
+        </div>
+        <div class="diagram-track diagram-track--support">${supportNodes}</div>
+      </section>
+    </div>
   `;
 
   elements.overview.querySelectorAll("[data-process]").forEach((button) => {
