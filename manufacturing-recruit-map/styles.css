@@ -693,6 +693,93 @@ select:focus {
   line-height: 1.75;
 }
 
+.keyword-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.keyword-group {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.keyword-group-title {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.resume-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(246,242,235,0.92));
+}
+
+.resume-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.resume-name {
+  margin: 0;
+  font-size: 20px;
+}
+
+.resume-role {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.resume-meta {
+  text-align: right;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.resume-section {
+  margin-top: 16px;
+}
+
+.resume-section-title {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.resume-summary,
+.resume-entry,
+.resume-skills {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.resume-entry + .resume-entry {
+  margin-top: 10px;
+}
+
+.resume-highlight {
+  display: inline;
+  padding: 0 4px;
+  border-radius: 6px;
+  background: rgba(217, 111, 50, 0.15);
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .dialog-note {
   margin: 18px 0 0;
   color: var(--muted);

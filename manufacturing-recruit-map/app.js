@@ -159,9 +159,11 @@ const elements = {
   dialogTitle: document.getElementById("dialog-title"),
   dialogDescription: document.getElementById("dialog-description"),
   dialogKeywords: document.getElementById("dialog-keywords"),
+  dialogKeywordGroups: document.getElementById("dialog-keyword-groups"),
   dialogSourceCompanies: document.getElementById("dialog-source-companies"),
   dialogPoachDirections: document.getElementById("dialog-poach-directions"),
   dialogInterviewQuestions: document.getElementById("dialog-interview-questions"),
+  dialogSampleResume: document.getElementById("dialog-sample-resume"),
   dialogNote: document.getElementById("dialog-note"),
   dialogMeta: document.getElementById("dialog-meta"),
   closeDialog: document.getElementById("close-dialog"),
@@ -429,6 +431,185 @@ function bulletListToHtml(items) {
   return items.map((item) => `<li>${item}</li>`).join("");
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function highlightTerms(text, terms) {
+  let output = escapeHtml(text);
+  dedupe(terms)
+    .filter((term) => term && term.length >= 2)
+    .sort((a, b) => b.length - a.length)
+    .forEach((term) => {
+      const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      output = output.replace(
+        new RegExp(safe, "g"),
+        `<span class="resume-highlight">${escapeHtml(term)}</span>`
+      );
+    });
+  return output;
+}
+
+function getKeywordGroups(job) {
+  const text = [job.sectionName, job.name, job.description, ...(job.keywords || [])].join(" ");
+  const groups = [];
+  const baseKeywords = dedupe(job.keywords || []);
+
+  const processTerms = [];
+  const toolTerms = [];
+  const qualityTerms = [];
+  const resultTerms = [];
+  const systemTerms = [];
+
+  if (/冲压|成形|回弹|模具/.test(text)) {
+    processTerms.push("冲压工艺", "成形分析", "模具调试", "回弹控制", "首件确认");
+  }
+  if (/焊|连接|焊钳|机器人/.test(text)) {
+    processTerms.push("焊接工艺", "连接工艺", "车身尺寸", "机器人调试", "焊点质量");
+  }
+  if (/涂装|电泳|喷涂|密封|前处理/.test(text)) {
+    processTerms.push("前处理", "电泳", "喷涂工艺", "密封工艺", "漆膜缺陷分析");
+  }
+  if (/总装|装配|拧紧|加注|EOL|诊断/.test(text)) {
+    processTerms.push("装配工艺", "防错设计", "拧紧控制", "EOL测试", "整车诊断");
+  }
+  if (/PACK|模组|电池|气密/.test(text)) {
+    processTerms.push("模组装配", "PACK装配", "气密测试", "绝缘测试", "追溯管理");
+  }
+  if (/电驱|电机|电控|逆变器|台架/.test(text)) {
+    processTerms.push("电驱装配", "电机工艺", "电控测试", "NVH", "下线测试");
+  }
+  if (/压铸|铸造|熔炼/.test(text)) {
+    processTerms.push("大型压铸", "铸造工艺", "试模", "熔炼控制", "后处理");
+  }
+  if (/机加|CNC|刀具|三坐标/.test(text)) {
+    processTerms.push("CNC加工", "刀具寿命", "尺寸能力", "程序优化", "三坐标测量");
+  }
+  if (/质量|SQE|IQE|PQE|OQE|APQP/.test(text)) {
+    qualityTerms.push("APQP", "PPAP", "8D", "FMEA", "SPC", "MSA", "控制计划");
+  }
+  if (/EHS|安全|环保|危废|职业健康/.test(text)) {
+    qualityTerms.push("双重预防机制", "隐患排查", "承包商管理", "危废合规", "职业健康");
+  }
+  if (/PLC|自动化|电气|OT|MES|WMS|SCADA|BI|数据/.test(text)) {
+    systemTerms.push("PLC", "HMI", "SCADA", "MES", "WMS", "OT网络", "SQL/BI");
+  }
+  if (/设备|维修|公辅|TPM/.test(text)) {
+    toolTerms.push("TPM", "点检", "预防性维护", "故障诊断", "备件管理", "OEE");
+  }
+  if (/采购|供应商|物流|计划|仓储|PMC|齐套/.test(text)) {
+    systemTerms.push("SAP/ERP", "MRP", "JIT/JIS", "拉动补料", "齐套管理", "库位规划");
+    resultTerms.push("交付达成", "库存周转", "缺件闭环", "供应商导入");
+  }
+
+  if (!toolTerms.length) {
+    if (/机器人/.test(text)) toolTerms.push("发那科", "ABB", "库卡", "离线编程");
+    if (/焊/.test(text)) toolTerms.push("焊钳", "焊接参数", "示教", "夹具定位");
+    if (/涂装/.test(text)) toolTerms.push("喷枪", "机器人喷涂", "漆雾控制", "烘炉");
+    if (/PACK|电池/.test(text)) toolTerms.push("激光焊", "点胶", "气密仪", "高压测试");
+    if (/电驱/.test(text)) toolTerms.push("测试台", "EOL台架", "扭矩校验", "绝缘耐压");
+    if (/压铸/.test(text)) toolTerms.push("压铸岛", "模温机", "真空系统", "熔炼炉");
+    if (/机加|CNC/.test(text)) toolTerms.push("数控系统", "刀具补偿", "夹具", "三坐标");
+  }
+
+  if (!resultTerms.length) {
+    resultTerms.push("良率提升", "节拍达成", "停线下降", "返修率下降", "项目 SOP");
+  }
+
+  groups.push({ title: "基础检索词", items: baseKeywords });
+  if (processTerms.length) groups.push({ title: "工艺 / 业务词", items: dedupe(processTerms) });
+  if (toolTerms.length) groups.push({ title: "设备 / 工装 / 工具词", items: dedupe(toolTerms) });
+  if (qualityTerms.length) groups.push({ title: "质量 / 管理工具词", items: dedupe(qualityTerms) });
+  if (systemTerms.length) groups.push({ title: "系统 / 软件词", items: dedupe(systemTerms) });
+  groups.push({ title: "结果导向词", items: dedupe(resultTerms) });
+
+  return groups.filter((group) => group.items.length > 0);
+}
+
+function renderKeywordGroups(groups) {
+  return groups
+    .map(
+      (group) => `
+        <section class="keyword-group">
+          <p class="keyword-group-title">${group.title}</p>
+          <div class="list-row">
+            ${group.items
+              .map(
+                (item) =>
+                  `<button type="button" class="keyword-chip" data-keyword="${escapeHtml(item)}">${escapeHtml(item)}</button>`
+              )
+              .join("")}
+          </div>
+        </section>
+      `
+    )
+    .join("");
+}
+
+function getSampleResume(job, intel, keywordGroups) {
+  const focusTerms = dedupe([
+    ...(job.keywords || []).slice(0, 4),
+    ...keywordGroups.flatMap((group) => group.items.slice(0, 2)),
+  ]).slice(0, 8);
+  const years = job.level === "management" ? "8年" : job.level === "operator" ? "4年" : "6年";
+  const education = job.level === "operator" ? "大专" : "本科";
+  const companyA = intel.sourceCompanies[0] || "某头部主机厂";
+  const companyB = intel.sourceCompanies[1] || "某核心零部件企业";
+  const projectTarget = job.isNewEnergy ? "新能源车型 SOP 导入" : "量产车型 SOP 导入";
+
+  const summary = `具备${years}${job.sectionName}相关经验，长期负责${job.name}工作，熟悉${focusTerms.slice(0, 4).join("、")}，能独立推动${projectTarget}中的问题识别、方案落地和量产稳定化。`;
+  const exp1 = `在${companyA}负责${job.name}，主导${focusTerms.slice(0, 3).join(" / ")}相关工作，围绕节拍、良率和异常闭环优化现场流程，支撑项目按节点推进至 SOP。`;
+  const exp2 = `在${companyB}参与跨部门协同，联动研发、质量、设备或供应链处理量产爬坡问题，推动${focusTerms.slice(3, 6).join(" / ") || "关键工艺和质量指标"}稳定达成。`;
+  const skills = dedupe([
+    ...focusTerms,
+    ...intel.interviewQuestions.slice(0, 1).map(() => "项目复盘"),
+  ]).join("、");
+
+  return {
+    name: "张某某",
+    role: `${job.name} | ${job.sectionName}`,
+    metaLeft: `${years}经验 / ${education} / 汽车制造行业`,
+    metaRight: `${job.isNewEnergy ? "新能源方向" : "量产制造方向"} / ${LEVEL_LABELS[job.level] || "岗位"}`,
+    summary,
+    experiences: [exp1, exp2],
+    skills,
+    focusTerms,
+  };
+}
+
+function renderSampleResume(resume) {
+  return `
+    <div class="resume-head">
+      <div>
+        <h3 class="resume-name">${resume.name}</h3>
+        <p class="resume-role">${resume.role}</p>
+      </div>
+      <div class="resume-meta">
+        <div>${resume.metaLeft}</div>
+        <div>${resume.metaRight}</div>
+      </div>
+    </div>
+    <section class="resume-section">
+      <p class="resume-section-title">职业概述</p>
+      <p class="resume-summary">${highlightTerms(resume.summary, resume.focusTerms)}</p>
+    </section>
+    <section class="resume-section">
+      <p class="resume-section-title">核心经历</p>
+      <p class="resume-entry">${highlightTerms(resume.experiences[0], resume.focusTerms)}</p>
+      <p class="resume-entry">${highlightTerms(resume.experiences[1], resume.focusTerms)}</p>
+    </section>
+    <section class="resume-section">
+      <p class="resume-section-title">关键能力 / 关键词</p>
+      <p class="resume-skills">${highlightTerms(resume.skills, resume.focusTerms)}</p>
+    </section>
+  `;
+}
+
 function inferCompanyExtensions(job) {
   const text = [job.sectionName, job.name, ...(job.keywords || [])].join(" ");
   const matches = [];
@@ -542,15 +723,19 @@ function getRecruitingIntel(job) {
 
 function openDialog(job) {
   const intel = getRecruitingIntel(job);
+  const keywordGroups = getKeywordGroups(job);
+  const sampleResume = getSampleResume(job, intel, keywordGroups);
   elements.dialogSection.textContent = job.sectionName;
   elements.dialogTitle.textContent = job.name;
   elements.dialogDescription.textContent = job.description;
   elements.dialogKeywords.innerHTML = (job.keywords || [])
     .map((keyword) => `<button type="button" class="keyword-chip" data-keyword="${keyword}">${keyword}</button>`)
     .join("");
+  elements.dialogKeywordGroups.innerHTML = renderKeywordGroups(keywordGroups);
   elements.dialogSourceCompanies.innerHTML = listToHtml(intel.sourceCompanies, "source-chip");
   elements.dialogPoachDirections.innerHTML = bulletListToHtml(intel.poachDirections);
   elements.dialogInterviewQuestions.innerHTML = bulletListToHtml(intel.interviewQuestions);
+  elements.dialogSampleResume.innerHTML = renderSampleResume(sampleResume);
   elements.dialogNote.textContent = intel.note;
 
   const meta = [
@@ -566,7 +751,7 @@ function openDialog(job) {
 
   elements.dialog.showModal();
 
-  elements.dialogKeywords.querySelectorAll("[data-keyword]").forEach((chip) => {
+  elements.dialog.querySelectorAll("[data-keyword]").forEach((chip) => {
     chip.addEventListener("click", () => {
       state.query = chip.dataset.keyword;
       elements.search.value = state.query;
