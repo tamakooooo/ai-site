@@ -567,6 +567,12 @@ select:focus {
   padding-top: 16px;
 }
 
+.list-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .keyword-chip {
   border: none;
   border-radius: 999px;
@@ -576,6 +582,15 @@ select:focus {
   font: inherit;
   font-size: 12px;
   cursor: pointer;
+}
+
+.source-chip {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(217, 111, 50, 0.1);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .empty-state {
@@ -668,6 +683,21 @@ select:focus {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
+}
+
+.detail-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.dialog-note {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 .meta-pill {

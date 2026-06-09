@@ -14,6 +14,122 @@ const LEVEL_LABELS = {
   operator: "技工/操作岗",
 };
 
+const SECTION_INTEL = {
+  "产品定义与项目管理": {
+    companies: ["主机厂产品规划中心", "新能源品牌战略部", "咨询/研究机构", "智能汽车项目管理团队"],
+    directions: ["优先看有整车项目节奏和跨部门推进经验的人", "关注做过 SOP 节点管理、配置管理、成本分解的人", "可以从乘用车主机厂和新势力平台项目团队挖人"],
+    questions: ["你负责过的车型或项目，关键里程碑怎么拆解和推进？", "当研发、采购、制造节点冲突时，你怎么拉齐优先级？"],
+  },
+  "整车研发": {
+    companies: ["乘用车主机厂研发中心", "Tier1 系统供应商", "工程开发服务公司", "试验验证中心"],
+    directions: ["重点找做过量产项目而不是纯概念开发的人", "优先看熟悉 DFMEA、DVP、问题闭环和工程变更的人", "可从车身、底盘、热管理、电子电器等系统团队平移"],
+    questions: ["你参与过哪些量产开发项目，量产前解决过什么设计问题？", "研发输出怎样确保后续制造端可生产、可检测、可装配？"],
+  },
+  "试制、验证与新车型导入": {
+    companies: ["主机厂试制车间", "新车型导入/NPI 团队", "样车中心", "验证与测量实验室"],
+    directions: ["优先看打通过试制到 SOP 导入链路的人", "关注 SE、尺寸、测量、制造验证一体化经验", "可从样车试制、验证中心、车身测量团队挖人"],
+    questions: ["你如何把试制阶段问题转成量产可执行的工艺动作？", "试制问题清单怎么分级、闭环和复盘？"],
+  },
+  "采购、供应链与供应商导入": {
+    companies: ["主机厂采购中心", "SQE/供应商开发团队", "模具与设备采购团队", "零部件供应链管理团队"],
+    directions: ["优先看做过项目采购和供应商导入的人", "关注成本、交付、质量三者平衡能力", "可从核心零部件供应商的项目/质量接口岗反向挖人"],
+    questions: ["你导入过哪些关键供应商，风险点怎么控？", "当供应商质量和交付同时失控时，你先抓什么？"],
+  },
+  "制造工程与工业化": {
+    companies: ["主机厂制造工程部", "工艺规划团队", "自动化集成商", "工装夹具与检具公司"],
+    directions: ["优先找做过产线导入、节拍平衡、工艺验证的人", "PLC、电气、自动化、夹具检具背景可互相转化", "可以从设备商和集成商挖懂现场落地的工程师"],
+    questions: ["你做过的工艺方案里，节拍、良率和投资是怎么平衡的？", "新线导入时你如何验证工装、夹具和程序的稳定性？"],
+  },
+  "冲压车间": {
+    companies: ["整车冲压厂", "大型模具厂", "冲压件供应商", "压机与自动化厂商"],
+    directions: ["优先找做过外覆盖件、侧围、门环等复杂件的人", "模具、成形、设备、换模背景之间可做相近挖掘", "可以从模具厂和冲压件 Tier1 补充冲压工艺人才"],
+    questions: ["你处理过哪些开裂、起皱、回弹问题？怎么定位原因？", "换模和首件确认流程里，哪些点最容易影响 OEE？"],
+  },
+  "焊装车间": {
+    companies: ["整车焊装车间", "白车身零部件厂", "机器人系统集成商", "焊接夹具与焊钳厂商"],
+    directions: ["优先看车身连接、机器人调试、焊接质量稳定化经验", "设备商和集成商里懂机器人、PLC、工装调试的人可转入主机厂", "可从座椅骨架、车身件、门盖件焊接工厂挖人"],
+    questions: ["你负责过哪些连接工艺，怎么保证焊点质量和尺寸稳定？", "机器人焊接参数、夹具定位和车身尺寸偏差之间怎么联动分析？"],
+  },
+  "涂装车间": {
+    companies: ["整车涂装车间", "涂料材料公司", "喷涂机器人集成商", "环保与公辅设备供应商"],
+    directions: ["重点看前处理、电泳、喷涂、密封全链路经验", "能同时理解工艺窗口、材料和设备的人稀缺", "可从家电喷涂、工程机械涂装、高端涂料厂补充部分能力"],
+    questions: ["你处理过哪些颗粒、流挂、缩孔、色差问题？", "涂装良率异常时，你如何区分材料、环境和设备原因？"],
+  },
+  "总装车间": {
+    companies: ["整车总装车间", "EOL 测试与诊断团队", "拧紧与加注设备商", "总成装配工厂"],
+    directions: ["优先找熟悉装配工艺、防错、拧紧、EOL 测试的人", "整车诊断、下线测试背景对新能源车很有价值", "可从发动机/变速箱/电驱总成装配线平移部分人才"],
+    questions: ["你如何设计总装工位的防错和异常拦截？", "下线不良高发时，你如何判断是来件、装配还是程序问题？"],
+  },
+  "整车终检与交付放行": {
+    companies: ["整车 OQC/终检团队", "PDI/交付质检团队", "第三方检测机构", "试车场与道路测试团队"],
+    directions: ["关注动态检测、淋雨、路试、交付放行经验", "有终检标准、缺陷判定和用户视角的人更适合交付质量岗位", "可从第三方检测与 PDI 团队补充检验人才"],
+    questions: ["你如何定义终检放行红线？", "遇到批量外观或功能缺陷时，终检如何与制造和质量联动？"],
+  },
+  "电池 PACK / 模组制造": {
+    companies: ["动力电池厂", "PACK 厂", "储能装配工厂", "激光焊与测试设备厂商"],
+    directions: ["优先看电芯到模组再到 PACK 的完整制造经验", "关注激光焊、点胶、气密、EOL 测试和追溯系统背景", "可从动力电池、储能、电池设备商三类企业交叉挖人"],
+    questions: ["你做过哪些 PACK 关键工序，如何控制气密和电性能一致性？", "电池产线异常时，你如何区分来料、工艺和设备问题？"],
+  },
+  "电驱/电机/电控制造": {
+    companies: ["电驱总成厂", "电机厂", "逆变器/电控厂", "电驱测试与装配设备厂商"],
+    directions: ["优先找懂绕组、装配、焊接、测试和 NVH 的人", "可从电机、电控、减速器、总成测试等相邻团队挖人", "设备厂里懂电驱测试台和自动化装配的人可补现场工程能力"],
+    questions: ["你负责过哪些电驱关键工艺，如何保证一致性和测试通过率？", "电驱下线测试异常时，你怎么快速分层定位问题？"],
+  },
+  "一体压铸": {
+    companies: ["一体压铸产线", "压铸件供应商", "模具厂", "熔炼与压铸设备厂商"],
+    directions: ["重点看大型压铸、试模、模具、材料和后处理经验", "可从传统铸造转，但优先有高压压铸和结构件经验的人", "设备和模具厂的人适合补设备调试与工艺优化能力"],
+    questions: ["你处理过哪些气孔、缩松、变形或粘模问题？", "大型压铸件良率和模具寿命通常怎么一起优化？"],
+  },
+  "机加与后处理": {
+    companies: ["机加工厂", "CNC 产线", "刀具厂", "精密检测与三坐标实验室"],
+    directions: ["优先找做过节拍、刀具寿命、尺寸能力优化的人", "CNC、刀具、夹具、三坐标背景可做互补挖掘", "可从汽车零部件机加和高精密加工行业平移人才"],
+    questions: ["你如何平衡加工节拍、刀具寿命和尺寸稳定性？", "三坐标数据异常时，你如何回溯到工艺或设备原因？"],
+  },
+  "质量管理": {
+    companies: ["主机厂质量中心", "Tier1 质量部", "SQE/IQE/PQE 团队", "第三方质量与认证机构"],
+    directions: ["优先看懂 APQP、PPAP、8D、问题闭环和量产爬坡的人", "来料、过程、出货、项目质量之间可以按经验互转", "可从核心零部件厂补充问题解决能力强的质量人才"],
+    questions: ["你主导过哪类质量问题闭环，证据链怎么建立？", "批量问题发生后，你如何推动跨部门真正收敛而不是临时围堵？"],
+  },
+  "设备维修与公辅保障": {
+    companies: ["主机厂设备部", "自动化维保团队", "公辅运维团队", "设备 OEM 与集成商售后团队"],
+    directions: ["优先找懂预防性维护、故障诊断和备件体系的人", "电气、机械、自动化、公辅可以按现场复杂度交叉挖掘", "设备厂售后和驻厂工程师往往有很强实操能力"],
+    questions: ["你处理过最典型的停线故障是什么，定位思路是什么？", "TPM、备件和点检体系你具体落过哪些动作？"],
+  },
+  "计划、仓储与物流": {
+    companies: ["主机厂 PMC/物流部", "仓储物流中心", "第三方物流", "包装与厂内物流方案商"],
+    directions: ["优先看 JIT/JIS、齐套、拉动补料和库位设计经验", "生产计划、物料计划、物流工程之间可以相互转化", "可从汽车供应链、家电和 3PL 的精益物流团队挖人"],
+    questions: ["你如何平衡主计划、物料齐套和产线缺件风险？", "厂内物流异常时，你如何判断是计划、仓储还是执行问题？"],
+  },
+  "生产运营与现场管理": {
+    companies: ["主机厂制造运营团队", "车间管理团队", "精益生产团队", "技能培训与班组管理团队"],
+    directions: ["优先找能带班组、抓指标、盯异常闭环的人", "线长、工段长、主管、制造经理适合按线体复杂度逐级 mapping", "培训和运营岗位可从成熟工厂体系化团队补充"],
+    questions: ["你负责的产线通常盯哪些核心指标？", "当产量、质量和人员稳定性同时波动时，你先抓什么？"],
+  },
+  "EHS、环保与职业健康": {
+    companies: ["主机厂 EHS 部门", "环保工程公司", "危废与水处理运维单位", "职业健康与安全咨询机构"],
+    directions: ["优先看过制造工厂现场的人，不优先纯办公室合规背景", "能同时覆盖安全、环保、职业健康和承包商管理的人更稀缺", "可从化工、电子、电池等高风险制造行业挖人"],
+    questions: ["你主导过哪些事故预防或隐患治理项目？", "面对高风险工序或外包施工，EHS 如何真正落到现场执行？"],
+  },
+  "数字化制造与 OT/IT": {
+    companies: ["主机厂数字化工厂团队", "MES/WMS/SCADA 实施商", "工业自动化软件公司", "数据平台与 BI 团队"],
+    directions: ["优先找既懂业务流程又能落系统的人", "MES、WMS、SCADA、OT 网络、数据分析背景可组合使用", "可从制造软件实施商补充交付经验，从主机厂补充业务理解"],
+    questions: ["你落过哪些制造系统项目，业务价值如何衡量？", "现场系统上线失败时，通常是流程、数据还是组织问题？"],
+  },
+};
+
+const COMPANY_GROUPS = {
+  oem: ["比亚迪", "特斯拉", "理想汽车", "蔚来", "小鹏汽车", "极氪", "广汽埃安", "吉利汽车"],
+  battery: ["宁德时代", "弗迪电池", "中创新航", "国轩高科", "亿纬锂能", "欣旺达动力"],
+  edrive: ["汇川技术", "华为数字能源", "联合电子", "舍弗勒", "博格华纳", "精进电动"],
+  supplier: ["延锋", "佛吉亚", "均胜电子", "敏实集团", "拓普集团", "宁波华翔"],
+  robotics: ["发那科", "ABB", "库卡", "安川", "新松", "埃斯顿"],
+  coating: ["PPG", "艾仕得", "立邦", "巴斯夫涂料", "杜尔", "艾森曼体系团队"],
+  diecasting: ["文灿股份", "拓普集团", "鸿图科技", "旭升集团", "力劲", "伊之密"],
+  machining: ["博世", "采埃孚", "舍弗勒", "耐世特", "爱信", "精锻科技"],
+  logistics: ["安吉物流", "长久物流", "德马科技", "科捷智能", "京东物流工业团队", "顺丰供应链"],
+  software: ["西门子", "达索系统", "罗克韦尔自动化", "和利时", "宝信软件", "鼎捷"],
+};
+
 const state = {
   query: "",
   process: "all",
@@ -43,6 +159,10 @@ const elements = {
   dialogTitle: document.getElementById("dialog-title"),
   dialogDescription: document.getElementById("dialog-description"),
   dialogKeywords: document.getElementById("dialog-keywords"),
+  dialogSourceCompanies: document.getElementById("dialog-source-companies"),
+  dialogPoachDirections: document.getElementById("dialog-poach-directions"),
+  dialogInterviewQuestions: document.getElementById("dialog-interview-questions"),
+  dialogNote: document.getElementById("dialog-note"),
   dialogMeta: document.getElementById("dialog-meta"),
   closeDialog: document.getElementById("close-dialog"),
 };
@@ -297,13 +417,141 @@ function renderSummary(sections) {
   elements.empty.hidden = jobCount !== 0;
 }
 
+function dedupe(items) {
+  return [...new Set(items.filter(Boolean))];
+}
+
+function listToHtml(items, className) {
+  return items.map((item) => `<span class="${className}">${item}</span>`).join("");
+}
+
+function bulletListToHtml(items) {
+  return items.map((item) => `<li>${item}</li>`).join("");
+}
+
+function inferCompanyExtensions(job) {
+  const text = [job.sectionName, job.name, ...(job.keywords || [])].join(" ");
+  const matches = [];
+
+  if (/PACK|模组|电池|气密|BMS|电芯/.test(text)) {
+    matches.push(...COMPANY_GROUPS.battery);
+  }
+  if (/电驱|电机|电控|逆变器|台架/.test(text)) {
+    matches.push(...COMPANY_GROUPS.edrive);
+  }
+  if (/焊|机器人|焊钳|连接/.test(text)) {
+    matches.push(...COMPANY_GROUPS.robotics);
+  }
+  if (/涂装|电泳|喷涂|密封|涂料/.test(text)) {
+    matches.push(...COMPANY_GROUPS.coating);
+  }
+  if (/压铸|熔炼|铸造/.test(text)) {
+    matches.push(...COMPANY_GROUPS.diecasting);
+  }
+  if (/CNC|机加|刀具|三坐标/.test(text)) {
+    matches.push(...COMPANY_GROUPS.machining);
+  }
+  if (/物流|仓储|包装|PMC|齐套/.test(text)) {
+    matches.push(...COMPANY_GROUPS.logistics);
+  }
+  if (/MES|WMS|SCADA|OT|工业网络|BI/.test(text)) {
+    matches.push(...COMPANY_GROUPS.software);
+  }
+  if (/SQE|IQE|PQE|OQE|供应商|内外饰|底盘|车身/.test(text)) {
+    matches.push(...COMPANY_GROUPS.supplier);
+  }
+
+  return dedupe([...COMPANY_GROUPS.oem, ...matches]).slice(0, 8);
+}
+
+function inferInterviewExtensions(job) {
+  const text = [job.name, job.description, ...(job.keywords || [])].join(" ");
+  const questions = [];
+
+  if (/PLC|电气|自动化|SCADA|MES|WMS|OT/.test(text)) {
+    questions.push("你实际改过哪些程序、逻辑或接口，如何验证上线后的稳定性？");
+  }
+  if (/APQP|PPAP|8D|FMEA|CP|MSA|SPC/.test(text)) {
+    questions.push("这些质量工具你在哪个项目里真正用过，输出物如何影响量产结果？");
+  }
+  if (/机器人|焊接|激光焊|焊钳/.test(text)) {
+    questions.push("你调过哪些焊接或机器人参数，判定有效的依据是什么？");
+  }
+  if (/冲压|模具|成形|回弹/.test(text)) {
+    questions.push("遇到模具和成形问题时，你先看材料、模面还是设备参数，为什么？");
+  }
+  if (/喷涂|电泳|前处理|密封|涂料/.test(text)) {
+    questions.push("你如何定义涂装工艺窗口，哪些参数偏移最容易引发批量问题？");
+  }
+  if (/拧紧|加注|EOL|诊断|终检|淋雨|四轮定位/.test(text)) {
+    questions.push("下线测试或终检异常时，你如何做首轮分层和快速判责？");
+  }
+  if (/PACK|气密|模组|电池/.test(text)) {
+    questions.push("电池相关岗位里，你通常怎么控制气密、绝缘和追溯一致性？");
+  }
+  if (/计划|物流|仓储|齐套|拉动/.test(text)) {
+    questions.push("你如何用数据判断缺件是计划问题、库存问题还是执行问题？");
+  }
+  if (/EHS|安全|环保|危废|职业健康/.test(text)) {
+    questions.push("你做过哪些现场稽核或风险整改，怎样确保不是纸面闭环？");
+  }
+  if (/班组长|线长|工段长|生产主管|制造经理/.test(text)) {
+    questions.push("你如何带班组稳定达成日产量，同时控制流失率和返修率？");
+  }
+
+  return questions;
+}
+
+function inferPoachExtensions(job) {
+  const text = [job.sectionName, job.name, ...(job.keywords || [])].join(" ");
+  const directions = [];
+
+  if (/设备|维修|自动化|PLC|机器人/.test(text)) {
+    directions.push("可以从设备 OEM、系统集成商、驻厂售后和产线维保团队反向挖人");
+  }
+  if (/模具|检具|夹具/.test(text)) {
+    directions.push("可以从模具厂、夹具检具厂、试模团队补充工艺和现场问题解决能力");
+  }
+  if (/质量|SQE|IQE|PQE|OQE|OQC/.test(text)) {
+    directions.push("可以从核心零部件供应商质量团队平移，重点看问题闭环深度");
+  }
+  if (/PACK|电池|电驱|电机|电控|压铸/.test(text)) {
+    directions.push("新能源特色工艺建议同时看主机厂、核心部件厂和设备厂三路人才池");
+  }
+  if (/MES|WMS|SCADA|OT|数据|BI/.test(text)) {
+    directions.push("可从制造软件实施商挖交付型人才，从主机厂挖懂业务流程的人");
+  }
+
+  return directions;
+}
+
+function getRecruitingIntel(job) {
+  const base = SECTION_INTEL[job.sectionName] || {
+    companies: COMPANY_GROUPS.oem,
+    directions: ["优先看做过量产制造项目并能描述具体结果的人"],
+    questions: ["请结合一个真实项目说明你负责的范围、难点和结果。"],
+  };
+
+  return {
+    sourceCompanies: dedupe([...base.companies, ...inferCompanyExtensions(job)]).slice(0, 8),
+    poachDirections: dedupe([...base.directions, ...inferPoachExtensions(job)]).slice(0, 5),
+    interviewQuestions: dedupe([...base.questions, ...inferInterviewExtensions(job)]).slice(0, 6),
+    note: "以下内容为基于流程模块、岗位名称和关键词自动推导的招聘建议，适合做初版 mapping 和面试准备，正式使用前建议按目标公司口径再收敛一次。",
+  };
+}
+
 function openDialog(job) {
+  const intel = getRecruitingIntel(job);
   elements.dialogSection.textContent = job.sectionName;
   elements.dialogTitle.textContent = job.name;
   elements.dialogDescription.textContent = job.description;
   elements.dialogKeywords.innerHTML = (job.keywords || [])
     .map((keyword) => `<button type="button" class="keyword-chip" data-keyword="${keyword}">${keyword}</button>`)
     .join("");
+  elements.dialogSourceCompanies.innerHTML = listToHtml(intel.sourceCompanies, "source-chip");
+  elements.dialogPoachDirections.innerHTML = bulletListToHtml(intel.poachDirections);
+  elements.dialogInterviewQuestions.innerHTML = bulletListToHtml(intel.interviewQuestions);
+  elements.dialogNote.textContent = intel.note;
 
   const meta = [
     LEVEL_LABELS[job.level] || "岗位",
