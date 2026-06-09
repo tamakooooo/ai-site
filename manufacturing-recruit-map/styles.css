@@ -570,7 +570,7 @@ select:focus {
 .job-card {
   display: flex;
   flex-direction: column;
-  min-height: 220px;
+  min-height: 300px;
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -651,6 +651,56 @@ select:focus {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.7;
+}
+
+.resume-preview {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid rgba(23, 33, 38, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.resume-preview-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.resume-preview-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.resume-preview-meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.resume-preview-copy {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.resume-preview-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.resume-preview-chip {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(217, 111, 50, 0.1);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .keyword-row {
@@ -813,6 +863,30 @@ select:focus {
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(246,242,235,0.92));
 }
 
+.resume-view-toggle {
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.resume-toggle-button {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.8);
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.resume-toggle-button.is-active {
+  border-color: rgba(217, 111, 50, 0.2);
+  background: rgba(217, 111, 50, 0.12);
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .resume-head {
   display: flex;
   justify-content: space-between;
@@ -872,6 +946,14 @@ select:focus {
   background: rgba(217, 111, 50, 0.15);
   color: var(--ink);
   font-weight: 700;
+}
+
+.resume-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
 }
 
 .dialog-note {

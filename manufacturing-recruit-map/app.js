@@ -164,6 +164,7 @@ const elements = {
   dialogPoachDirections: document.getElementById("dialog-poach-directions"),
   dialogInterviewQuestions: document.getElementById("dialog-interview-questions"),
   dialogSampleResume: document.getElementById("dialog-sample-resume"),
+  resumeViewToggle: document.getElementById("resume-view-toggle"),
   dialogNote: document.getElementById("dialog-note"),
   dialogMeta: document.getElementById("dialog-meta"),
   closeDialog: document.getElementById("close-dialog"),
@@ -393,8 +394,23 @@ function renderSections(sections) {
   elements.sections.innerHTML = sections
     .map((section) => {
       const cards = section.jobs
-        .map(
-          (job) => `
+        .map((job) => {
+          const keywordGroups = getKeywordGroups({
+            ...job,
+            sectionName: section.section,
+            sectionType: section.type,
+          });
+          const intel = getRecruitingIntel({
+            ...job,
+            sectionName: section.section,
+            sectionType: section.type,
+          });
+          const resume = getSampleResume(
+            { ...job, sectionName: section.section, sectionType: section.type },
+            intel,
+            keywordGroups
+          );
+          return `
             <article class="job-card" id="${getJobAnchor(section.id, job.name)}" tabindex="0" data-job='${escapeAttribute(
               JSON.stringify({
                 ...job,
@@ -411,6 +427,7 @@ function renderSections(sections) {
               </div>
               <h4>${job.name}</h4>
               <p>${job.description}</p>
+              ${renderResumePreview(resume)}
               <div class="keyword-row">
                 ${(job.keywords || [])
                   .slice(0, 5)
@@ -421,8 +438,8 @@ function renderSections(sections) {
                   .join("")}
               </div>
             </article>
-          `
-        )
+          `;
+        })
         .join("");
 
       return `
@@ -614,6 +631,19 @@ function getSampleResume(job, intel, keywordGroups) {
   const companyA = intel.sourceCompanies[0] || "某头部主机厂";
   const companyB = intel.sourceCompanies[1] || "某核心零部件企业";
   const projectTarget = job.isNewEnergy ? "新能源车型 SOP 导入" : "量产车型 SOP 导入";
+  const projectTitle = job.isNewEnergy ? "新能源量产爬坡项目" : "量产工艺优化项目";
+  const achievements = dedupe([
+    "支撑 SOP 节点达成",
+    "推动良率提升 3%-8%",
+    "降低返修或停线风险",
+    "完成跨部门问题闭环",
+  ]).slice(0, 3);
+  const tools = dedupe(keywordGroups.flatMap((group) => group.items).slice(0, 10));
+  const risks = dedupe([
+    "是否真的做过量产导入而不是只做文档维护",
+    "是否能讲清楚异常定位路径和闭环动作",
+    "是否有和质量、设备、生产协同推进的证据",
+  ]).slice(0, 3);
 
   const summary = `具备${years}${job.sectionName}相关经验，长期负责${job.name}工作，熟悉${focusTerms.slice(0, 4).join("、")}，能独立推动${projectTarget}中的问题识别、方案落地和量产稳定化。`;
   const exp1 = `在${companyA}负责${job.name}，主导${focusTerms.slice(0, 3).join(" / ")}相关工作，围绕节拍、良率和异常闭环优化现场流程，支撑项目按节点推进至 SOP。`;
@@ -632,10 +662,69 @@ function getSampleResume(job, intel, keywordGroups) {
     experiences: [exp1, exp2],
     skills,
     focusTerms,
+    projectTitle,
+    achievements,
+    tools,
+    risks,
   };
 }
 
-function renderSampleResume(resume) {
+function renderResumePreview(resume) {
+  return `
+    <section class="resume-preview" aria-label="示范简历预览">
+      <div class="resume-preview-head">
+        <p class="resume-preview-title">示范简历预览</p>
+        <span class="resume-preview-meta">${resume.metaLeft}</span>
+      </div>
+      <p class="resume-preview-copy">${highlightTerms(resume.summary, resume.focusTerms.slice(0, 4))}</p>
+      <div class="resume-preview-keywords">
+        ${resume.focusTerms.slice(0, 3).map((term) => `<span class="resume-preview-chip">${escapeHtml(term)}</span>`).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderSampleResume(resume, view = "summary") {
+  if (view === "full") {
+    return `
+      <div class="resume-head">
+        <div>
+          <h3 class="resume-name">${resume.name}</h3>
+          <p class="resume-role">${resume.role}</p>
+        </div>
+        <div class="resume-meta">
+          <div>${resume.metaLeft}</div>
+          <div>${resume.metaRight}</div>
+        </div>
+      </div>
+      <section class="resume-section">
+        <p class="resume-section-title">职业概述</p>
+        <p class="resume-summary">${highlightTerms(resume.summary, resume.focusTerms)}</p>
+      </section>
+      <section class="resume-section">
+        <p class="resume-section-title">项目经历</p>
+        <p class="resume-entry"><strong>${resume.projectTitle}</strong>：${highlightTerms(resume.experiences[0], resume.focusTerms)}</p>
+        <p class="resume-entry">${highlightTerms(resume.experiences[1], resume.focusTerms)}</p>
+      </section>
+      <section class="resume-section">
+        <p class="resume-section-title">关键成绩</p>
+        <ul class="resume-list">
+          ${resume.achievements.map((item) => `<li>${highlightTerms(item, resume.focusTerms)}</li>`).join("")}
+        </ul>
+      </section>
+      <section class="resume-section">
+        <p class="resume-section-title">系统 / 工具 / 关键词</p>
+        <p class="resume-skills">${highlightTerms(resume.tools.join("、"), resume.focusTerms)}</p>
+      </section>
+      <section class="resume-section">
+        <p class="resume-section-title">招聘关注点</p>
+        <ul class="resume-list">
+          ${resume.risks.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
+      </section>
+    `;
+  }
+
   return `
     <div class="resume-head">
       <div>
@@ -661,6 +750,19 @@ function renderSampleResume(resume) {
       <p class="resume-skills">${highlightTerms(resume.skills, resume.focusTerms)}</p>
     </section>
   `;
+}
+
+function bindResumeViewToggle(resume) {
+  const buttons = elements.resumeViewToggle.querySelectorAll("[data-resume-view]");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const view = button.dataset.resumeView;
+      buttons.forEach((item) =>
+        item.classList.toggle("is-active", item.dataset.resumeView === view)
+      );
+      elements.dialogSampleResume.innerHTML = renderSampleResume(resume, view);
+    });
+  });
 }
 
 function inferCompanyExtensions(job) {
@@ -788,8 +890,11 @@ function openDialog(job) {
   elements.dialogSourceCompanies.innerHTML = listToHtml(intel.sourceCompanies, "source-chip");
   elements.dialogPoachDirections.innerHTML = bulletListToHtml(intel.poachDirections);
   elements.dialogInterviewQuestions.innerHTML = bulletListToHtml(intel.interviewQuestions);
-  elements.dialogSampleResume.innerHTML = renderSampleResume(sampleResume);
+  elements.dialogSampleResume.innerHTML = renderSampleResume(sampleResume, "summary");
   elements.dialogNote.textContent = intel.note;
+  elements.resumeViewToggle.querySelectorAll("[data-resume-view]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.resumeView === "summary");
+  });
 
   const meta = [
     LEVEL_LABELS[job.level] || "岗位",
@@ -803,6 +908,7 @@ function openDialog(job) {
     .join("");
 
   elements.dialog.showModal();
+  bindResumeViewToggle(sampleResume);
 
   elements.dialog.querySelectorAll("[data-keyword]").forEach((chip) => {
     chip.addEventListener("click", () => {
